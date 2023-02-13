@@ -1,5 +1,7 @@
 package org.cmpm.analysing.stages;
-
+/**
+ * Состояние имени функции(не буду прописывать каждое), так как здесь всё линейно)
+ * */
 public enum Name implements State {
     A(0), B(1), C(2), D(3), E(4), F(5), G(6), I(7), K(8);
     Name(int index){
@@ -31,7 +33,7 @@ public enum Name implements State {
     private static final State[][] matrix = {
             //a y x 0 1 - ( ) = \t e f
             {C, B, End.E, End.E, End.E, End.E, End.E, End.E, End.E, G, End.E, End.E},
-            {End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E, D, I, End.E, End.E},
+            {End.E, End.E, End.E, End.E, End.E, End.E, E, End.E, D, I, End.E, End.E},
             {C, End.E, End.E, K, K, End.E, E, End.E, End.E, End.E, End.E, End.E},
             {Word.A, End.E, Base.B, Number.A, Number.B, Base.A, Base.C, End.E, End.E, Space.N2, End.E, End.E},
             {End.E, End.E, F, End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E},

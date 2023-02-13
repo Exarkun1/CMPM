@@ -1,5 +1,7 @@
 package org.cmpm.analysing.stages;
-
+/**
+ * Конечное состояние: E - ошибочное, F - правильное
+ * */
 public enum End implements State{
     E(0), F(1);
     End(int index){

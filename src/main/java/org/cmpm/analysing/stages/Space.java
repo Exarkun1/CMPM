@@ -1,5 +1,7 @@
 package org.cmpm.analysing.stages;
-
+/**
+ * Состояние пробела: Y - функция может закончиться этим пробелом, N - не может
+ * */
 public enum Space implements State{
     Y(0), N(1), N2(2);
     Space(int index){

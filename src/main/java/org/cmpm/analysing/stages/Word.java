@@ -1,5 +1,7 @@
 package org.cmpm.analysing.stages;
-
+/** Состояние параметра(параметр начинаться с буквы, и может заканчиваться цифрой):
+ * A - буква, B - цифра
+ * */
 public enum Word implements State {
     A(0), B(1);
     Word(int index){

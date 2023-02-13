@@ -1,5 +1,8 @@
 package org.cmpm.analysing.stages;
-
+/**
+ * Основное состояние: A - переход к переменным, B - к операциям,
+ * C - после открывающей скобки, D - после закрывающей, E - после минуса, который идёт в начале выражения
+ * */
 public enum Base implements State{
     A(0), B(1), C(2), D(3), E(4);
     Base(int index){

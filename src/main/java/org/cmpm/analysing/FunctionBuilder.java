@@ -5,8 +5,13 @@ import org.cmpm.functions.Function;
 import org.cmpm.functions.basic.*;
 import org.cmpm.functions.combination.*;
 import org.cmpm.functions.mono.*;
-
+/**
+ * Построитель функции
+ * */
 public class FunctionBuilder {
+    /**
+     * Анализ и построение функиии
+     * */
     public Function building(String text){
         text = analyser.processing(text);
         if(text != null){
@@ -14,14 +19,28 @@ public class FunctionBuilder {
             String functionBase = text.replaceAll(".+=", "");
             if(Parameters.functions.get(functionName) != null) return null;
             else{
-                Parameters.functions.put(functionName, recursiveBuilding(functionBase));
-                return Parameters.functions.get(functionName);
+                // Если функция имеет уникальное имя, то добавляем это имя в параметры приложения
+                if(!functionName.equals("y")) {
+                    Parameters.functions.put(functionName, recursiveBuilding(functionBase));
+                    return Parameters.functions.get(functionName);
+                }
+                // Иначе добаляем уникальный идентификатор
+                else {
+                    String index = String.valueOf(count++);
+                    Parameters.functions.put(index, recursiveBuilding(functionBase));
+                    return Parameters.functions.get(index);
+                }
             }
         }
         return null;
     }
+    /**
+     * Внутренняя реализация построителя функций через рекурсия
+     * */
     private Function recursiveBuilding(String text){
+        // Удаление внешних пробелов, с проверкой, что функция не изменится
         text = removingOuterBrackets(text);
+        // Выход из рекурсии
         if(text.equals("x")) return new Variable();
         else if(text.matches("\\d+|\\d+\\.\\d+")) return new Constant(Double.parseDouble(text));
         else if(text.matches("[a-z]+\\d?+")){
@@ -36,6 +55,8 @@ public class FunctionBuilder {
             }
             return c;
         }
+
+        // Тело рекурсии, последовательный поиск символов операций по возрастанию их "силы"
         int count = 0;
         for(int i = text.length()-1; i > 0; i--){
             char symbol = text.charAt(i);
@@ -108,10 +129,14 @@ public class FunctionBuilder {
         }
         return null;
     }
+    /**
+     * Удаление внешних пробелов, если от них ничего не зависит
+     * */
     private String removingOuterBrackets(String text){
         while (true){
             if (text.charAt(0) == '(' && text.charAt(text.length()-1) == ')') {
                 String temp = text.substring(1, text.length()-1);
+                // Так как мы уже изменили функцию(так что она уже не рабочаю), надо вернуть её в нормальное состояние для проверки
                 String tempAnalysable = ("y=" + temp)
                         .replaceAll("!", "")
                         .replaceAll("#", "")
@@ -125,6 +150,9 @@ public class FunctionBuilder {
         }
         return text;
     }
+    /**
+     * Создание какой-то стандартной функции
+     * */
     private Function createFunction(String begin, String end){
         switch (begin) {
             case "sqrt" -> {
@@ -169,4 +197,5 @@ public class FunctionBuilder {
         }
     }
     private final Analyser analyser = new Analyser();
+    private static int count;
 }

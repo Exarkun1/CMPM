@@ -1,5 +1,7 @@
 package org.cmpm.analysing.stages;
-
+/**
+ * Состояние числа: A - число начинается с 0, B - с любой другой цифры,
+ * C - после запятой, D - после одного знака после запятой*/
 public enum Number implements State{
     A(0), B(1), C(2), D(3);
     Number(int index){
