@@ -11,5 +11,6 @@ public class Main {
 
         Function f = new FunctionBuilder().building("y = -ln( -22*sin(x) -(  0,1/1,1*x ))x * ln(x^2) + exp(x+1)");
         System.out.println(f.get(-2));
+        System.out.println(1);
     }
 }
