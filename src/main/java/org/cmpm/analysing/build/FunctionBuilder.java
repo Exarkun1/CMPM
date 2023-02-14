@@ -1,10 +1,14 @@
-package org.cmpm.analysing;
+package org.cmpm.analysing.build;
 
 import org.cmpm.Parameters;
+import org.cmpm.analysing.Analyser;
 import org.cmpm.functions.Function;
 import org.cmpm.functions.basic.*;
 import org.cmpm.functions.combination.*;
 import org.cmpm.functions.mono.*;
+
+import java.util.List;
+
 /**
  * Построитель функции
  * */
@@ -57,75 +61,9 @@ public class FunctionBuilder {
         }
 
         // Тело рекурсии, последовательный поиск символов операций по возрастанию их "силы"
-        int count = 0;
-        for(int i = text.length()-1; i > 0; i--){
-            char symbol = text.charAt(i);
-            if(symbol == ')') count++;
-            else if(symbol == '(') count--;
-
-            if(count == 0 && (symbol == '+' || symbol == '-')) {
-                String begin = text.substring(0, i);
-                String end = text.substring(i+1);
-                if(symbol == '+')return new Sum(recursiveBuilding(begin), recursiveBuilding(end));
-                else return new Difference(recursiveBuilding(begin), recursiveBuilding(end));
-            }
-
-        }
-
-        count = 0;
-        for(int i = text.length()-1; i > 0; i--){
-            char symbol = text.charAt(i);
-            if(symbol == ')') count++;
-            else if(symbol == '(') count--;
-
-            if(count == 0 && (symbol == '*' || symbol == '/')) {
-                String begin = text.substring(0, i);
-                String end = text.substring(i+1);
-                if(symbol == '*')return new Multiply(recursiveBuilding(begin), recursiveBuilding(end));
-                else return new Division(recursiveBuilding(begin), recursiveBuilding(end));
-            }
-
-        }
-
-        count = 0;
-        for(int i = text.length()-1; i > 0; i--){
-            char symbol = text.charAt(i);
-            if(symbol == ')') count++;
-            else if(symbol == '(') count--;
-
-            if(count == 0 && symbol == '#') {
-                String begin = text.substring(0, i);
-                String end = text.substring(i+1);
-                return new Multiply(recursiveBuilding(begin), recursiveBuilding(end));
-            }
-
-        }
-
-        count = 0;
-        for(int i = text.length()-1; i > 0; i--){
-            char symbol = text.charAt(i);
-            if(symbol == ')') count++;
-            else if(symbol == '(') count--;
-
-            if(count == 0 && symbol == '^') {
-                String begin = text.substring(0, i);
-                String end = text.substring(i+1);
-                return new Exponential(recursiveBuilding(begin), recursiveBuilding(end));
-            }
-        }
-
-        count = 0;
-        for(int i = text.length()-1; i > 0; i--){
-            char symbol = text.charAt(i);
-            if(symbol == ')') count++;
-            else if(symbol == '(') count--;
-
-            if(count == 0 && symbol == '!') {
-                String begin = text.substring(0, i);
-                String end = text.substring(i+1);
-                return createFunction(begin, end);
-            }
-
+        for(var builder : builders){
+            Function temp = Builder.buildingBunch(text, builder);
+            if(temp != null) return temp;
         }
         return null;
     }
@@ -150,10 +88,86 @@ public class FunctionBuilder {
         }
         return text;
     }
+    private final Analyser analyser = new Analyser();
+    private static int count;
+
+    private final List<Builder> builders = List.of(
+            new SumBuilder(),
+            new MultiplyBuilder(),
+            new StrongMultiplyBuilder(),
+            new ExponentialBuilder(),
+            new StandardFunctionBuilder()
+    );
+
+    private class SumBuilder implements Builder {
+        @Override
+        public boolean contain(char symbol) {
+            return symbol == '+' || symbol == '-';
+        }
+
+        @Override
+        public Function createFunction(String begin, String end, char symbol) {
+            if(symbol == '+') return new Sum(recursiveBuilding(begin), recursiveBuilding(end));
+            else return new Difference(recursiveBuilding(begin), recursiveBuilding(end));
+        }
+    }
+
+    private class MultiplyBuilder implements Builder {
+        @Override
+        public boolean contain(char symbol) {
+            return symbol == '*' || symbol == '/';
+        }
+
+        @Override
+        public Function createFunction(String begin, String end, char symbol) {
+            if(symbol == '*') return new Multiply(recursiveBuilding(begin), recursiveBuilding(end));
+            else return new Division(recursiveBuilding(begin), recursiveBuilding(end));
+        }
+    }
+
+    private class StrongMultiplyBuilder implements Builder{
+
+        @Override
+        public boolean contain(char symbol) {
+            return symbol == '#';
+        }
+
+        @Override
+        public Function createFunction(String begin, String end, char symbol) {
+            return new Multiply(recursiveBuilding(begin), recursiveBuilding(end));
+        }
+    }
+
+    private class ExponentialBuilder implements Builder{
+
+        @Override
+        public boolean contain(char symbol) {
+            return symbol == '^';
+        }
+
+        @Override
+        public Function createFunction(String begin, String end, char symbol) {
+            return new Exponential(recursiveBuilding(begin), recursiveBuilding(end));
+        }
+    }
+
+    private class StandardFunctionBuilder implements Builder{
+        @Override
+        public boolean contain(char symbol) {
+            return symbol == '!';
+        }
+
+        @Override
+        public Function createFunction(String begin, String end, char symbol) {
+            return createFunctionByName(begin, end);
+        }
+
+    }
+
     /**
      * Создание какой-то стандартной функции
      * */
-    private Function createFunction(String begin, String end){
+    private Function createFunctionByName(String begin, String end){
         switch (begin) {
             case "sqrt" -> {
                 return new Pow(recursiveBuilding(end), 0.5);
@@ -196,6 +210,4 @@ public class FunctionBuilder {
             }
         }
     }
-    private final Analyser analyser = new Analyser();
-    private static int count;
 }

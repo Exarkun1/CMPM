@@ -1,7 +1,7 @@
 package org.cmpm;
 
 import org.cmpm.analysing.Analyser;
-import org.cmpm.analysing.FunctionBuilder;
+import org.cmpm.analysing.build.FunctionBuilder;
 import org.cmpm.functions.Function;
 
 public class Main {
