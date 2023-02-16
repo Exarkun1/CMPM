@@ -25,13 +25,13 @@ public class FunctionBuilder {
             else{
                 // Если функция имеет уникальное имя, то добавляем это имя в параметры приложения
                 if(!functionName.equals("y")) {
-                    Parameters.functions.put(functionName, recursiveBuilding(functionBase));
+                    Parameters.functions.put(functionName, buildingWithoutSaving(functionBase));
                     return Parameters.functions.get(functionName);
                 }
                 // Иначе добаляем уникальный идентификатор
                 else {
                     String index = String.valueOf(count++);
-                    Parameters.functions.put(index, recursiveBuilding(functionBase));
+                    Parameters.functions.put(index, buildingWithoutSaving(functionBase));
                     return Parameters.functions.get(index);
                 }
             }
@@ -41,11 +41,14 @@ public class FunctionBuilder {
     /**
      * Внутренняя реализация построителя функций через рекурсия
      * */
-    private Function recursiveBuilding(String text){
+    public Function buildingWithoutSaving(String text){
         // Удаление внешних пробелов, с проверкой, что функция не изменится
         text = removingOuterBrackets(text);
+        if(text == null) return null;
         // Выход из рекурсии
         if(text.equals("x")) return new Variable();
+        else if(text.equals("e")) return new Constant(Math.E);
+        else if(text.equals("pi")) return new Constant(Math.PI);
         else if(text.matches("\\d+|\\d+\\.\\d+")) return new Constant(Double.parseDouble(text));
         else if(text.matches("[a-z]+\\d?+")){
             Function f = Parameters.functions.get(text);
@@ -61,8 +64,8 @@ public class FunctionBuilder {
         }
 
         // Тело рекурсии, последовательный поиск символов операций по возрастанию их "силы"
-        for(var builder : builders){
-            Function temp = Builder.buildingBunch(text, builder);
+        for(var factory : factories){
+            Function temp = searchingFunctions(text, factory);
             if(temp != null) return temp;
         }
         return null;
@@ -88,126 +91,50 @@ public class FunctionBuilder {
         }
         return text;
     }
+    /**
+     * Поиск разделителя функций и создание
+     * */
+    private Function searchingFunctions(String text, ContainFactoryAdapter factory){
+        int count = 0;
+        for(int i = text.length()-1; i > 0; i--){
+            char symbol = text.charAt(i);
+            if(symbol == ')') count++;
+            else if(symbol == '(') count--;
+
+            if(count == 0 && factory.contain(symbol)) {
+                String begin = text.substring(0, i);
+                String end = text.substring(i+1);
+                return factory.createFunction(begin, end, symbol);
+            }
+        }
+        return null;
+    }
     private final Analyser analyser = new Analyser();
     private static int count;
-
-    private final List<Builder> builders = List.of(
-            new SumBuilder(),
-            new MultiplyBuilder(),
-            new StrongMultiplyBuilder(),
-            new ExponentialBuilder(),
-            new StandardFunctionBuilder()
-    );
-
-    private class SumBuilder implements Builder {
-        @Override
-        public boolean contain(char symbol) {
-            return symbol == '+' || symbol == '-';
-        }
-
-        @Override
-        public Function createFunction(String begin, String end, char symbol) {
-            if(symbol == '+') return new Sum(recursiveBuilding(begin), recursiveBuilding(end));
-            else return new Difference(recursiveBuilding(begin), recursiveBuilding(end));
-        }
-    }
-
-    private class MultiplyBuilder implements Builder {
-        @Override
-        public boolean contain(char symbol) {
-            return symbol == '*' || symbol == '/';
-        }
-
-        @Override
-        public Function createFunction(String begin, String end, char symbol) {
-            if(symbol == '*') return new Multiply(recursiveBuilding(begin), recursiveBuilding(end));
-            else return new Division(recursiveBuilding(begin), recursiveBuilding(end));
-        }
-    }
-
-    private class StrongMultiplyBuilder implements Builder{
-
-        @Override
-        public boolean contain(char symbol) {
-            return symbol == '#';
-        }
-
-        @Override
-        public Function createFunction(String begin, String end, char symbol) {
-            return new Multiply(recursiveBuilding(begin), recursiveBuilding(end));
-        }
-    }
-
-    private class ExponentialBuilder implements Builder{
-
-        @Override
-        public boolean contain(char symbol) {
-            return symbol == '^';
-        }
-
-        @Override
-        public Function createFunction(String begin, String end, char symbol) {
-            return new Exponential(recursiveBuilding(begin), recursiveBuilding(end));
-        }
-    }
-
-    private class StandardFunctionBuilder implements Builder{
-        @Override
-        public boolean contain(char symbol) {
-            return symbol == '!';
-        }
-
-        @Override
-        public Function createFunction(String begin, String end, char symbol) {
-            return createFunctionByName(begin, end);
-        }
-
-    }
-
     /**
-     * Создание какой-то стандартной функции
+     * Список фабрик для стандартных функций
      * */
+    private final List<ContainFactoryAdapter> factories = List.of(
+            new ContainFactoryAdapter((b, e, s) -> {
+                if(s == '+') return new Sum(buildingWithoutSaving(b), buildingWithoutSaving(e));
+                else return new Difference(buildingWithoutSaving(b), buildingWithoutSaving(e));
+            }, s -> s == '+' || s == '-'),
+
+            new ContainFactoryAdapter((b, e, s) -> {
+                if(s == '*') return new Multiply(buildingWithoutSaving(b), buildingWithoutSaving(e));
+                else return new Division(buildingWithoutSaving(b), buildingWithoutSaving(e));
+            }, s -> s == '*' || s == '/'),
+
+            new ContainFactoryAdapter((b, e, s) -> new Multiply(buildingWithoutSaving(b), buildingWithoutSaving(e)),
+                    s -> s == '#'),
+
+            new ContainFactoryAdapter((b, e, s) -> new Exponential(buildingWithoutSaving(b), buildingWithoutSaving(e)),
+                    s -> s == '^'),
+
+            new ContainFactoryAdapter((b, e, s) -> createFunctionByName(b, e),
+                    s -> s == '!')
+    );
     private Function createFunctionByName(String begin, String end){
-        switch (begin) {
-            case "sqrt" -> {
-                return new Pow(recursiveBuilding(end), 0.5);
-            }
-            case "exp" -> {
-                return new Exp(recursiveBuilding(end));
-            }
-            case "abs" -> {
-                return new Abs(recursiveBuilding(end));
-            }
-            case "log" -> {
-                return new Log(2, recursiveBuilding(end));
-            }
-            case "ln" -> {
-                return new Log(recursiveBuilding(end));
-            }
-            case "sin" -> {
-                return new Sin(recursiveBuilding(end));
-            }
-            case "cos" -> {
-                return new Cos(recursiveBuilding(end));
-            }
-            case "tan" -> {
-                return new Tan(recursiveBuilding(end));
-            }
-            case "ctan" -> {
-                return new CTan(recursiveBuilding(end));
-            }
-            case "asin" -> {
-                return new ASin(recursiveBuilding(end));
-            }
-            case "acos" -> {
-                return new ACos(recursiveBuilding(end));
-            }
-            case "atan" -> {
-                return new ATan(recursiveBuilding(end));
-            }
-            default -> {
-                return null;
-            }
-        }
+        return Parameters.keyWords.get(begin).createFunction(begin, end, '\0');
     }
 }

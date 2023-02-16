@@ -35,7 +35,7 @@ public class Analyser {
             while (matcher.find()) {
                 String group = matcher.group().substring(0, matcher.group().length()-1);
                 int index = matcher.end();
-                if(!Parameters.keyWords.contains(group)) {
+                if(!Parameters.keyWords.containsKey(group)) {
                     functionBase = new StringBuffer(functionBase).insert(index-count--, "#").toString(); // 4
                 }
                 else {
