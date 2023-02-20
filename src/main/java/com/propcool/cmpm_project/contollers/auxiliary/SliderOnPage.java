@@ -11,6 +11,9 @@ public class SliderOnPage extends Slider {
     public SliderOnPage(double min, double max, double value, MainController controller, String parameterName){
         super(min, max, value);
         setPrefHeight(50);
+        setMajorTickUnit(2);
+        setShowTickLabels(true);
+        setShowTickMarks(true);
         setOnMouseDragged(mouseEvent -> {
             Constant param = Elements.parameters.get(parameterName);
             param.set(getValue());

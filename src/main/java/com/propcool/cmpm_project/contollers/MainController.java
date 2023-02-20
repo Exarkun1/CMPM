@@ -186,6 +186,21 @@ public class MainController implements Initializable {
             }
         }
     }
+    public void removeSliders(){
+        List<String> deletedParams = new ArrayList<>();
+        met:
+        for(var param : Elements.parameters.keySet()){
+            for(var params : Elements.functionsWithParams.values()){
+                if(params.contains(param)) continue met;
+            }
+            deletedParams.add(param);
+        }
+        for(var param : deletedParams) {
+            Slider slider = sliders.remove(param);
+            paneForText.getChildren().remove(slider);
+            Elements.parameters.remove(param);
+        }
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         addTextField();
@@ -202,7 +217,7 @@ public class MainController implements Initializable {
     private double pixelSize = 0.01;
     private double shiftX = 0;
     private double shiftY = 0;
-    private final int height = 1056-90, half_height = height/2;
+    private final int height = 1056-91, half_height = height/2;
     private final int wight = 1936, half_wight = wight/2;
     private double centerX = half_wight + shiftX;
     private double centerY = half_height + shiftY;

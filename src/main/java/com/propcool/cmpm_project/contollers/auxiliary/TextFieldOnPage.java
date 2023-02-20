@@ -13,18 +13,22 @@ public class TextFieldOnPage extends TextField {
         setOnKeyReleased(keyEvent -> {
             String textOfField = getText();
             NamedFunction nf = Elements.builder.building(textOfField);
-            if(nf == null || nf.getValue() == null
-                    || (Elements.functions.containsKey(nf.getKey()) && !nf.getKey().equals(functionName))
-                    || (Elements.parameters.containsKey(nf.getKey())
+            if(nf == null || (Elements.functions.containsKey(nf.getName()) && !nf.getName().equals(functionName))
+                    || (Elements.parameters.containsKey(nf.getName())
             )) {
                 Elements.functions.remove(functionName);
+                Elements.functionsWithParams.remove(functionName);
                 controller.remove(functionName);
                 functionName = null;
             } else {
                 Elements.functions.remove(functionName);
-                Elements.functions.put(nf.getKey(), nf.getValue());
+                Elements.functions.put(nf.getName(), nf.getFunction());
+
+                Elements.functionsWithParams.remove(functionName);
+                Elements.functionsWithParams.put(nf.getName(), nf.getParams());
+
                 controller.remove(functionName);
-                functionName = nf.getKey();
+                functionName = nf.getName();
 
                 controller.rebuildFunction(functionName);
                 controller.redraw(functionName);
@@ -32,7 +36,9 @@ public class TextFieldOnPage extends TextField {
             controller.removeTextField();
             controller.addTextField();
             controller.addSliders();
-            // System.out.println(Elements.functions.keySet());
+            controller.removeSliders();
+            // System.out.println(Elements.functionsWithParams);
+            // System.out.println(Elements.parameters.keySet());
         });
     }
     public TextFieldOnPage(MainController controller){

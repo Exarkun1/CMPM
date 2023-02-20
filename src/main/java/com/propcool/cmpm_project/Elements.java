@@ -19,22 +19,23 @@ public class Elements {
 
     public static final Map<String, Function> functions = new HashMap<>();
     public static final Map<String, Constant> parameters = new HashMap<>();
+    public static final Map<String, List<String>> functionsWithParams = new HashMap<>();
     public static final FunctionBuilder builder = new FunctionBuilder();
 
     static {
         //List.of("sqrt", "exp", "abs", "log", "ln", "sin", "cos", "tan", "ctan", "asin", "acos", "atan");
-        keyWords.put("sqrt", (b, e, s) -> new Pow(builder.buildingNotNamed(e), 0.5));
-        keyWords.put("exp", (b, e, s) -> new Exp(builder.buildingNotNamed(e)));
-        keyWords.put("abs", (b, e, s) -> new Abs(builder.buildingNotNamed(e)));
-        keyWords.put("log", (b, e, s) -> new Log(2, builder.buildingNotNamed(e)));
-        keyWords.put("ln", (b, e, s) -> new Log(builder.buildingNotNamed(e)));
-        keyWords.put("sin", (b, e, s) -> new Sin(builder.buildingNotNamed(e)));
-        keyWords.put("cos", (b, e, s) -> new Cos(builder.buildingNotNamed(e)));
-        keyWords.put("tan", (b, e, s) -> new Tan(builder.buildingNotNamed(e)));
-        keyWords.put("ctan", (b, e, s) -> new CTan(builder.buildingNotNamed(e)));
-        keyWords.put("arcsin", (b, e, s) -> new ASin(builder.buildingNotNamed(e)));
-        keyWords.put("arcsos", (b, e, s) -> new ACos(builder.buildingNotNamed(e)));
-        keyWords.put("arctan", (b, e, s) -> new ATan(builder.buildingNotNamed(e)));
+        keyWords.put("sqrt", (b, e, s, p) -> new Pow(builder.buildingNotNamed(e, p), 0.5));
+        keyWords.put("exp", (b, e, s, p) -> new Exp(builder.buildingNotNamed(e, p)));
+        keyWords.put("abs", (b, e, s, p) -> new Abs(builder.buildingNotNamed(e, p)));
+        keyWords.put("log", (b, e, s, p) -> new Log(2, builder.buildingNotNamed(e, p)));
+        keyWords.put("ln", (b, e, s, p) -> new Log(builder.buildingNotNamed(e, p)));
+        keyWords.put("sin", (b, e, s, p) -> new Sin(builder.buildingNotNamed(e, p)));
+        keyWords.put("cos", (b, e, s, p) -> new Cos(builder.buildingNotNamed(e, p)));
+        keyWords.put("tan", (b, e, s, p) -> new Tan(builder.buildingNotNamed(e, p)));
+        keyWords.put("ctan", (b, e, s, p) -> new CTan(builder.buildingNotNamed(e, p)));
+        keyWords.put("arcsin", (b, e, s, p) -> new ASin(builder.buildingNotNamed(e, p)));
+        keyWords.put("arcsos", (b, e, s, p) -> new ACos(builder.buildingNotNamed(e, p)));
+        keyWords.put("arctan", (b, e, s, p) -> new ATan(builder.buildingNotNamed(e, p)));
     }
     private Elements(){}
 }

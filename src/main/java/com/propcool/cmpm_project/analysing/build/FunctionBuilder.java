@@ -6,6 +6,7 @@ import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,22 +21,25 @@ public class FunctionBuilder {
         if(text != null){
             String functionName = text.replaceAll("\\(.+|=.+", "");
             String functionBase = text.replaceAll(".+=", "");
+
+            List<String> params = new ArrayList<>();
             // Если функция имеет уникальное имя, то возвращаем функцию с этим именем
             if(!functionName.equals("y")) {
-                return new NamedFunction(functionName, buildingNotNamed(functionBase));
+                return new NamedFunction(functionName, buildingNotNamed(functionBase, params), params);
             }
             // Иначе добаляем уникальный идентификатор
             else {
                 String index = String.valueOf(count++);
-                return new NamedFunction(index, buildingNotNamed(functionBase));
+                return new NamedFunction(index, buildingNotNamed(functionBase, params), params);
             }
         }
         return null;
     }
     /**
-     * Внутренняя реализация построителя функций через рекурсия
+     * Внутренняя реализация построителя функций через рекурсию
+     * (также ведётся сохранение параметров функции в список)
      * */
-    public Function buildingNotNamed(String text){
+    public Function buildingNotNamed(String text, List<String> params){
         // Удаление внешних пробелов, с проверкой, что функция не изменится
         text = removingOuterBrackets(text);
         // Выход из рекурсии
@@ -53,15 +57,16 @@ public class FunctionBuilder {
                 c = new Constant(1);
                 Elements.parameters.put(text, c);
             }
+            params.add(text);
             return c;
         }
 
         // Тело рекурсии, последовательный поиск символов операций по возрастанию их "силы"
         for(var factory : factories){
-            Function temp = searchingFunctions(text, factory);
+            Function temp = searchingFunctions(text, params, factory);
             if(temp != null) return temp;
         }
-        return null;
+        throw new RuntimeException("Не верные знаки");
     }
     /**
      * Удаление внешних пробелов, если от них ничего не зависит
@@ -87,7 +92,7 @@ public class FunctionBuilder {
     /**
      * Поиск разделителя функций и создание
      * */
-    private Function searchingFunctions(String text, ContainFactoryAdapter factory){
+    private Function searchingFunctions(String text,List<String> params, ContainFactoryAdapter factory){
         int count = 0;
         for(int i = text.length()-1; i > 0; i--){
             char symbol = text.charAt(i);
@@ -97,7 +102,7 @@ public class FunctionBuilder {
             if(count == 0 && factory.contain(symbol)) {
                 String begin = text.substring(0, i);
                 String end = text.substring(i+1);
-                return factory.createFunction(begin, end, symbol);
+                return factory.createFunction(begin, end, symbol, params);
             }
         }
         return null;
@@ -108,26 +113,26 @@ public class FunctionBuilder {
      * Список фабрик для стандартных функций
      * */
     private final List<ContainFactoryAdapter> factories = List.of(
-            new ContainFactoryAdapter((b, e, s) -> {
-                if(s == '+') return new Sum(buildingNotNamed(b), buildingNotNamed(e));
-                else return new Difference(buildingNotNamed(b), buildingNotNamed(e));
+            new ContainFactoryAdapter((b, e, s, p) -> {
+                if(s == '+') return new Sum(buildingNotNamed(b, p), buildingNotNamed(e, p));
+                else return new Difference(buildingNotNamed(b, p), buildingNotNamed(e, p));
             }, s -> s == '+' || s == '-'),
 
-            new ContainFactoryAdapter((b, e, s) -> {
-                if(s == '*') return new Multiply(buildingNotNamed(b), buildingNotNamed(e));
-                else return new Division(buildingNotNamed(b), buildingNotNamed(e));
+            new ContainFactoryAdapter((b, e, s, p) -> {
+                if(s == '*') return new Multiply(buildingNotNamed(b, p), buildingNotNamed(e, p));
+                else return new Division(buildingNotNamed(b, p), buildingNotNamed(e, p));
             }, s -> s == '*' || s == '/'),
 
-            new ContainFactoryAdapter((b, e, s) -> new Multiply(buildingNotNamed(b), buildingNotNamed(e)),
+            new ContainFactoryAdapter((b, e, s, p) -> new Multiply(buildingNotNamed(b, p), buildingNotNamed(e, p)),
                     s -> s == '#'),
 
-            new ContainFactoryAdapter((b, e, s) -> new Exponential(buildingNotNamed(b), buildingNotNamed(e)),
+            new ContainFactoryAdapter((b, e, s, p) -> new Exponential(buildingNotNamed(b, p), buildingNotNamed(e, p)),
                     s -> s == '^'),
 
-            new ContainFactoryAdapter((b, e, s) -> createFunctionByName(b, e),
+            new ContainFactoryAdapter((b, e, s, p) -> createFunctionByName(b, e, p),
                     s -> s == '!')
     );
-    private Function createFunctionByName(String begin, String end){
-        return Elements.keyWords.get(begin).createFunction(begin, end, '\0');
+    private Function createFunctionByName(String begin, String end, List<String> params){
+        return Elements.keyWords.get(begin).createFunction(begin, end, '\0', params);
     }
 }

@@ -2,31 +2,36 @@ package com.propcool.cmpm_project.analysing.build;
 
 import com.propcool.cmpm_project.functions.Function;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-public class NamedFunction implements Map.Entry<String, Function>{
+public class NamedFunction{
+    public NamedFunction(String name, Function function, List<String> params){
+        this.name = name;
+        this.function = function;
+        addAll(params);
+    }
     public NamedFunction(String name, Function function){
         this.name = name;
         this.function = function;
     }
-
-    @Override
-    public String getKey() {
+    public String getName() {
         return name;
     }
-
-    @Override
-    public Function getValue() {
+    public Function getFunction() {
         return function;
     }
-
-    @Override
-    public Function setValue(Function value) {
-        Function f = function;
-        function = value;
-        return f;
+    public boolean contain(String param){
+        return params.contains(param);
+    }
+    public void addAll(List<String> params){
+        this.params.addAll(params);
+    }
+    public List<String> getParams() {
+        return params;
     }
 
     private final String name;
     private Function function;
+    private final List<String> params = new ArrayList<>();
 }
