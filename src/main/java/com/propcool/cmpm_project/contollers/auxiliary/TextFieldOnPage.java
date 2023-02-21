@@ -4,22 +4,28 @@ import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.analysing.build.NamedFunction;
 import com.propcool.cmpm_project.contollers.MainController;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
+/**
+ * Класс текстового поля для функции
+ * */
 public class TextFieldOnPage extends TextField {
     public TextFieldOnPage(String text, MainController controller){
         super(text);
+        this.controller = controller;
         setFont(new Font(25));
+        //setPrefWidth(350);
 
-        setOnKeyReleased(keyEvent -> processing(controller));
+        setOnKeyReleased(keyEvent -> processing(color));
         // Необходимо для обновления функций, зависящих от других функций
         // (кликом, обновляем старую функцию, так как действие не частое, но требовательное для автоматического обновления)
-        setOnMouseClicked(mouseEvent -> processing(controller));
+        setOnMouseClicked(mouseEvent -> processing(color));
     }
     public TextFieldOnPage(MainController controller){
         this("", controller);
     }
-    private void processing(MainController controller){
+    public void processing(Color color){
+        this.color = color;
         String textOfField = getText();
         NamedFunction nf = Elements.builder.building(textOfField);
         if(nf == null || (Elements.functions.containsKey(nf.getName()) && !nf.getName().equals(functionName))
@@ -27,6 +33,8 @@ public class TextFieldOnPage extends TextField {
         )) {
             Elements.functions.remove(functionName);
             Elements.functionsWithParams.remove(functionName);
+            Elements.functionsWithColor.remove(functionName);
+
             controller.remove(functionName);
             functionName = null;
         } else {
@@ -35,6 +43,9 @@ public class TextFieldOnPage extends TextField {
 
             Elements.functionsWithParams.remove(functionName);
             Elements.functionsWithParams.put(nf.getName(), nf.getParams());
+
+            Elements.functionsWithColor.remove(functionName);
+            Elements.functionsWithColor.put(nf.getName(), color);
 
             controller.remove(functionName);
             functionName = nf.getName();
@@ -48,4 +59,6 @@ public class TextFieldOnPage extends TextField {
         controller.removeSliders();
     }
     private String functionName;
+    private final MainController controller;
+    private Color color = Color.GREEN;
 }

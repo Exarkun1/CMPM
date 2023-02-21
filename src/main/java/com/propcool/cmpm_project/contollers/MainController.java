@@ -1,8 +1,9 @@
 package com.propcool.cmpm_project.contollers;
 
 import com.propcool.cmpm_project.Elements;
-import com.propcool.cmpm_project.analysing.build.NamedFunction;
+import com.propcool.cmpm_project.contollers.auxiliary.SliderBox;
 import com.propcool.cmpm_project.contollers.auxiliary.SliderOnPage;
+import com.propcool.cmpm_project.contollers.auxiliary.TextFieldBox;
 import com.propcool.cmpm_project.contollers.auxiliary.TextFieldOnPage;
 import com.propcool.cmpm_project.functions.Function;
 import javafx.animation.TranslateTransition;
@@ -14,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -23,7 +23,9 @@ import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.*;
-
+/**
+ * Контроллер главной страницы
+ * */
 public class MainController implements Initializable {
     @FXML
     private AnchorPane mainPanel;
@@ -35,6 +37,9 @@ public class MainController implements Initializable {
 
     @FXML
     private VBox paneForText;
+    /**
+     * Сдвиг координат
+     * */
     @FXML
     void mouseDragged(MouseEvent event) {
         shiftX -= (mouseX-event.getX());
@@ -48,12 +53,17 @@ public class MainController implements Initializable {
 
         makeNewFrame();
     }
+    /**
+     * Клик по экрану
+     * */
     @FXML
     void mousePressed(MouseEvent event) {
         mouseX = event.getX();
         mouseY = event.getY();
     }
-
+    /**
+     * Масштабирование
+     * */
     @FXML
     void scroll(ScrollEvent event) {
         if(event.getDeltaY() < 0){
@@ -72,14 +82,19 @@ public class MainController implements Initializable {
 
         makeNewFrame();
     }
+    /**
+     * Открытие окна ввода
+     * */
     @FXML
     void openTextFields(MouseEvent event) {
-
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), outgoingPanel);
         translateTransition.setToX(menuIsOpen ? -350 : 350);
         translateTransition.play();
         menuIsOpen = !menuIsOpen;
     }
+    /**
+     * Пересоздание линий всех функций
+     * */
     public void rebuildAllFunctions(){
         Line lineX = new Line(0,centerY, wight, centerY);
         lineX.setStrokeWidth(2);
@@ -99,8 +114,12 @@ public class MainController implements Initializable {
             rebuildFunction(functionName);
         }
     }
+    /**
+     * Пересоздание линий одной функции
+     * */
     public void rebuildFunction(String functionName){
         Function function = Elements.functions.get(functionName);
+        Color color = Elements.functionsWithColor.get(functionName);
 
         Group groupLines = new Group();
         double x0 = 0, y0 = getFunctionValue(function, x0);
@@ -110,7 +129,7 @@ public class MainController implements Initializable {
 
             if (!Double.isNaN(y0) && !Double.isNaN(y1)) {
                 Line line = new Line(x0, y0, x1, y1);
-                line.setStroke(Color.GREEN);
+                line.setStroke(color);
                 line.setStrokeWidth(2);
 
                 if (y0 <= height && y1 <= height && y0 >= 0 && y1 >= 0) {
@@ -137,55 +156,81 @@ public class MainController implements Initializable {
     private double getFunctionValue(Function function, double x){
         return half_height - function.get((x - half_wight - shiftX) * pixelSize) / pixelSize + shiftY;
     }
-
+    /**
+     * Отбражение всех функций
+     * */
     public void redrawAll(){
         paneForGraphs.getChildren().addAll(graphics.values());
     }
+    /**
+     * Отбражение одной функции
+     * */
 
     public void redraw(String functionName){
         paneForGraphs.getChildren().addAll(graphics.get(functionName));
     }
+    /**
+     * Очистка экрана
+     * */
     public void clear(){
         paneForGraphs.getChildren().removeAll(graphics.values());
         graphics.clear();
     }
+    /**
+     * Удаление одной функции с экрана
+     * */
     public void remove(String functionName){
         paneForGraphs.getChildren().removeAll(graphics.get(functionName));
         graphics.remove(functionName);
     }
-
+    /**
+     * Создание полностью нового кадра
+     * */
     public void makeNewFrame(){
         clear();
         rebuildAllFunctions();
         redrawAll();
     }
+    /**
+     * Добавление текстового поля для записи функций
+     * */
 
     public void addTextField(){
-        if(textFields.isEmpty() || !textFields.getLast().getText().equals("")) {
-            TextFieldOnPage textField = new TextFieldOnPage(this);
-            textFields.add(textField);
-            paneForText.getChildren().add(textField);
+        if(textFields.isEmpty() || !textFields.getLast().getTextField().getText().equals("")) {
+            TextFieldBox textFieldBox = new TextFieldBox(this);
+            textFields.add(textFieldBox);
+            paneForText.getChildren().add(textFieldBox);
         }
     }
+    /**
+     * Удаление текстового поля
+     * */
     public void removeTextField(){
         if(textFields.size() >= 2) {
-            TextField tf1 = textFields.get(textFields.size() - 1);
-            TextField tf2 = textFields.get(textFields.size() - 2);
+            TextFieldBox textFieldBox = textFields.get(textFields.size() - 1);
+            TextField tf1 = textFields.get(textFields.size() - 1).getTextField();
+            TextField tf2 = textFields.get(textFields.size() - 2).getTextField();
             if (tf1.getText().equals("") && tf2.getText().equals("")) {
-                textFields.remove(tf1);
-                paneForText.getChildren().remove(tf1);
+                textFields.remove(textFieldBox);
+                paneForText.getChildren().remove(textFieldBox);
             }
         }
     }
+    /**
+     * Добавление ползунка для параметра
+     * */
     public void addSliders(){
         for(var param : Elements.parameters.keySet()){
             if(!sliders.containsKey(param)){
-                Slider slider = new SliderOnPage(this, param);
-                sliders.put(param, slider);
-                paneForText.getChildren().add(slider);
+                SliderBox sliderBox = new SliderBox(param, this);
+                sliders.put(param, sliderBox);
+                paneForText.getChildren().add(sliderBox);
             }
         }
     }
+    /**
+     * Удаление лишних ползунков
+     * */
     public void removeSliders(){
         List<String> deletedParams = new ArrayList<>();
         met:
@@ -196,8 +241,8 @@ public class MainController implements Initializable {
             deletedParams.add(param);
         }
         for(var param : deletedParams) {
-            Slider slider = sliders.remove(param);
-            paneForText.getChildren().remove(slider);
+            SliderBox sliderBox = sliders.remove(param);
+            paneForText.getChildren().remove(sliderBox);
             Elements.parameters.remove(param);
         }
     }
@@ -224,8 +269,8 @@ public class MainController implements Initializable {
     private boolean menuIsOpen = false;
     private final int step = 2;
     private final Map<String, Group> graphics = new HashMap<>();
-    private final LinkedList<TextField> textFields = new LinkedList<>();
-    private final Map<String, Slider> sliders = new LinkedHashMap<>();
+    private final LinkedList<TextFieldBox> textFields = new LinkedList<>();
+    private final Map<String, SliderBox> sliders = new LinkedHashMap<>();
     private double mouseX;
     private double mouseY;
 }

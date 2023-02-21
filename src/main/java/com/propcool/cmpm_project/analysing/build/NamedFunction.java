@@ -4,7 +4,9 @@ import com.propcool.cmpm_project.functions.Function;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Класс с данными о фунции
+ * */
 public class NamedFunction{
     public NamedFunction(String name, Function function, List<String> params){
         this.name = name;

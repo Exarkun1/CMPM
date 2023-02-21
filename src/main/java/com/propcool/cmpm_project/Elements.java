@@ -8,6 +8,7 @@ import com.propcool.cmpm_project.functions.basic.Exp;
 import com.propcool.cmpm_project.functions.basic.Log;
 import com.propcool.cmpm_project.functions.basic.Pow;
 import com.propcool.cmpm_project.functions.mono.*;
+import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ public class Elements {
     public static final Map<String, Function> functions = new HashMap<>();
     public static final Map<String, Constant> parameters = new HashMap<>();
     public static final Map<String, List<String>> functionsWithParams = new HashMap<>();
+    public static final Map<String, Color> functionsWithColor = new HashMap<>();
     public static final FunctionBuilder builder = new FunctionBuilder();
 
     static {
