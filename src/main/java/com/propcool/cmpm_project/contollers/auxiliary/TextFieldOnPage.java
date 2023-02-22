@@ -16,16 +16,16 @@ public class TextFieldOnPage extends TextField {
         setFont(new Font(25));
         //setPrefWidth(350);
 
-        setOnKeyReleased(keyEvent -> processing(color));
+        setOnKeyReleased(keyEvent -> processing(defaultColor));
         // Необходимо для обновления функций, зависящих от других функций
         // (кликом, обновляем старую функцию, так как действие не частое, но требовательное для автоматического обновления)
-        setOnMouseClicked(mouseEvent -> processing(color));
+        setOnMouseClicked(mouseEvent -> processing(defaultColor));
     }
     public TextFieldOnPage(MainController controller){
         this("", controller);
     }
     public void processing(Color color){
-        this.color = color;
+        this.defaultColor = color;
         String textOfField = getText();
         NamedFunction nf = Elements.builder.building(textOfField);
         if(nf == null || (Elements.functions.containsKey(nf.getName()) && !nf.getName().equals(functionName))
@@ -60,5 +60,5 @@ public class TextFieldOnPage extends TextField {
     }
     private String functionName;
     private final MainController controller;
-    private Color color = Color.GREEN;
+    private Color defaultColor = Color.GREEN;
 }

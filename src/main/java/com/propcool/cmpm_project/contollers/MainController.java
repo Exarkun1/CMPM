@@ -96,13 +96,50 @@ public class MainController implements Initializable {
      * Пересоздание линий всех функций
      * */
     public void rebuildAllFunctions(){
+        Group groupXY = new Group();
+        double dist = 1/pixelSize;
+        // Создание линий на расстоянии 1 для эмитации клеточек(требует рефакторинга)
+        for(double y = centerY+dist; y < height; y += dist){
+            if(y > 0){
+                Line lineX = new Line(0,y, wight, y);
+                lineX.setStroke(Color.LIGHTGRAY);
+                lineX.setStrokeWidth(2);
+                groupXY.getChildren().add(lineX);
+            }
+        }
+        for(double y = centerY-dist; y > 0; y -= dist){
+            if(y < height){
+                Line lineX = new Line(0,y, wight, y);
+                lineX.setStroke(Color.LIGHTGRAY);
+                lineX.setStrokeWidth(2);
+                groupXY.getChildren().add(lineX);
+            }
+        }
+        for(double x = centerX+dist; x < wight; x += dist){
+            if(x > 0){
+                Line lineX = new Line(x, 0, x, height);
+                lineX.setStroke(Color.LIGHTGRAY);
+                lineX.setStrokeWidth(2);
+                groupXY.getChildren().add(lineX);
+            }
+        }
+        for(double x = centerX-dist; x > 0; x -= dist){
+            if(x < wight){
+                Line lineX = new Line(x, 0, x, height);
+                lineX.setStroke(Color.LIGHTGRAY);
+                lineX.setStrokeWidth(2);
+                groupXY.getChildren().add(lineX);
+            }
+        }
+
+        // Всё остальное
         Line lineX = new Line(0,centerY, wight, centerY);
         lineX.setStrokeWidth(2);
 
         Line lineY = new Line(centerX, 0, centerX, height);
         lineY.setStrokeWidth(2);
 
-        Group groupXY = new Group();
+        //Group groupXY = new Group();
         if(centerY >= 0 && centerY <= height)
             groupXY.getChildren().add(lineX);
         if(centerX >= 0 && centerX <= wight)

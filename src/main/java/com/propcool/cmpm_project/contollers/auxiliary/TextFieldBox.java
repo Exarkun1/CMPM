@@ -13,7 +13,8 @@ public class TextFieldBox extends HBox {
         setAlignment(Pos.CENTER);
         ColorPicker colorPicker = new ColorPicker();
         colorPicker.setValue(Color.GREEN);
-        colorPicker.setPrefWidth(40);
+        colorPicker.setPrefWidth(50);
+        colorPicker.setPrefHeight(50);
 
         colorPicker.setOnAction(actionEvent -> textField.processing(colorPicker.getValue()));
         getChildren().addAll(textField, colorPicker);
