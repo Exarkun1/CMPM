@@ -7,6 +7,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
+/**
+ * Панель для элементов, связанных с текстовыми полями, и самим полем
+ * */
+
 public class TextFieldBox extends HBox {
     public TextFieldBox(MainController controller){
         this.textField = new TextFieldOnPage(controller);

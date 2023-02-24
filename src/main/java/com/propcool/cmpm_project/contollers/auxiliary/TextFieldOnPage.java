@@ -14,7 +14,6 @@ public class TextFieldOnPage extends TextField {
         super(text);
         this.controller = controller;
         setFont(new Font(25));
-        //setPrefWidth(350);
 
         setOnKeyReleased(keyEvent -> processing(defaultColor));
         // Необходимо для обновления функций, зависящих от других функций
@@ -32,20 +31,14 @@ public class TextFieldOnPage extends TextField {
                 || (Elements.parameters.containsKey(nf.getName())
         )) {
             Elements.functions.remove(functionName);
-            Elements.functionsWithParams.remove(functionName);
-            Elements.functionsWithColor.remove(functionName);
 
             controller.remove(functionName);
             functionName = null;
         } else {
             Elements.functions.remove(functionName);
-            Elements.functions.put(nf.getName(), nf.getFunction());
-
-            Elements.functionsWithParams.remove(functionName);
-            Elements.functionsWithParams.put(nf.getName(), nf.getParams());
-
-            Elements.functionsWithColor.remove(functionName);
-            Elements.functionsWithColor.put(nf.getName(), color);
+            CustomizableFunction cf = new CustomizableFunction(nf.getFunction(), nf.getParams());
+            cf.setColor(color);
+            Elements.functions.put(nf.getName(), cf);
 
             controller.remove(functionName);
             functionName = nf.getName();

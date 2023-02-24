@@ -1,10 +1,7 @@
 package com.propcool.cmpm_project.contollers;
 
 import com.propcool.cmpm_project.Elements;
-import com.propcool.cmpm_project.contollers.auxiliary.SliderBox;
-import com.propcool.cmpm_project.contollers.auxiliary.SliderOnPage;
-import com.propcool.cmpm_project.contollers.auxiliary.TextFieldBox;
-import com.propcool.cmpm_project.contollers.auxiliary.TextFieldOnPage;
+import com.propcool.cmpm_project.contollers.auxiliary.*;
 import com.propcool.cmpm_project.functions.Function;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -98,37 +95,29 @@ public class MainController implements Initializable {
     public void rebuildAllFunctions(){
         Group groupXY = new Group();
         double dist = 1/pixelSize;
-        // Создание линий на расстоянии 1 для эмитации клеточек(требует рефакторинга)
+        // Создание линий на расстоянии 1 для эмитации клеточек
         for(double y = centerY+dist; y < height; y += dist){
             if(y > 0){
-                Line lineX = new Line(0,y, wight, y);
-                lineX.setStroke(Color.LIGHTGRAY);
-                lineX.setStrokeWidth(2);
+                Line lineX = createLine(0, y, wight, y, Color.LIGHTGRAY, 2);
                 groupXY.getChildren().add(lineX);
             }
         }
         for(double y = centerY-dist; y > 0; y -= dist){
             if(y < height){
-                Line lineX = new Line(0,y, wight, y);
-                lineX.setStroke(Color.LIGHTGRAY);
-                lineX.setStrokeWidth(2);
+                Line lineX = createLine(0, y, wight, y, Color.LIGHTGRAY, 2);
                 groupXY.getChildren().add(lineX);
             }
         }
         for(double x = centerX+dist; x < wight; x += dist){
             if(x > 0){
-                Line lineX = new Line(x, 0, x, height);
-                lineX.setStroke(Color.LIGHTGRAY);
-                lineX.setStrokeWidth(2);
-                groupXY.getChildren().add(lineX);
+                Line lineY = createLine(x, 0, x, height, Color.LIGHTGRAY, 2);
+                groupXY.getChildren().add(lineY);
             }
         }
         for(double x = centerX-dist; x > 0; x -= dist){
             if(x < wight){
-                Line lineX = new Line(x, 0, x, height);
-                lineX.setStroke(Color.LIGHTGRAY);
-                lineX.setStrokeWidth(2);
-                groupXY.getChildren().add(lineX);
+                Line lineY = createLine(x, 0, x, height, Color.LIGHTGRAY, 2);
+                groupXY.getChildren().add(lineY);
             }
         }
 
@@ -151,12 +140,22 @@ public class MainController implements Initializable {
             rebuildFunction(functionName);
         }
     }
+
+    private Line createLine(double x0, double y0, double x1, double y1, Color color, int strokeWidth){
+        Line line = new Line(x0, y0, x1, y1);
+        line.setStroke(color);
+        line.setStrokeWidth(strokeWidth);
+        return line;
+    }
     /**
      * Пересоздание линий одной функции
      * */
     public void rebuildFunction(String functionName){
-        Function function = Elements.functions.get(functionName);
-        Color color = Elements.functionsWithColor.get(functionName);
+        CustomizableFunction cf = Elements.functions.get(functionName);
+        if(cf == null) throw new RuntimeException("Такого имени нет");
+
+        Function function = cf.getFunction();
+        Color color = cf.getColor();
 
         Group groupLines = new Group();
         double x0 = 0, y0 = getFunctionValue(function, x0);
@@ -165,9 +164,7 @@ public class MainController implements Initializable {
             double y1 = getFunctionValue(function, x1);
 
             if (!Double.isNaN(y0) && !Double.isNaN(y1)) {
-                Line line = new Line(x0, y0, x1, y1);
-                line.setStroke(color);
-                line.setStrokeWidth(2);
+                Line line = createLine(x0, y0, x1, y1, color, 2);
 
                 if (y0 <= height && y1 <= height && y0 >= 0 && y1 >= 0) {
                     groupLines.getChildren().add(line);
@@ -272,8 +269,8 @@ public class MainController implements Initializable {
         List<String> deletedParams = new ArrayList<>();
         met:
         for(var param : Elements.parameters.keySet()){
-            for(var params : Elements.functionsWithParams.values()){
-                if(params.contains(param)) continue met;
+            for(var cf : Elements.functions.values()){
+                if(cf.getParams().contains(param)) continue met;
             }
             deletedParams.add(param);
         }
@@ -304,7 +301,7 @@ public class MainController implements Initializable {
     private double centerX = half_wight + shiftX;
     private double centerY = half_height + shiftY;
     private boolean menuIsOpen = false;
-    private final int step = 2;
+    private final int step = 1;
     private final Map<String, Group> graphics = new HashMap<>();
     private final LinkedList<TextFieldBox> textFields = new LinkedList<>();
     private final Map<String, SliderBox> sliders = new LinkedHashMap<>();

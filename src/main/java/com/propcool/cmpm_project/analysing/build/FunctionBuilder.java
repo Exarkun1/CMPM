@@ -2,6 +2,7 @@ package com.propcool.cmpm_project.analysing.build;
 
 import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.analysing.Analyser;
+import com.propcool.cmpm_project.contollers.auxiliary.CustomizableFunction;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.*;
@@ -48,9 +49,9 @@ public class FunctionBuilder {
         else if(text.equals("pi")) return new Constant(Math.PI);
         else if(text.matches("\\d+|\\d+\\.\\d+")) return new Constant(Double.parseDouble(text));
         else if(text.matches("[a-z]+\\d?+")){
-            Function f = Elements.functions.get(text);
+            CustomizableFunction f = Elements.functions.get(text);
             if(f != null){
-                return f;
+                return f.getFunction();
             }
             Constant c = Elements.parameters.get(text);
             if(c == null) {

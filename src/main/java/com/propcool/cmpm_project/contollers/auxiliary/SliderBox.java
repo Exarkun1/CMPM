@@ -4,10 +4,11 @@ import com.propcool.cmpm_project.contollers.MainController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
+/**
+ * Панель для кнопок элементов, связанных со слайдерами, и самих слайдеров
+ * */
 public class SliderBox extends HBox {
     public SliderBox(String paramName, MainController controller){
         this.paramName = paramName;

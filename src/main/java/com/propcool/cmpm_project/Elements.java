@@ -2,13 +2,12 @@ package com.propcool.cmpm_project;
 
 import com.propcool.cmpm_project.analysing.build.FunctionBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionFactory;
-import com.propcool.cmpm_project.functions.Function;
+import com.propcool.cmpm_project.contollers.auxiliary.CustomizableFunction;
 import com.propcool.cmpm_project.functions.basic.Constant;
 import com.propcool.cmpm_project.functions.basic.Exp;
 import com.propcool.cmpm_project.functions.basic.Log;
 import com.propcool.cmpm_project.functions.basic.Pow;
 import com.propcool.cmpm_project.functions.mono.*;
-import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +17,8 @@ public class Elements {
     public static final Map<String, FunctionFactory> keyWords = new HashMap<>();
     public static final List<String> constants = List.of("pi", "e");
 
-    public static final Map<String, Function> functions = new HashMap<>();
+    public static final Map<String, CustomizableFunction> functions = new HashMap<>();
     public static final Map<String, Constant> parameters = new HashMap<>();
-    public static final Map<String, List<String>> functionsWithParams = new HashMap<>();
-    public static final Map<String, Color> functionsWithColor = new HashMap<>();
     public static final FunctionBuilder builder = new FunctionBuilder();
 
     static {
