@@ -1,9 +1,8 @@
-package com.propcool.cmpm_project.contollers.auxiliary;
+package com.propcool.cmpm_project.controllers.auxiliary;
 
 import com.propcool.cmpm_project.functions.Function;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CustomizableFunction {

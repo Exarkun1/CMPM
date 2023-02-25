@@ -2,7 +2,7 @@ package com.propcool.cmpm_project.analysing.build;
 
 import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.analysing.Analyser;
-import com.propcool.cmpm_project.contollers.auxiliary.CustomizableFunction;
+import com.propcool.cmpm_project.controllers.auxiliary.CustomizableFunction;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.*;

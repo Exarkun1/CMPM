@@ -1,7 +1,7 @@
-package com.propcool.cmpm_project.contollers.auxiliary;
+package com.propcool.cmpm_project.controllers.auxiliary;
 
 import com.propcool.cmpm_project.Elements;
-import com.propcool.cmpm_project.contollers.MainController;
+import com.propcool.cmpm_project.controllers.MainController;
 import com.propcool.cmpm_project.functions.basic.Constant;
 import javafx.scene.control.Slider;
 /**

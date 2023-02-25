@@ -7,6 +7,6 @@ module com.propcool.cmpm_project {
 
     opens com.propcool.cmpm_project to javafx.fxml;
     exports com.propcool.cmpm_project;
-    exports com.propcool.cmpm_project.contollers;
-    opens com.propcool.cmpm_project.contollers to javafx.fxml;
+    exports com.propcool.cmpm_project.controllers;
+    opens com.propcool.cmpm_project.controllers to javafx.fxml;
 }

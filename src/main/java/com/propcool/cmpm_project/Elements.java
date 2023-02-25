@@ -2,7 +2,7 @@ package com.propcool.cmpm_project;
 
 import com.propcool.cmpm_project.analysing.build.FunctionBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionFactory;
-import com.propcool.cmpm_project.contollers.auxiliary.CustomizableFunction;
+import com.propcool.cmpm_project.controllers.auxiliary.CustomizableFunction;
 import com.propcool.cmpm_project.functions.basic.Constant;
 import com.propcool.cmpm_project.functions.basic.Exp;
 import com.propcool.cmpm_project.functions.basic.Log;

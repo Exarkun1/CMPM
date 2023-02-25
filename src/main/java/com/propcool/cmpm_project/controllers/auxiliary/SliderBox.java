@@ -1,6 +1,6 @@
-package com.propcool.cmpm_project.contollers.auxiliary;
+package com.propcool.cmpm_project.controllers.auxiliary;
 
-import com.propcool.cmpm_project.contollers.MainController;
+import com.propcool.cmpm_project.controllers.MainController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;

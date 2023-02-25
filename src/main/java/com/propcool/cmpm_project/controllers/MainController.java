@@ -1,13 +1,12 @@
-package com.propcool.cmpm_project.contollers;
+package com.propcool.cmpm_project.controllers;
 
 import com.propcool.cmpm_project.Elements;
-import com.propcool.cmpm_project.contollers.auxiliary.*;
+import com.propcool.cmpm_project.controllers.auxiliary.*;
 import com.propcool.cmpm_project.functions.Function;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -39,11 +38,11 @@ public class MainController implements Initializable {
      * */
     @FXML
     void mouseDragged(MouseEvent event) {
-        shiftX -= (mouseX-event.getX());
-        shiftY -= (mouseY-event.getY());
+        double dx = event.getX()-mouseX;
+        double dy = event.getY()-mouseY;
 
-        centerX = half_wight + shiftX;
-        centerY = half_height + shiftY;
+        centerX += dx;
+        centerY += dy;
 
         mouseX = event.getX();
         mouseY = event.getY();
@@ -63,19 +62,19 @@ public class MainController implements Initializable {
      * */
     @FXML
     void scroll(ScrollEvent event) {
+        double dx = event.getX()-centerX;
+        double dy = event.getY()-centerY;
+
         if(event.getDeltaY() < 0){
-            pixelSize *= 1.1;
-            shiftX -= (centerX-event.getX())/4;
-            shiftY -= (centerY-event.getY())/4;
+            pixelSize *= scrollCoef;
+            centerX += dx*(scrollCoef-1)/scrollCoef;
+            centerY += dy*(scrollCoef-1)/scrollCoef;
         }
         else if(pixelSize > 0){
-            pixelSize /= 1.1;
-            shiftX += (centerX-event.getX())/4;
-            shiftY += (centerY-event.getY())/4;
+            pixelSize /= scrollCoef;
+            centerX -= dx*(scrollCoef-1);
+            centerY -= dy*(scrollCoef-1);
         }
-
-        centerX = half_wight + shiftX;
-        centerY = half_height + shiftY;
 
         makeNewFrame();
     }
@@ -188,7 +187,7 @@ public class MainController implements Initializable {
         graphics.put(functionName, groupLines);
     }
     private double getFunctionValue(Function function, double x){
-        return half_height - function.get((x - half_wight - shiftX) * pixelSize) / pixelSize + shiftY;
+        return centerY - function.get((x - centerX) * pixelSize) / pixelSize;
     }
     /**
      * Отбражение всех функций
@@ -294,13 +293,12 @@ public class MainController implements Initializable {
         makeNewFrame();
     }
     private double pixelSize = 0.01;
-    private double shiftX = 0;
-    private double shiftY = 0;
     private final int height = 1056-91, half_height = height/2;
     private final int wight = 1936, half_wight = wight/2;
-    private double centerX = half_wight + shiftX;
-    private double centerY = half_height + shiftY;
+    private double centerX = half_wight;
+    private double centerY = half_height;
     private boolean menuIsOpen = false;
+    private final double scrollCoef = 1.1;
     private final int step = 1;
     private final Map<String, Group> graphics = new HashMap<>();
     private final LinkedList<TextFieldBox> textFields = new LinkedList<>();
