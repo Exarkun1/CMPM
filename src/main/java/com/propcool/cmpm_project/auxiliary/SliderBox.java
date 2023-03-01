@@ -1,4 +1,4 @@
-package com.propcool.cmpm_project.controllers.auxiliary;
+package com.propcool.cmpm_project.auxiliary;
 
 import com.propcool.cmpm_project.controllers.MainController;
 import javafx.geometry.Pos;
@@ -11,19 +11,14 @@ import javafx.scene.text.Text;
  * */
 public class SliderBox extends HBox {
     public SliderBox(String paramName, MainController controller){
-        this.paramName = paramName;
         this.slider = new SliderOnPage(paramName, controller);
         setAlignment(Pos.CENTER);
         Text name = new Text(paramName + ": ");
         name.setFont(Font.font (30));
         getChildren().addAll(name, slider);
     }
-    public String getParamName() {
-        return paramName;
-    }
     public Slider getSlider() {
         return slider;
     }
-    private final String paramName;
     private final Slider slider;
 }

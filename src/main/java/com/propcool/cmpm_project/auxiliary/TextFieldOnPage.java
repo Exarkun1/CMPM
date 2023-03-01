@@ -1,4 +1,4 @@
-package com.propcool.cmpm_project.controllers.auxiliary;
+package com.propcool.cmpm_project.auxiliary;
 
 import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.analysing.build.NamedFunction;
@@ -14,44 +14,63 @@ public class TextFieldOnPage extends TextField {
         super(text);
         this.controller = controller;
         setFont(new Font(25));
+        setPrefWidth(285);
 
-        setOnKeyReleased(keyEvent -> processing(defaultColor));
+        functionData = new FunctionData();
+        functionData.setExpression(getText());
+        functionData.setColor(defaultColor);
+        functionData.setWidth(defaultWidth);
+
+        setOnKeyReleased(keyEvent -> processing());
         // Необходимо для обновления функций, зависящих от других функций
         // (кликом, обновляем старую функцию, так как действие не частое, но требовательное для автоматического обновления)
-        setOnMouseClicked(mouseEvent -> processing(defaultColor));
+        setOnMouseClicked(mouseEvent -> processing());
     }
     public TextFieldOnPage(MainController controller){
         this("", controller);
     }
-    public void processing(Color color){
-        this.defaultColor = color;
-        String textOfField = getText();
-        NamedFunction nf = Elements.builder.building(textOfField);
+    public void processing(){
+        NamedFunction nf = Elements.builder.building(getText());
+
+        Elements.functions.remove(functionName);
+        controller.remove(functionName);
         if(nf == null || (Elements.functions.containsKey(nf.getName()) && !nf.getName().equals(functionName))
                 || (Elements.parameters.containsKey(nf.getName())
         )) {
-            Elements.functions.remove(functionName);
-
-            controller.remove(functionName);
             functionName = null;
+            functionData = new FunctionData();
         } else {
-            Elements.functions.remove(functionName);
             CustomizableFunction cf = new CustomizableFunction(nf.getFunction(), nf.getParams());
-            cf.setColor(color);
+            functionData = cf.getData();
             Elements.functions.put(nf.getName(), cf);
-
-            controller.remove(functionName);
             functionName = nf.getName();
-
-            controller.rebuildFunction(functionName);
-            controller.redraw(functionName);
+            functionData = cf.getData();
         }
-        controller.removeTextField();
-        controller.addTextField();
+        functionData.setExpression(getText());
+        functionData.setColor(defaultColor);
+        functionData.setWidth(defaultWidth);
+
+        controller.rebuildFunction(functionName);
+        controller.redraw(functionName);
+
         controller.addSliders();
         controller.removeSliders();
     }
+    public void setDefaultColor(Color color){
+        this.defaultColor = color;
+    }
+    public void setDefaultWidth(int defaultWidth) {
+        this.defaultWidth = defaultWidth;
+    }
+    public FunctionData getFunctionData() {
+        return functionData;
+    }
+    public String getFunctionName() {
+        return functionName;
+    }
     private String functionName;
     private final MainController controller;
+    private FunctionData functionData;
     private Color defaultColor = Color.GREEN;
+    private int defaultWidth = 2;
 }

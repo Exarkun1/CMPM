@@ -1,12 +1,15 @@
 package com.propcool.cmpm_project.controllers;
 
 import com.propcool.cmpm_project.Elements;
-import com.propcool.cmpm_project.controllers.auxiliary.*;
+import com.propcool.cmpm_project.auxiliary.*;
 import com.propcool.cmpm_project.functions.Function;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -27,12 +30,21 @@ public class MainController implements Initializable {
     private AnchorPane mainPanel;
     @FXML
     private BorderPane outgoingPanel;
+    @FXML
+    private BorderPane outgoingPanelSettings;
+    @FXML
+    private Accordion accordionSettings;
 
     @FXML
     private AnchorPane paneForGraphs;
 
     @FXML
     private VBox paneForText;
+    @FXML
+    private Button creatFieldButton;
+
+    @FXML
+    private TextField nameNotebookField;
     /**
      * Сдвиг координат
      * */
@@ -84,9 +96,47 @@ public class MainController implements Initializable {
     @FXML
     void openTextFields(MouseEvent event) {
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), outgoingPanel);
-        translateTransition.setToX(menuIsOpen ? -350 : 350);
+        translateTransition.setToX(menuIsOpen ? -400 : 400);
         translateTransition.play();
         menuIsOpen = !menuIsOpen;
+    }
+    @FXML
+    void openSettings(MouseEvent event) {
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), outgoingPanelSettings);
+        translateTransition.setToX(settingsIsOpen ? -400 : 400);
+        translateTransition.play();
+        settingsIsOpen = !settingsIsOpen;
+    }
+    /**
+     * Добавление текстового поля для записи функций
+     * */
+    @FXML
+    public void addTextField(ActionEvent event){
+        // делаем ползунки и кнопку добавления полей для параметров ниже текстовых полей
+        paneForText.getChildren().removeAll(sliders.values());
+        paneForText.getChildren().remove(creatFieldButton);
+
+        TextFieldBox textFieldBox = new TextFieldBox(this);
+        textFields.add(textFieldBox);
+        paneForText.getChildren().add(textFieldBox);
+
+        paneForText.getChildren().add(creatFieldButton);
+        paneForText.getChildren().addAll(sliders.values());
+    }
+    @FXML
+    void recordNotebook(ActionEvent event) {
+        List<FunctionData> functionDataList = new ArrayList<>();
+        for(var textFieldBox : textFields){
+            functionDataList.add(textFieldBox.getTextField().getFunctionData());
+        }
+        List<ParameterData> parameterDataList = new ArrayList<>();
+        for(var param : Elements.parameters.values()){
+            parameterDataList.add(param.getData());
+        }
+        Notebook notebook = new Notebook();
+        notebook.setFunctionDataList(functionDataList);
+        notebook.setParameterDataList(parameterDataList);
+        Elements.notebooks.put(nameNotebookField.getText(), notebook);
     }
     /**
      * Пересоздание линий всех функций
@@ -127,7 +177,6 @@ public class MainController implements Initializable {
         Line lineY = new Line(centerX, 0, centerX, height);
         lineY.setStrokeWidth(2);
 
-        //Group groupXY = new Group();
         if(centerY >= 0 && centerY <= height)
             groupXY.getChildren().add(lineX);
         if(centerX >= 0 && centerX <= wight)
@@ -151,10 +200,11 @@ public class MainController implements Initializable {
      * */
     public void rebuildFunction(String functionName){
         CustomizableFunction cf = Elements.functions.get(functionName);
-        if(cf == null) throw new RuntimeException("Такого имени нет");
+        if(cf == null) return;
 
         Function function = cf.getFunction();
         Color color = cf.getColor();
+        int strokeWidth = cf.getWidth();
 
         Group groupLines = new Group();
         double x0 = 0, y0 = getFunctionValue(function, x0);
@@ -163,7 +213,7 @@ public class MainController implements Initializable {
             double y1 = getFunctionValue(function, x1);
 
             if (!Double.isNaN(y0) && !Double.isNaN(y1)) {
-                Line line = createLine(x0, y0, x1, y1, color, 2);
+                Line line = createLine(x0, y0, x1, y1, color, strokeWidth);
 
                 if (y0 <= height && y1 <= height && y0 >= 0 && y1 >= 0) {
                     groupLines.getChildren().add(line);
@@ -200,7 +250,9 @@ public class MainController implements Initializable {
      * */
 
     public void redraw(String functionName){
-        paneForGraphs.getChildren().addAll(graphics.get(functionName));
+        Group group = graphics.get(functionName);
+        if(group == null) return;
+        paneForGraphs.getChildren().addAll(group);
     }
     /**
      * Очистка экрана
@@ -213,7 +265,9 @@ public class MainController implements Initializable {
      * Удаление одной функции с экрана
      * */
     public void remove(String functionName){
-        paneForGraphs.getChildren().removeAll(graphics.get(functionName));
+        Group group = graphics.get(functionName);
+        if(group == null) return;
+        paneForGraphs.getChildren().removeAll(group);
         graphics.remove(functionName);
     }
     /**
@@ -225,29 +279,17 @@ public class MainController implements Initializable {
         redrawAll();
     }
     /**
-     * Добавление текстового поля для записи функций
-     * */
-
-    public void addTextField(){
-        if(textFields.isEmpty() || !textFields.getLast().getTextField().getText().equals("")) {
-            TextFieldBox textFieldBox = new TextFieldBox(this);
-            textFields.add(textFieldBox);
-            paneForText.getChildren().add(textFieldBox);
-        }
-    }
-    /**
      * Удаление текстового поля
      * */
-    public void removeTextField(){
-        if(textFields.size() >= 2) {
-            TextFieldBox textFieldBox = textFields.get(textFields.size() - 1);
-            TextField tf1 = textFields.get(textFields.size() - 1).getTextField();
-            TextField tf2 = textFields.get(textFields.size() - 2).getTextField();
-            if (tf1.getText().equals("") && tf2.getText().equals("")) {
-                textFields.remove(textFieldBox);
-                paneForText.getChildren().remove(textFieldBox);
-            }
-        }
+    public void removeTextField(TextFieldBox box){
+        paneForText.getChildren().remove(box);
+        textFields.remove(box);
+
+        String functionName = box.getTextField().getFunctionName();
+        remove(functionName);
+        Elements.functions.remove(functionName);
+
+        removeSliders();
     }
     /**
      * Добавление ползунка для параметра
@@ -281,15 +323,23 @@ public class MainController implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        addTextField();
-
         outgoingPanel.setPrefHeight(height);
-        outgoingPanel.setPrefWidth(350);
-        outgoingPanel.setLayoutX(-350);
+        outgoingPanel.setPrefWidth(400);
+        outgoingPanel.setLayoutX(-400);
+
+        outgoingPanelSettings.setPrefHeight(height);
+        outgoingPanelSettings.setPrefWidth(400);
+        outgoingPanelSettings.setLayoutX(-400);
+
+        accordionSettings.setPrefHeight(height);
+        accordionSettings.setPrefWidth(400);
 
         paneForGraphs.setPrefHeight(height);
         paneForGraphs.setPrefWidth(wight);
 
+        creatFieldButton.setPrefWidth(400);
+
+        addTextField(new ActionEvent(this, creatFieldButton));
         makeNewFrame();
     }
     private double pixelSize = 0.01;
@@ -298,7 +348,8 @@ public class MainController implements Initializable {
     private double centerX = half_wight;
     private double centerY = half_height;
     private boolean menuIsOpen = false;
-    private final double scrollCoef = 1.1;
+    private boolean settingsIsOpen = false;
+    private final double scrollCoef = 1.075;
     private final int step = 1;
     private final Map<String, Group> graphics = new HashMap<>();
     private final LinkedList<TextFieldBox> textFields = new LinkedList<>();

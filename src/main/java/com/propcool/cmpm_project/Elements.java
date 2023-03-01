@@ -2,7 +2,9 @@ package com.propcool.cmpm_project;
 
 import com.propcool.cmpm_project.analysing.build.FunctionBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionFactory;
-import com.propcool.cmpm_project.controllers.auxiliary.CustomizableFunction;
+import com.propcool.cmpm_project.auxiliary.CustomizableFunction;
+import com.propcool.cmpm_project.auxiliary.CustomizableParameter;
+import com.propcool.cmpm_project.auxiliary.Notebook;
 import com.propcool.cmpm_project.functions.basic.Constant;
 import com.propcool.cmpm_project.functions.basic.Exp;
 import com.propcool.cmpm_project.functions.basic.Log;
@@ -16,9 +18,10 @@ import java.util.Map;
 public class Elements {
     public static final Map<String, FunctionFactory> keyWords = new HashMap<>();
     public static final List<String> constants = List.of("pi", "e");
+    public static final Map<String, Notebook> notebooks = new HashMap<>();
 
-    public static final Map<String, CustomizableFunction> functions = new HashMap<>();
-    public static final Map<String, Constant> parameters = new HashMap<>();
+    public static final  Map<String, CustomizableFunction> functions = new HashMap<>();
+    public static final  Map<String, CustomizableParameter> parameters = new HashMap<>();
     public static final FunctionBuilder builder = new FunctionBuilder();
 
     static {
@@ -35,6 +38,10 @@ public class Elements {
         keyWords.put("arcsin", (b, e, s, p) -> new ASin(builder.buildingNotNamed(e, p)));
         keyWords.put("arcsos", (b, e, s, p) -> new ACos(builder.buildingNotNamed(e, p)));
         keyWords.put("arctan", (b, e, s, p) -> new ATan(builder.buildingNotNamed(e, p)));
+    }
+
+    public static void goToOtherNotebook(String name){
+        Notebook nb = notebooks.get(name);
     }
     private Elements(){}
 }

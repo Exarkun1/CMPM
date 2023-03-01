@@ -1,4 +1,4 @@
-package com.propcool.cmpm_project.controllers.auxiliary;
+package com.propcool.cmpm_project.auxiliary;
 
 import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.controllers.MainController;
@@ -11,13 +11,14 @@ public class SliderOnPage extends Slider {
     public SliderOnPage(double min, double max, double value, String parameterName, MainController controller){
         super(min, max, value);
         setPrefHeight(50);
-        setPrefWidth(250);
+        setPrefWidth(300);
         setMajorTickUnit(2);
         setShowTickLabels(true);
         setShowTickMarks(true);
         setOnMouseDragged(mouseEvent -> {
-            Constant param = Elements.parameters.get(parameterName);
-            param.set(getValue());
+            CustomizableParameter cp = Elements.parameters.get(parameterName);
+            cp.setValue(getValue());
+            cp.getParam().set(getValue());
             controller.makeNewFrame();
         });
     }

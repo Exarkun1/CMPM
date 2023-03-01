@@ -2,7 +2,8 @@ package com.propcool.cmpm_project.analysing.build;
 
 import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.analysing.Analyser;
-import com.propcool.cmpm_project.controllers.auxiliary.CustomizableFunction;
+import com.propcool.cmpm_project.auxiliary.CustomizableFunction;
+import com.propcool.cmpm_project.auxiliary.CustomizableParameter;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.*;
@@ -49,17 +50,21 @@ public class FunctionBuilder {
         else if(text.equals("pi")) return new Constant(Math.PI);
         else if(text.matches("\\d+|\\d+\\.\\d+")) return new Constant(Double.parseDouble(text));
         else if(text.matches("[a-z]+\\d?+")){
-            CustomizableFunction f = Elements.functions.get(text);
-            if(f != null){
-                return f.getFunction();
+            CustomizableFunction cf = Elements.functions.get(text);
+            if(cf != null){
+                return cf.getFunction();
             }
-            Constant c = Elements.parameters.get(text);
-            if(c == null) {
-                c = new Constant(1);
-                Elements.parameters.put(text, c);
+            CustomizableParameter cp = Elements.parameters.get(text);
+            if(cp == null) {
+                Constant c = new Constant(1);
+                cp = new CustomizableParameter(c);
+                cp.setArea(10);
+                cp.setValue(1);
+                cp.setName(text);
+                Elements.parameters.put(text, cp);
             }
             params.add(text);
-            return c;
+            return cp.getParam();
         }
 
         // Тело рекурсии, последовательный поиск символов операций по возрастанию их "силы"
