@@ -10,6 +10,7 @@ import javafx.scene.control.Slider;
 public class SliderOnPage extends Slider {
     public SliderOnPage(double min, double max, double value, String parameterName, MainController controller){
         super(min, max, value);
+        this.parameterName = parameterName;
         setPrefHeight(50);
         setPrefWidth(300);
         setMajorTickUnit(2);
@@ -25,4 +26,11 @@ public class SliderOnPage extends Slider {
     public SliderOnPage(String parameterName, MainController controller){
         this(-10, 10, 1, parameterName, controller);
     }
+    public void setParam(double v){
+        setValue(v);
+        CustomizableParameter cp = Elements.parameters.get(parameterName);
+        cp.setValue(getValue());
+        cp.getParam().set(getValue());
+    }
+    private final String parameterName;
 }

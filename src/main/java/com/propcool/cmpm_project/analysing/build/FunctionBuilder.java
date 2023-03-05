@@ -49,11 +49,12 @@ public class FunctionBuilder {
         else if(text.equals("e")) return new Constant(Math.E);
         else if(text.equals("pi")) return new Constant(Math.PI);
         else if(text.matches("\\d+|\\d+\\.\\d+")) return new Constant(Double.parseDouble(text));
-        else if(text.matches("[a-z]+\\d?+")){
-            CustomizableFunction cf = Elements.functions.get(text);
-            if(cf != null){
-                return cf.getFunction();
-            }
+        else if(text.matches("[a-z]+\\d+|[a-z]+")){
+            //Временно удалена возможность добавления кастомных функций в другую функцию(на доработку)
+            //CustomizableFunction cf = Elements.functions.get(text);
+            //if(cf != null){
+                //return cf.getFunction();
+            //}
             CustomizableParameter cp = Elements.parameters.get(text);
             if(cp == null) {
                 Constant c = new Constant(1);

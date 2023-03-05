@@ -3,6 +3,7 @@ package com.propcool.cmpm_project.controllers;
 import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.auxiliary.*;
 import com.propcool.cmpm_project.functions.Function;
+import com.propcool.cmpm_project.notebooks.Notebook;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,8 +19,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 /**
@@ -45,6 +49,8 @@ public class MainController implements Initializable {
 
     @FXML
     private TextField nameNotebookField;
+    @FXML
+    private VBox paneForNotebooks;
     /**
      * Сдвиг координат
      * */
@@ -113,30 +119,44 @@ public class MainController implements Initializable {
     @FXML
     public void addTextField(ActionEvent event){
         // делаем ползунки и кнопку добавления полей для параметров ниже текстовых полей
-        paneForText.getChildren().removeAll(sliders.values());
-        paneForText.getChildren().remove(creatFieldButton);
-
-        TextFieldBox textFieldBox = new TextFieldBox(this);
-        textFields.add(textFieldBox);
-        paneForText.getChildren().add(textFieldBox);
-
-        paneForText.getChildren().add(creatFieldButton);
-        paneForText.getChildren().addAll(sliders.values());
+        newTextField(new TextFieldBox(this));
     }
+
     @FXML
     void recordNotebook(ActionEvent event) {
-        List<FunctionData> functionDataList = new ArrayList<>();
-        for(var textFieldBox : textFields){
-            functionDataList.add(textFieldBox.getTextField().getFunctionData());
+        Notebook notebook = Elements.notebookBuilder.build(textFields);
+
+        String notebookName = nameNotebookField.getText();
+
+        Notebook prevNotebook = Elements.notebooks.get(notebookName);
+        Elements.notebooks.put(notebookName, notebook);
+
+        if(prevNotebook == null) paneForNotebooks.getChildren().add(new NotebookBox(notebookName, this));
+    }
+    @FXML
+    void saveNotebook(ActionEvent event) {
+        File file = fileChooser.showSaveDialog(mainPanel.getScene().getWindow());
+        Notebook notebook = Elements.notebookBuilder.build(textFields);
+        try {
+            if(file != null) Elements.notebookSaver.save(notebook, file);
+        } catch (IOException e) {
+            throw new RuntimeException("Не удалось сохранить тетрадь в файл", e);
         }
-        List<ParameterData> parameterDataList = new ArrayList<>();
-        for(var param : Elements.parameters.values()){
-            parameterDataList.add(param.getData());
+    }
+    @FXML
+    void loadNotebook(ActionEvent event) {
+        File file = fileChooser.showOpenDialog(mainPanel.getScene().getWindow());
+        try {
+            if(file != null) {
+                Notebook notebook = Elements.notebookLoader.load(file);
+                openNotebook(notebook);
+                makeNewFrame();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Не удалось открыть файл", e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Не удалось получить тетрадь из файла", e);
         }
-        Notebook notebook = new Notebook();
-        notebook.setFunctionDataList(functionDataList);
-        notebook.setParameterDataList(parameterDataList);
-        Elements.notebooks.put(nameNotebookField.getText(), notebook);
     }
     /**
      * Пересоздание линий всех функций
@@ -206,28 +226,28 @@ public class MainController implements Initializable {
         Color color = cf.getColor();
         int strokeWidth = cf.getWidth();
 
-        Group groupLines = new Group();
-        double x0 = 0, y0 = getFunctionValue(function, x0);
+        Group groupLines = new GroupLines();
+        double x0 = 1, y0 = getFunctionValue(function, x0);
 
-        for (double x1 = x0; x1 < wight; x1 += step) {
+        for (double x1 = x0; x1 < wight-4; x1 += step) {
             double y1 = getFunctionValue(function, x1);
 
             if (!Double.isNaN(y0) && !Double.isNaN(y1)) {
                 Line line = createLine(x0, y0, x1, y1, color, strokeWidth);
 
-                if (y0 <= height && y1 <= height && y0 >= 0 && y1 >= 0) {
+                if (y0 <= height-2 && y1 <= height-2 && y0 >= 2 && y1 >= 2) {
                     groupLines.getChildren().add(line);
-                } else if (y0 > height && y1 <= height && y1 >= 0) {
-                    line.setStartY(height);
+                } else if (y0 > height-2 && y1 <= height-2 && y1 >= 2) {
+                    line.setStartY(height-2);
                     groupLines.getChildren().add(line);
-                } else if (y0 <= height && y1 > height && y0 >= 0) {
-                    line.setEndY(height);
+                } else if (y0 <= height-2 && y1 > height-2 && y0 >= 2) {
+                    line.setEndY(height-2);
                     groupLines.getChildren().add(line);
-                } else if (y0 < 0 && y1 <= height && y1 >= 0) {
-                    line.setStartY(0);
+                } else if (y0 < 2 && y1 <= height-2 && y1 >= 2) {
+                    line.setStartY(2);
                     groupLines.getChildren().add(line);
-                } else if (y0 <= height && y1 < 0 && y0 >= 0) {
-                    line.setEndY(0);
+                } else if (y0 <= height-2 && y1 < 2 && y0 >= 2) {
+                    line.setEndY(2);
                     groupLines.getChildren().add(line);
                 }
             }
@@ -258,7 +278,7 @@ public class MainController implements Initializable {
      * Очистка экрана
      * */
     public void clear(){
-        paneForGraphs.getChildren().removeAll(graphics.values());
+        paneForGraphs.getChildren().clear();
         graphics.clear();
     }
     /**
@@ -277,6 +297,16 @@ public class MainController implements Initializable {
         clear();
         rebuildAllFunctions();
         redrawAll();
+    }
+    public void newTextField(TextFieldBox textFieldBox){
+        paneForText.getChildren().removeAll(sliders.values());
+        paneForText.getChildren().remove(creatFieldButton);
+
+        textFields.add(textFieldBox);
+        paneForText.getChildren().add(textFieldBox);
+
+        paneForText.getChildren().add(creatFieldButton);
+        paneForText.getChildren().addAll(sliders.values());
     }
     /**
      * Удаление текстового поля
@@ -321,6 +351,37 @@ public class MainController implements Initializable {
             Elements.parameters.remove(param);
         }
     }
+    public void clearTextPane(){
+        paneForText.getChildren().removeAll(textFields);
+        paneForText.getChildren().removeAll(sliders.values());
+        Elements.functions.clear();
+        Elements.parameters.clear();
+        textFields.clear();
+        sliders.clear();
+    }
+    public void addAllTextFields(Notebook notebook){
+        for(var data : notebook.getFunctionDataSet()){
+            TextFieldBox box = new TextFieldBox(this);
+            box.getTextField().setText(data.getExpression());
+            box.getColorPicker().setValue(Color.valueOf(data.getColor()));
+            box.getTextField().setDefaultColor(Color.valueOf(data.getColor()));
+            box.getTextField().processing();
+            textFields.add(box);
+            newTextField(box);
+        }
+    }
+    public void setSliders(Notebook notebook){
+        for(var data : notebook.getParameterDataSet()){
+            SliderBox box = sliders.get(data.getName());
+            if(box != null) box.getSlider().setParam(data.getValue());
+            //sliders.get(data.getName()).getSlider().setArea(data.getArea());
+        }
+    }
+    public void openNotebook(Notebook notebook){
+        clearTextPane();
+        addAllTextFields(notebook);
+        setSliders(notebook);
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         outgoingPanel.setPrefHeight(height);
@@ -339,7 +400,7 @@ public class MainController implements Initializable {
 
         creatFieldButton.setPrefWidth(400);
 
-        addTextField(new ActionEvent(this, creatFieldButton));
+        newTextField(new TextFieldBox(this));
         makeNewFrame();
     }
     private double pixelSize = 0.01;
@@ -347,13 +408,14 @@ public class MainController implements Initializable {
     private final int wight = 1936, half_wight = wight/2;
     private double centerX = half_wight;
     private double centerY = half_height;
+    private double mouseX;
+    private double mouseY;
     private boolean menuIsOpen = false;
     private boolean settingsIsOpen = false;
     private final double scrollCoef = 1.075;
     private final int step = 1;
     private final Map<String, Group> graphics = new HashMap<>();
-    private final LinkedList<TextFieldBox> textFields = new LinkedList<>();
+    private final LinkedHashSet<TextFieldBox> textFields = new LinkedHashSet<>();
     private final Map<String, SliderBox> sliders = new LinkedHashMap<>();
-    private double mouseX;
-    private double mouseY;
+    private final FileChooser fileChooser = new FileChooser();
 }

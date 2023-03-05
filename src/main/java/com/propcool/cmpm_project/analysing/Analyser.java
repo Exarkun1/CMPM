@@ -29,7 +29,7 @@ public class Analyser {
 
             String functionBase = text.replaceAll(".+=", ""); // Тело функции
 
-            Pattern pattern = Pattern.compile("[a-z]+\\(|\\d[a-z]+|\\)x");
+            Pattern pattern = Pattern.compile("[a-z]+\\(|\\d[a-z]|\\)x|\\d\\(");
             Matcher matcher = pattern.matcher(functionBase);
             int count = 1;
             while (matcher.find()) {
@@ -45,11 +45,9 @@ public class Analyser {
             text = text.replaceAll("=.+", "=" + functionBase);
 
             String functionName = text.replaceAll("\\(.+|=.+", ""); // имя функции
-            pattern = Pattern.compile("[a-z]+\\d?+");
+            pattern = Pattern.compile(functionName);
             matcher = pattern.matcher(functionBase);
-            while (matcher.find()) {
-                if(matcher.group().equals(functionName)) return null; // 6
-            }
+            if(matcher.find()) return null;
 
             return text;
         }

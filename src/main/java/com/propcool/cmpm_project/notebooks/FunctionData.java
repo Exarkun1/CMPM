@@ -1,8 +1,10 @@
-package com.propcool.cmpm_project.auxiliary;
+package com.propcool.cmpm_project.notebooks;
 
 import javafx.scene.paint.Color;
 
-public class FunctionData {
+import java.io.Serializable;
+
+public class FunctionData implements Serializable {
     public String getExpression() {
         return expression;
     }
@@ -11,11 +13,11 @@ public class FunctionData {
         this.expression = expression;
     }
 
-    public Color getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(String color) {
         this.color = color;
     }
 
@@ -28,6 +30,6 @@ public class FunctionData {
     }
 
     private String expression;
-    private Color color;
+    private String color;
     private int width;
 }

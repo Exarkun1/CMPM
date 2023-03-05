@@ -74,6 +74,21 @@
                                  <children>
                                     <Button layoutX="297.0" layoutY="20.0" mnemonicParsing="false" onAction="#recordNotebook" text="Записать" />
                                     <TextField fx:id="nameNotebookField" layoutX="28.0" layoutY="20.0" prefHeight="27.0" prefWidth="269.0" />
+                                    <ScrollPane layoutX="29.0" layoutY="79.0" prefHeight="200.0" prefWidth="344.0">
+                                       <content>
+                                          <VBox fx:id="paneForNotebooks" prefHeight="200.0" prefWidth="323.0" />
+                                       </content>
+                                    </ScrollPane>
+                                    <Button layoutX="63.0" layoutY="302.0" mnemonicParsing="false" onAction="#saveNotebook" text="Сохранить">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Button>
+                                    <Button layoutX="250.0" layoutY="302.0" mnemonicParsing="false" onAction="#loadNotebook" text="Загрузить">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Button>
                                  </children></AnchorPane>
                            </content>
                            <font>

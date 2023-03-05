@@ -3,6 +3,7 @@ package com.propcool.cmpm_project.auxiliary;
 import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.analysing.build.NamedFunction;
 import com.propcool.cmpm_project.controllers.MainController;
+import com.propcool.cmpm_project.notebooks.FunctionData;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -18,25 +19,21 @@ public class TextFieldOnPage extends TextField {
 
         functionData = new FunctionData();
         functionData.setExpression(getText());
-        functionData.setColor(defaultColor);
+        functionData.setColor(defaultColor.toString());
         functionData.setWidth(defaultWidth);
 
         setOnKeyReleased(keyEvent -> processing());
-        // Необходимо для обновления функций, зависящих от других функций
-        // (кликом, обновляем старую функцию, так как действие не частое, но требовательное для автоматического обновления)
-        setOnMouseClicked(mouseEvent -> processing());
+        //setOnMouseClicked(mouseEvent -> processing());
     }
     public TextFieldOnPage(MainController controller){
         this("", controller);
     }
     public void processing(){
-        NamedFunction nf = Elements.builder.building(getText());
+        NamedFunction nf = Elements.functionBuilder.building(getText());
 
         Elements.functions.remove(functionName);
         controller.remove(functionName);
-        if(nf == null || (Elements.functions.containsKey(nf.getName()) && !nf.getName().equals(functionName))
-                || (Elements.parameters.containsKey(nf.getName())
-        )) {
+        if(nf == null || (Elements.functions.containsKey(nf.getName()) && !nf.getName().equals(functionName))) {
             functionName = null;
             functionData = new FunctionData();
         } else {
@@ -47,7 +44,7 @@ public class TextFieldOnPage extends TextField {
             functionData = cf.getData();
         }
         functionData.setExpression(getText());
-        functionData.setColor(defaultColor);
+        functionData.setColor(defaultColor.toString());
         functionData.setWidth(defaultWidth);
 
         controller.rebuildFunction(functionName);

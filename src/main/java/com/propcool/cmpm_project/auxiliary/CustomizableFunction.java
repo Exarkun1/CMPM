@@ -1,6 +1,7 @@
 package com.propcool.cmpm_project.auxiliary;
 
 import com.propcool.cmpm_project.functions.Function;
+import com.propcool.cmpm_project.notebooks.FunctionData;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -25,11 +26,11 @@ public class CustomizableFunction {
     }
 
     public Color getColor() {
-        return functionData.getColor();
+        return Color.valueOf(functionData.getColor());
     }
 
     public void setColor(Color color) {
-        functionData.setColor(color);
+        functionData.setColor(color.toString());
     }
 
     public int getWidth() { return functionData.getWidth(); }

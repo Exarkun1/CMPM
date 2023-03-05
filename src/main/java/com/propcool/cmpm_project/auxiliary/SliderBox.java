@@ -17,8 +17,8 @@ public class SliderBox extends HBox {
         name.setFont(Font.font (30));
         getChildren().addAll(name, slider);
     }
-    public Slider getSlider() {
+    public SliderOnPage getSlider() {
         return slider;
     }
-    private final Slider slider;
+    private final SliderOnPage slider;
 }
