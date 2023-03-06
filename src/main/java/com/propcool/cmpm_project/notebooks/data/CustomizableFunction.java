@@ -1,11 +1,12 @@
-package com.propcool.cmpm_project.auxiliary;
+package com.propcool.cmpm_project.notebooks.data;
 
 import com.propcool.cmpm_project.functions.Function;
-import com.propcool.cmpm_project.notebooks.FunctionData;
 import javafx.scene.paint.Color;
 
 import java.util.List;
-
+/**
+ * Класс хранящий всю необходимую информацию о функциях
+ * */
 public class CustomizableFunction {
     public CustomizableFunction(Function function, List<String> params){
         this.function = function;

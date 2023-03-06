@@ -1,9 +1,11 @@
-package com.propcool.cmpm_project.auxiliary;
+package com.propcool.cmpm_project.components;
 
 import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.analysing.build.NamedFunction;
-import com.propcool.cmpm_project.controllers.MainController;
-import com.propcool.cmpm_project.notebooks.FunctionData;
+import com.propcool.cmpm_project.manage.DrawManager;
+import com.propcool.cmpm_project.manage.TextFieldsManager;
+import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
+import com.propcool.cmpm_project.notebooks.data.FunctionData;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -11,9 +13,10 @@ import javafx.scene.text.Font;
  * Класс текстового поля для функции
  * */
 public class TextFieldOnPage extends TextField {
-    public TextFieldOnPage(String text, MainController controller){
+    public TextFieldOnPage(String text, DrawManager drawManager, TextFieldsManager textFieldsManager){
         super(text);
-        this.controller = controller;
+        this.drawManager = drawManager;
+        this.textFieldsManager = textFieldsManager;
         setFont(new Font(25));
         setPrefWidth(285);
 
@@ -25,14 +28,14 @@ public class TextFieldOnPage extends TextField {
         setOnKeyReleased(keyEvent -> processing());
         //setOnMouseClicked(mouseEvent -> processing());
     }
-    public TextFieldOnPage(MainController controller){
-        this("", controller);
+    public TextFieldOnPage(DrawManager drawManager, TextFieldsManager textFieldsManager){
+        this("", drawManager, textFieldsManager);
     }
     public void processing(){
         NamedFunction nf = Elements.functionBuilder.building(getText());
 
         Elements.functions.remove(functionName);
-        controller.remove(functionName);
+        drawManager.remove(functionName);
         if(nf == null || (Elements.functions.containsKey(nf.getName()) && !nf.getName().equals(functionName))) {
             functionName = null;
             functionData = new FunctionData();
@@ -47,11 +50,11 @@ public class TextFieldOnPage extends TextField {
         functionData.setColor(defaultColor.toString());
         functionData.setWidth(defaultWidth);
 
-        controller.rebuildFunction(functionName);
-        controller.redraw(functionName);
+        drawManager.rebuildFunction(functionName);
+        drawManager.redraw(functionName);
 
-        controller.addSliders();
-        controller.removeSliders();
+        textFieldsManager.addSliders();
+        textFieldsManager.removeSliders();
     }
     public void setDefaultColor(Color color){
         this.defaultColor = color;
@@ -66,8 +69,9 @@ public class TextFieldOnPage extends TextField {
         return functionName;
     }
     private String functionName;
-    private final MainController controller;
+    private final DrawManager drawManager;
+    private final TextFieldsManager textFieldsManager;
     private FunctionData functionData;
     private Color defaultColor = Color.GREEN;
-    private int defaultWidth = 2;
+    private int defaultWidth = 3;
 }

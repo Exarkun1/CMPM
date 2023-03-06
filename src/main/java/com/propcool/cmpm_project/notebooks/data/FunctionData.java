@@ -1,9 +1,9 @@
-package com.propcool.cmpm_project.notebooks;
-
-import javafx.scene.paint.Color;
+package com.propcool.cmpm_project.notebooks.data;
 
 import java.io.Serializable;
-
+/**
+ * Данные о функции для её сохранения и загрузки
+ * */
 public class FunctionData implements Serializable {
     public String getExpression() {
         return expression;

@@ -1,8 +1,13 @@
 package com.propcool.cmpm_project.notebooks;
 
+import com.propcool.cmpm_project.notebooks.data.FunctionData;
+import com.propcool.cmpm_project.notebooks.data.ParameterData;
+
 import java.io.Serializable;
 import java.util.Set;
-
+/**
+ * Класс экрана графиков
+ * */
 public class Notebook implements Serializable {
     public Set<FunctionData> getFunctionDataSet() {
         return functionDataSet;

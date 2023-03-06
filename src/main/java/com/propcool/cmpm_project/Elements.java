@@ -2,8 +2,9 @@ package com.propcool.cmpm_project;
 
 import com.propcool.cmpm_project.analysing.build.FunctionBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionFactory;
-import com.propcool.cmpm_project.auxiliary.CustomizableFunction;
-import com.propcool.cmpm_project.auxiliary.CustomizableParameter;
+import com.propcool.cmpm_project.manage.CoordinateManager;
+import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
+import com.propcool.cmpm_project.notebooks.data.CustomizableParameter;
 import com.propcool.cmpm_project.notebooks.Notebook;
 import com.propcool.cmpm_project.functions.basic.Exp;
 import com.propcool.cmpm_project.functions.basic.Log;
@@ -25,9 +26,6 @@ public class Elements {
     public static final  Map<String, CustomizableFunction> functions = new HashMap<>();
     public static final  Map<String, CustomizableParameter> parameters = new HashMap<>();
     public static final FunctionBuilder functionBuilder = new FunctionBuilder();
-    public static final NotebookBuilder notebookBuilder = new NotebookBuilder();
-    public static final NotebookSaver notebookSaver = new NotebookSaver();
-    public static final NotebookLoader notebookLoader = new NotebookLoader();
 
     static {
         //List.of("sqrt", "exp", "abs", "log", "ln", "sin", "cos", "tan", "ctan", "asin", "acos", "atan");

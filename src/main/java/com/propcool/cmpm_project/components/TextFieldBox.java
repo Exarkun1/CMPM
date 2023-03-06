@@ -1,14 +1,11 @@
-package com.propcool.cmpm_project.auxiliary;
+package com.propcool.cmpm_project.components;
 
 import com.propcool.cmpm_project.CmpmApplication;
-import com.propcool.cmpm_project.Elements;
-import com.propcool.cmpm_project.controllers.MainController;
-import javafx.event.EventHandler;
+import com.propcool.cmpm_project.manage.DrawManager;
+import com.propcool.cmpm_project.manage.TextFieldsManager;
 import javafx.geometry.Pos;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
@@ -19,8 +16,8 @@ import java.net.URL;
  * */
 
 public class TextFieldBox extends HBox {
-    public TextFieldBox(MainController controller){
-        this.textField = new TextFieldOnPage(controller);
+    public TextFieldBox(DrawManager drawManager, TextFieldsManager textFieldsManager){
+        this.textField = new TextFieldOnPage(drawManager, textFieldsManager);
         setAlignment(Pos.CENTER);
         colorPicker.setValue(Color.GREEN);
         colorPicker.setPrefWidth(50);
@@ -36,7 +33,7 @@ public class TextFieldBox extends HBox {
         imageView.setFitHeight(50);
 
         imageView.setOnMousePressed(mouseEvent -> {
-            controller.removeTextField(this);
+            textFieldsManager.removeTextField(this);
         });
         getChildren().addAll(colorPicker, textField, imageView);
     }

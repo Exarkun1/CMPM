@@ -1,8 +1,9 @@
-package com.propcool.cmpm_project.auxiliary;
+package com.propcool.cmpm_project.notebooks.data;
 
 import com.propcool.cmpm_project.functions.basic.Constant;
-import com.propcool.cmpm_project.notebooks.ParameterData;
-
+/**
+ * Класс хранящий всю необходимую информацию о параметрах
+ * */
 public class CustomizableParameter {
     public CustomizableParameter(Constant param) {
         this.param = param;

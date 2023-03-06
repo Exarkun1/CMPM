@@ -1,7 +1,9 @@
-package com.propcool.cmpm_project.notebooks;
+package com.propcool.cmpm_project.notebooks.data;
 
 import java.io.Serializable;
-
+/**
+ * Данные о параметре для его сохранения и загрузки
+ * */
 public class ParameterData implements Serializable {
 
     public String getName() {
