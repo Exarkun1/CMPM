@@ -64,6 +64,9 @@ public class CoordinateManager {
     public double getY(double pixelY){
         return -(pixelY - centerY) * pixelSize;
     }
+    public boolean onScreen(double x, double y){
+        return 2 <= x && x <= wight-2 && 2 <= y && y <= height-2;
+    }
 
     public int getHeight() {
         return height;

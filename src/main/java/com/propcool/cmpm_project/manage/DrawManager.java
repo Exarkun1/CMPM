@@ -1,8 +1,6 @@
 package com.propcool.cmpm_project.manage;
 
-import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.components.GroupLines;
-import com.propcool.cmpm_project.controllers.MainController;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
 import javafx.scene.Group;
@@ -17,8 +15,9 @@ import java.util.Map;
  * Менеджер рисования, создаёт линии для графиков и добавляет их на панель
  * */
 public class DrawManager {
-    public DrawManager(AnchorPane paneForGraphs, CoordinateManager coordinateManager, ControlManager controlManager){
+    public DrawManager(AnchorPane paneForGraphs, FunctionManager functionManager, CoordinateManager coordinateManager, ControlManager controlManager){
         this.paneForGraphs = paneForGraphs;
+        this.functionManager = functionManager;
         this.coordinateManager = coordinateManager;
         this.controlManager = controlManager;
     }
@@ -74,7 +73,7 @@ public class DrawManager {
 
         graphics.put("", groupXY);
 
-        for (var functionName : Elements.functions.keySet()){
+        for (var functionName : functionManager.getFunctions().keySet()){
             rebuildFunction(functionName);
         }
     }
@@ -89,7 +88,7 @@ public class DrawManager {
      * Пересоздание линий одной функции
      * */
     public void rebuildFunction(String functionName){
-        CustomizableFunction cf = Elements.functions.get(functionName);
+        CustomizableFunction cf = functionManager.getFunction(functionName);
         if(cf == null) return;
 
         Function function = cf.getFunction();
@@ -178,5 +177,6 @@ public class DrawManager {
     private final AnchorPane paneForGraphs;
     private final CoordinateManager coordinateManager;
     private final Map<String, Group> graphics = new HashMap<>();
+    private final FunctionManager functionManager;
     private final ControlManager controlManager;
 }

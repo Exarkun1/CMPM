@@ -2,6 +2,7 @@ package com.propcool.cmpm_project.components;
 
 import com.propcool.cmpm_project.CmpmApplication;
 import com.propcool.cmpm_project.manage.DrawManager;
+import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.manage.TextFieldsManager;
 import javafx.geometry.Pos;
 import javafx.scene.control.ColorPicker;
@@ -16,8 +17,8 @@ import java.net.URL;
  * */
 
 public class TextFieldBox extends HBox {
-    public TextFieldBox(DrawManager drawManager, TextFieldsManager textFieldsManager){
-        this.textField = new TextFieldOnPage(drawManager, textFieldsManager);
+    public TextFieldBox(FunctionManager functionManager, DrawManager drawManager, TextFieldsManager textFieldsManager){
+        this.textField = new TextFieldOnPage(functionManager, drawManager, textFieldsManager);
         setAlignment(Pos.CENTER);
         colorPicker.setValue(Color.GREEN);
         colorPicker.setPrefWidth(50);

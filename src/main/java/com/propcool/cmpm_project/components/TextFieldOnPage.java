@@ -1,8 +1,8 @@
 package com.propcool.cmpm_project.components;
 
-import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.analysing.build.NamedFunction;
 import com.propcool.cmpm_project.manage.DrawManager;
+import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.manage.TextFieldsManager;
 import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
 import com.propcool.cmpm_project.notebooks.data.FunctionData;
@@ -13,8 +13,9 @@ import javafx.scene.text.Font;
  * Класс текстового поля для функции
  * */
 public class TextFieldOnPage extends TextField {
-    public TextFieldOnPage(String text, DrawManager drawManager, TextFieldsManager textFieldsManager){
+    public TextFieldOnPage(String text, FunctionManager functionManager, DrawManager drawManager, TextFieldsManager textFieldsManager){
         super(text);
+        this.functionManager = functionManager;
         this.drawManager = drawManager;
         this.textFieldsManager = textFieldsManager;
         setFont(new Font(25));
@@ -28,21 +29,21 @@ public class TextFieldOnPage extends TextField {
         setOnKeyReleased(keyEvent -> processing());
         //setOnMouseClicked(mouseEvent -> processing());
     }
-    public TextFieldOnPage(DrawManager drawManager, TextFieldsManager textFieldsManager){
-        this("", drawManager, textFieldsManager);
+    public TextFieldOnPage(FunctionManager functionManager, DrawManager drawManager, TextFieldsManager textFieldsManager){
+        this("", functionManager, drawManager, textFieldsManager);
     }
     public void processing(){
-        NamedFunction nf = Elements.functionBuilder.building(getText());
+        NamedFunction nf = functionManager.buildFunction(getText());
 
-        Elements.functions.remove(functionName);
+        functionManager.removeFunction(functionName);
         drawManager.remove(functionName);
-        if(nf == null || (Elements.functions.containsKey(nf.getName()) && !nf.getName().equals(functionName))) {
+        if(nf == null || (functionManager.getFunctions().containsKey(nf.getName()) && !nf.getName().equals(functionName))) {
             functionName = null;
             functionData = new FunctionData();
         } else {
             CustomizableFunction cf = new CustomizableFunction(nf.getFunction(), nf.getParams());
             functionData = cf.getData();
-            Elements.functions.put(nf.getName(), cf);
+            functionManager.putFunction(nf.getName(), cf);
             functionName = nf.getName();
             functionData = cf.getData();
         }
@@ -69,6 +70,7 @@ public class TextFieldOnPage extends TextField {
         return functionName;
     }
     private String functionName;
+    private final FunctionManager functionManager;
     private final DrawManager drawManager;
     private final TextFieldsManager textFieldsManager;
     private FunctionData functionData;

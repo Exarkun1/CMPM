@@ -1,10 +1,10 @@
 package com.propcool.cmpm_project.analysing;
 
-import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.analysing.stages.Base;
 import com.propcool.cmpm_project.analysing.stages.End;
 import com.propcool.cmpm_project.analysing.stages.Name;
 import com.propcool.cmpm_project.analysing.stages.State;
+import com.propcool.cmpm_project.manage.FunctionManager;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,7 +20,7 @@ public class Analyser {
      * 5)вставка ! в тех местах, где подразумевается функция(ln(x) -> ln!(x)),
      * 6)проверка на то, что в функции нет параметра с тем же именем
      * */
-    public String processing(String text){
+    public String processing(String text, FunctionManager functionManager){
         if(checkingString(text)){
             text = text.replaceAll("\\s+", ""); // 1
             text = text.replaceAll(",", "."); // 2
@@ -35,7 +35,7 @@ public class Analyser {
             while (matcher.find()) {
                 String group = matcher.group().substring(0, matcher.group().length()-1);
                 int index = matcher.end();
-                if(!Elements.keyWords.containsKey(group)) {
+                if(!functionManager.getKeyWords().containsKey(group)) {
                     functionBase = new StringBuffer(functionBase).insert(index-count--, "#").toString(); // 4
                 }
                 else {
@@ -44,10 +44,10 @@ public class Analyser {
             }
             text = text.replaceAll("=.+", "=" + functionBase);
 
-            String functionName = text.replaceAll("\\(.+|=.+", ""); // имя функции
+            /*String functionName = text.replaceAll("\\(.+|=.+", ""); // имя функции
             pattern = Pattern.compile(functionName);
             matcher = pattern.matcher(functionBase);
-            if(matcher.find()) return null;
+            if(matcher.find()) return null;*/ // 6
 
             return text;
         }

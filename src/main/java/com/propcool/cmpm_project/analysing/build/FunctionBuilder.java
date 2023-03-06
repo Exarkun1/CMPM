@@ -1,7 +1,7 @@
 package com.propcool.cmpm_project.analysing.build;
 
-import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.analysing.Analyser;
+import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.notebooks.data.CustomizableParameter;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
@@ -14,11 +14,14 @@ import java.util.List;
  * Построитель функции
  * */
 public class FunctionBuilder {
+    public FunctionBuilder(FunctionManager functionManager){
+        this.functionManager = functionManager;
+    }
     /**
      * Анализ и построение функиии
      * */
     public NamedFunction building(String text){
-        text = analyser.processing(text);
+        text = analyser.processing(text, functionManager);
         if(text != null){
             String functionName = text.replaceAll("\\(.+|=.+", "");
             String functionBase = text.replaceAll(".+=", "");
@@ -54,14 +57,14 @@ public class FunctionBuilder {
             //if(cf != null){
                 //return cf.getFunction();
             //}
-            CustomizableParameter cp = Elements.parameters.get(text);
+            CustomizableParameter cp = functionManager.getParam(text);
             if(cp == null) {
                 Constant c = new Constant(1);
                 cp = new CustomizableParameter(c);
                 cp.setArea(10);
                 cp.setValue(1);
                 cp.setName(text);
-                Elements.parameters.put(text, cp);
+                functionManager.putParam(text, cp);
             }
             params.add(text);
             return cp.getParam();
@@ -86,7 +89,7 @@ public class FunctionBuilder {
                         .replaceAll("!", "")
                         .replaceAll("#", "")
                         .replaceAll("\\.", ",");
-                if(analyser.processing(tempAnalysable) != null) {
+                if(analyser.processing(tempAnalysable, functionManager) != null) {
                     text = temp;
                 }
                 else break;
@@ -139,6 +142,7 @@ public class FunctionBuilder {
                     s -> s == '!')
     );
     private Function createFunctionByName(String begin, String end, List<String> params){
-        return Elements.keyWords.get(begin).createFunction(begin, end, '\0', params);
+        return functionManager.getKeyWord(begin).createFunction(begin, end, '\0', params);
     }
+    private final FunctionManager functionManager;
 }

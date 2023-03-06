@@ -1,7 +1,5 @@
 package com.propcool.cmpm_project.components;
 
-import com.propcool.cmpm_project.Elements;
-import com.propcool.cmpm_project.controllers.MainController;
 import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.manage.NotebookManager;
 import javafx.geometry.Pos;
@@ -18,7 +16,7 @@ public class NotebookBox extends HBox {
         Button deleteButton = new Button("удалить");
         setAlignment(Pos.CENTER);
         openButton.setOnAction(actionEvent -> {
-            notebookManager.openNotebook(Elements.notebooks.get(notebookName));
+            notebookManager.openNotebook(notebookManager.getNotebook(notebookName));
             drawManager.makeNewFrame();
         });
         deleteButton.setOnAction(actionEvent -> notebookManager.deleteNotebook(notebookName));

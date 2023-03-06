@@ -26,7 +26,7 @@ public class GroupLines extends Group {
             double y = coordinateManager.getPixelY(function, x);
             circle = new Circle(mouseEvent.getX(), y, 5);
             text = new Text(x+10,y, getText(x, y));
-            text.setFont(new Font(14));
+            text.setFont(new Font(16));
             circle.setFill(Color.GRAY);
             circle.setStroke(Color.BLACK);
             drawManager.addNodes(circle, text);
@@ -35,11 +35,16 @@ public class GroupLines extends Group {
         setOnMouseDragged(mouseEvent -> {
             double x = mouseEvent.getX();
             double y = coordinateManager.getPixelY(function, x);
-            circle.setCenterX(x);
-            circle.setCenterY(y);
-            text.setText(getText(x, y));
-            text.setX(x+10);
-            text.setY(y);
+            if(coordinateManager.onScreen(x, y)) {
+                visibleCircle();
+                circle.setCenterX(x);
+                circle.setCenterY(y);
+                text.setText(getText(x, y));
+                text.setX(x + 10);
+                text.setY(y);
+            } else {
+                noVisibleCircle();
+            }
         });
         // Удаление кружка
         setOnMouseReleased(mouseEvent -> {
@@ -63,6 +68,14 @@ public class GroupLines extends Group {
             Line line = (Line)elem;
             line.setStrokeWidth(line.getStrokeWidth()*3/5);
         }
+    }
+    private void visibleCircle(){
+        circle.setVisible(true);
+        text.setVisible(true);
+    }
+    private void noVisibleCircle(){
+        circle.setVisible(false);
+        text.setVisible(false);
     }
     private Circle circle;
     private Text text;

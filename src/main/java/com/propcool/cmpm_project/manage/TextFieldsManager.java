@@ -1,6 +1,5 @@
 package com.propcool.cmpm_project.manage;
 
-import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.components.SliderBox;
 import com.propcool.cmpm_project.components.TextFieldBox;
 import com.propcool.cmpm_project.notebooks.Notebook;
@@ -13,10 +12,11 @@ import java.util.*;
  * Менеджер текстовых полей
  * */
 public class TextFieldsManager {
-    public TextFieldsManager(VBox paneForText, Button creatFieldButton, DrawManager drawManager){
+    public TextFieldsManager(VBox paneForText, Button creatFieldButton, FunctionManager functionManager, DrawManager drawManager){
         this.paneForText = paneForText;
         this.drawManager = drawManager;
         this.creatFieldButton = creatFieldButton;
+        this.functionManager = functionManager;
     }
     /**
      * Добавление поля
@@ -40,7 +40,7 @@ public class TextFieldsManager {
 
         String functionName = box.getTextField().getFunctionName();
         drawManager.remove(functionName);
-        Elements.functions.remove(functionName);
+        functionManager.removeFunction(functionName);
 
         removeSliders();
     }
@@ -48,9 +48,9 @@ public class TextFieldsManager {
      * Добавление ползунка для параметра
      * */
     public void addSliders(){
-        for(var param : Elements.parameters.keySet()){
+        for(var param : functionManager.getParameters().keySet()){
             if(!sliders.containsKey(param)){
-                SliderBox sliderBox = new SliderBox(param, drawManager);
+                SliderBox sliderBox = new SliderBox(param, functionManager, drawManager);
                 sliders.put(param, sliderBox);
                 paneForText.getChildren().add(sliderBox);
             }
@@ -62,8 +62,8 @@ public class TextFieldsManager {
     public void removeSliders(){
         List<String> deletedParams = new ArrayList<>();
         met:
-        for(var param : Elements.parameters.keySet()){
-            for(var cf : Elements.functions.values()){
+        for(var param : functionManager.getParameters().keySet()){
+            for(var cf : functionManager.getFunctions().values()){
                 if(cf.getParams().contains(param)) continue met;
             }
             deletedParams.add(param);
@@ -71,7 +71,7 @@ public class TextFieldsManager {
         for(var param : deletedParams) {
             SliderBox sliderBox = sliders.remove(param);
             paneForText.getChildren().remove(sliderBox);
-            Elements.parameters.remove(param);
+            functionManager.removeParam(param);
         }
     }
     /**
@@ -80,8 +80,8 @@ public class TextFieldsManager {
     public void clear(){
         paneForText.getChildren().removeAll(textFields);
         paneForText.getChildren().removeAll(sliders.values());
-        Elements.functions.clear();
-        Elements.parameters.clear();
+        functionManager.clearFunctions();
+        functionManager.clearParams();
         textFields.clear();
         sliders.clear();
     }
@@ -90,7 +90,7 @@ public class TextFieldsManager {
      * */
     public void addNotebookFields(Notebook notebook){
         for(var data : notebook.getFunctionDataSet()){
-            TextFieldBox box = new TextFieldBox(drawManager, this);
+            TextFieldBox box = new TextFieldBox(functionManager, drawManager, this);
             box.getTextField().setText(data.getExpression());
             box.getColorPicker().setValue(Color.valueOf(data.getColor()));
             box.getTextField().setDefaultColor(Color.valueOf(data.getColor()));
@@ -114,8 +114,9 @@ public class TextFieldsManager {
         return textFields;
     }
     private final VBox paneForText;
-    private final DrawManager drawManager;
     private final Button creatFieldButton;
     private final LinkedHashSet<TextFieldBox> textFields = new LinkedHashSet<>();
     private final Map<String, SliderBox> sliders = new LinkedHashMap<>();
+    private final DrawManager drawManager;
+    private final FunctionManager functionManager;
 }

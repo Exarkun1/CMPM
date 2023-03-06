@@ -1,6 +1,5 @@
 package com.propcool.cmpm_project.manage;
 
-import com.propcool.cmpm_project.Elements;
 import com.propcool.cmpm_project.components.NotebookBox;
 import com.propcool.cmpm_project.notebooks.Notebook;
 import com.propcool.cmpm_project.notebooks.NotebookBuilder;
@@ -12,14 +11,18 @@ import javafx.stage.Window;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Менеджер тетрадей(экранов)
  * */
 public class NotebookManager {
-    public NotebookManager(VBox paneForNotebooks, DrawManager drawManager, TextFieldsManager textFieldsManager) {
+    public NotebookManager(VBox paneForNotebooks, FunctionManager functionManager, DrawManager drawManager, TextFieldsManager textFieldsManager) {
         this.paneForNotebooks = paneForNotebooks;
         this.drawManager = drawManager;
         this.textFieldsManager = textFieldsManager;
+        this.notebookBuilder = new NotebookBuilder(functionManager);
     }
     /**
      * Запись тетради
@@ -27,8 +30,8 @@ public class NotebookManager {
     public void record(String notebookName){
         Notebook notebook = notebookBuilder.build(textFieldsManager.getTextFields());
 
-        Notebook prevNotebook = Elements.notebooks.get(notebookName);
-        Elements.notebooks.put(notebookName, notebook);
+        Notebook prevNotebook = notebooks.get(notebookName);
+        notebooks.put(notebookName, notebook);
 
         notebookBox = new NotebookBox(notebookName, drawManager, this);
         if(prevNotebook == null) paneForNotebooks.getChildren().add(notebookBox);
@@ -74,14 +77,20 @@ public class NotebookManager {
      * Удаление тетради
      * */
     public void deleteNotebook(String notebookName){
-        Elements.notebooks.remove(notebookName);
+        notebooks.remove(notebookName);
         paneForNotebooks.getChildren().remove(notebookBox);
     }
+
+    public Notebook getNotebook(String name) {
+        return notebooks.get(name);
+    }
+
+    public final Map<String, Notebook> notebooks = new HashMap<>();
     private NotebookBox notebookBox;
     private final VBox paneForNotebooks;
     private final DrawManager drawManager;
     private final TextFieldsManager textFieldsManager;
-    private final NotebookBuilder notebookBuilder = new NotebookBuilder();
+    private NotebookBuilder notebookBuilder;
     private final NotebookSaver notebookSaver = new NotebookSaver();
     private final NotebookLoader notebookLoader = new NotebookLoader();
     private final FileChooser fileChooser = new FileChooser();

@@ -11,7 +11,7 @@ public enum Base implements State{
     @Override
     public int checkSymbol(char c) {
         if (c == 'x') return 0;
-        else if(c >= 'a' && c <= 'z' && c != 'y') return 1;
+        else if(c >= 'a' && c <= 'z') return 1;
         else if(c == '0') return 2;
         else if(c >= '1' && c <= '9') return 3;
         else if(c == '+' || c == '*' || c == '/' || c == '^') return 4;
@@ -34,7 +34,7 @@ public enum Base implements State{
     private static final State[][] matrix = {
             //x a 0 1 + - ( ) \t e f
             {B, Word.A, Number.A, Number.B, End.E, End.E, C, End.E, Space.N, End.E, End.E},
-            {End.E, End.E, End.E, End.E, A, A, End.E, D, Space.Y, End.E, End.F},
+            {End.E, Word.A, End.E, End.E, A, A, End.E, D, Space.Y, End.E, End.F},
             {B, Word.A, Number.A, Number.B, End.E, A, C, End.E, Space.N2, End.E, End.E},
             {B, End.E, End.E, End.E, A, A, End.E, D, Space.Y, End.E, End.F},
             {B, Word.A, Number.A, Number.B, End.E, End.E, C, End.E, End.E, End.E, End.E},

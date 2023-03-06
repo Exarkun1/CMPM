@@ -86,7 +86,7 @@ public class MainController implements Initializable {
     @FXML
     public void addTextField(ActionEvent event){
         // делаем ползунки и кнопку добавления полей для параметров ниже текстовых полей
-        textFieldsManager.addTextField(new TextFieldBox(drawManager, textFieldsManager));
+        textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager));
     }
     /**
      * Запись тетради
@@ -128,12 +128,13 @@ public class MainController implements Initializable {
         creatFieldButton.setPrefWidth(400);
 
         openManager = new OpenManager(outgoingPanel, outgoingPanelSettings, controlManager);
-        drawManager = new DrawManager(paneForGraphs, coordinateManager, controlManager);
-        textFieldsManager = new TextFieldsManager(paneForText, creatFieldButton, drawManager);
-        notebookManager = new NotebookManager(paneForNotebooks, drawManager, textFieldsManager);
-        textFieldsManager.addTextField(new TextFieldBox(drawManager, textFieldsManager));
+        drawManager = new DrawManager(paneForGraphs, functionManager, coordinateManager, controlManager);
+        textFieldsManager = new TextFieldsManager(paneForText, creatFieldButton, functionManager, drawManager);
+        notebookManager = new NotebookManager(paneForNotebooks, functionManager, drawManager, textFieldsManager);
+        textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager));
         drawManager.makeNewFrame();
     }
+    public final FunctionManager functionManager =new FunctionManager();
     public final CoordinateManager coordinateManager = new CoordinateManager();
     private final ControlManager controlManager = new ControlManager();
     public OpenManager openManager;
