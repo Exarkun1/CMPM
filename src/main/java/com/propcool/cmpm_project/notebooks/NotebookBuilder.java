@@ -1,6 +1,5 @@
 package com.propcool.cmpm_project.notebooks;
 
-import com.propcool.cmpm_project.components.TextFieldBox;
 import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.notebooks.data.FunctionData;
 import com.propcool.cmpm_project.notebooks.data.ParameterData;
@@ -14,10 +13,10 @@ public class NotebookBuilder {
     public NotebookBuilder(FunctionManager functionManager){
         this.functionManager = functionManager;
     }
-    public Notebook build(Set<TextFieldBox> textFields){
+    public Notebook build(){
         Set<FunctionData> functionDataSet = new LinkedHashSet<>();
-        for(var textFieldBox : textFields){
-            functionDataSet.add(textFieldBox.getTextField().getFunctionData());
+        for(var function : functionManager.getFunctions().values()){
+            functionDataSet.add(function.getData());
         }
         Set<ParameterData> parameterDataSet = new LinkedHashSet<>();
         for(var param : functionManager.getParameters().values()){

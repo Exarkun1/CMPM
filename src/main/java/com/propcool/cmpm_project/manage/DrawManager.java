@@ -89,7 +89,7 @@ public class DrawManager {
      * */
     public void rebuildFunction(String functionName){
         CustomizableFunction cf = functionManager.getFunction(functionName);
-        if(cf == null) return;
+        if(cf == null || cf.getFunction() == null) return;
 
         Function function = cf.getFunction();
         Color color = cf.getColor();
@@ -173,7 +173,7 @@ public class DrawManager {
     public void removeNodes(Node... nodes){
         paneForGraphs.getChildren().removeAll(nodes);
     }
-    private final int step = 1;
+    private final int step = 2;
     private final AnchorPane paneForGraphs;
     private final CoordinateManager coordinateManager;
     private final Map<String, Group> graphics = new HashMap<>();

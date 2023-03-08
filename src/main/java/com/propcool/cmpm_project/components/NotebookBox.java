@@ -2,10 +2,14 @@ package com.propcool.cmpm_project.components;
 
 import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.manage.NotebookManager;
+import com.propcool.cmpm_project.notebooks.Notebook;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+
+import java.util.Map;
+
 /**
  * Панель для элементов связанным с тетрадями(экранами)
  * */

@@ -12,6 +12,7 @@ import javafx.stage.Window;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -28,20 +29,23 @@ public class NotebookManager {
      * Запись тетради
      * */
     public void record(String notebookName){
-        Notebook notebook = notebookBuilder.build(textFieldsManager.getTextFields());
+        Notebook notebook = notebookBuilder.build();
+        NotebookBox notebookBox = new NotebookBox(notebookName, drawManager, this);
 
-        Notebook prevNotebook = notebooks.get(notebookName);
+        NotebookBox prevNotebook = notebookBoxMap.get(notebookName);
         notebooks.put(notebookName, notebook);
 
-        notebookBox = new NotebookBox(notebookName, drawManager, this);
-        if(prevNotebook == null) paneForNotebooks.getChildren().add(notebookBox);
+        if(prevNotebook == null) {
+            paneForNotebooks.getChildren().add(notebookBox);
+            notebookBoxMap.put(notebookName, notebookBox);
+        }
     }
     /**
      * Сохранение теради
      * */
     public void save(Window window){
         File file = fileChooser.showSaveDialog(window);
-        Notebook notebook = notebookBuilder.build(textFieldsManager.getTextFields());
+        Notebook notebook = notebookBuilder.build();
         try {
             if(file != null) notebookSaver.save(notebook, file);
         } catch (IOException e) {
@@ -77,20 +81,20 @@ public class NotebookManager {
      * Удаление тетради
      * */
     public void deleteNotebook(String notebookName){
+        NotebookBox box = notebookBoxMap.remove(notebookName);
+        paneForNotebooks.getChildren().remove(box);
         notebooks.remove(notebookName);
-        paneForNotebooks.getChildren().remove(notebookBox);
+    }
+    public Notebook getNotebook(String notebookName){
+        return notebooks.get(notebookName);
     }
 
-    public Notebook getNotebook(String name) {
-        return notebooks.get(name);
-    }
-
-    public final Map<String, Notebook> notebooks = new HashMap<>();
-    private NotebookBox notebookBox;
+    public final Map<String, NotebookBox> notebookBoxMap = new HashMap<>();
+    public final Map<String, Notebook> notebooks = new LinkedHashMap<>();
     private final VBox paneForNotebooks;
     private final DrawManager drawManager;
     private final TextFieldsManager textFieldsManager;
-    private NotebookBuilder notebookBuilder;
+    private final NotebookBuilder notebookBuilder;
     private final NotebookSaver notebookSaver = new NotebookSaver();
     private final NotebookLoader notebookLoader = new NotebookLoader();
     private final FileChooser fileChooser = new FileChooser();
