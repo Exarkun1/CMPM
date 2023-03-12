@@ -1,5 +1,6 @@
 package com.propcool.cmpm_project.notebooks;
 
+import com.propcool.cmpm_project.manage.CoordinateManager;
 import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.notebooks.data.FunctionData;
 import com.propcool.cmpm_project.notebooks.data.ParameterData;
@@ -13,7 +14,7 @@ public class NotebookBuilder {
     public NotebookBuilder(FunctionManager functionManager){
         this.functionManager = functionManager;
     }
-    public Notebook build(){
+    public Notebook build(CoordinateManager coordinateManager){
         Set<FunctionData> functionDataSet = new LinkedHashSet<>();
         for(var function : functionManager.getFunctions().values()){
             functionDataSet.add(function.getData());
@@ -25,6 +26,7 @@ public class NotebookBuilder {
         Notebook notebook = new Notebook();
         notebook.setFunctionDataSet(functionDataSet);
         notebook.setParameterDataSet(parameterDataSet);
+        notebook.setSystemName(coordinateManager.getName());
 
         return notebook;
     }

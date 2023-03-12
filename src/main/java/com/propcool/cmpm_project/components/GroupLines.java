@@ -1,5 +1,6 @@
 package com.propcool.cmpm_project.components;
 
+import com.propcool.cmpm_project.auxiliary.Point;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.manage.ControlManager;
 import com.propcool.cmpm_project.manage.CoordinateManager;
@@ -22,9 +23,10 @@ public class GroupLines extends Group {
         setOnMousePressed(mouseEvent -> {
             enlargeLines();
             controlManager.setLineDragged();
-            double x = mouseEvent.getX();
-            double y = coordinateManager.getPixelY(function, x);
-            circle = new Circle(mouseEvent.getX(), y, 5);
+            Point point = coordinateManager.getCircleCoordinate(function, mouseEvent.getX(), mouseEvent.getY());
+            double x = point.getX();
+            double y = point.getY();
+            circle = new Circle(x, y, 5);
             text = new Text(x+10,y, getText(x, y));
             text.setFont(new Font(16));
             circle.setFill(Color.GRAY);
@@ -33,8 +35,9 @@ public class GroupLines extends Group {
         });
         // Смещение кружка
         setOnMouseDragged(mouseEvent -> {
-            double x = mouseEvent.getX();
-            double y = coordinateManager.getPixelY(function, x);
+            Point point = coordinateManager.getCircleCoordinate(function, mouseEvent.getX(), mouseEvent.getY());
+            double x = point.getX();
+            double y = point.getY();
             if(coordinateManager.onScreen(x, y)) {
                 visibleCircle();
                 circle.setCenterX(x);
@@ -55,7 +58,7 @@ public class GroupLines extends Group {
         });
     }
     private String getText(double x, double y){
-        return "("+ format.format(coordinateManager.getX(x)) + ", " + format.format(coordinateManager.getY(y))+ ")";
+        return "("+ format.format(coordinateManager.getX(x, y)) + ", " + format.format(coordinateManager.getY(x, y))+ ")";
     }
     private void enlargeLines(){
         for(var elem : getChildren()){

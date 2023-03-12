@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -41,104 +42,101 @@ public class MainController implements Initializable {
     private TextField nameNotebookField;
     @FXML
     private VBox paneForNotebooks;
+    @FXML
+    private ChoiceBox<String> systemChoice;
     /**
      * Сдвиг координат
      * */
     @FXML
     void mouseDragged(MouseEvent event) {
-        if(controlManager.isLineDragged()) return;
-        coordinateManager.shift(event.getX(), event.getY());
-        drawManager.makeNewFrame();
+        mainManager.shift(event.getX(), event.getY());
     }
     /**
      * Клик по экрану
      * */
     @FXML
     void mousePressed(MouseEvent event) {
-        coordinateManager.setMouse(event.getX(), event.getY());
+        mainManager.setMouse(event.getX(), event.getY());
     }
     /**
      * Масштабирование
      * */
     @FXML
     void scroll(ScrollEvent event) {
-        if(event.getDeltaY() < 0)coordinateManager.zoomIn(event.getX(), event.getY());
-        else coordinateManager.zoomOut(event.getX(), event.getY());
-        drawManager.makeNewFrame();
+        mainManager.scale(event.getDeltaY(), event.getX(), event.getY());
     }
     /**
      * Открытие окна ввода
      * */
     @FXML
     void openTextFields(MouseEvent event) {
-        openManager.openTextFields();
+        mainManager.openTextFields();
     }
     /**
      * Открытие окна настроек
      * */
     @FXML
     void openSettings(MouseEvent event) {
-        openManager.openSettings();
+        mainManager.openSettings();
     }
     /**
      * Добавление текстового поля для записи функций
      * */
     @FXML
     public void addTextField(ActionEvent event){
-        // делаем ползунки и кнопку добавления полей для параметров ниже текстовых полей
-        textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager));
+        mainManager.addTextField();
     }
     /**
      * Запись тетради
      * */
     @FXML
     void recordNotebook(ActionEvent event) {
-        notebookManager.record(nameNotebookField.getText());
+        mainManager.recordNotebook(nameNotebookField.getText());
     }
     /**
      * Сохранение тетради
      * */
     @FXML
     void saveNotebook(ActionEvent event) {
-        notebookManager.save(mainPanel.getScene().getWindow());
+        mainManager.saveNotebook();
     }
     /**
      * Загрузка тетради
      * */
     @FXML
     void loadNotebook(ActionEvent event) {
-        notebookManager.load(mainPanel.getScene().getWindow());
+        mainManager.loadNotebook();
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        outgoingPanel.setPrefHeight(coordinateManager.getHeight());
+        mainManager = new MainManager(
+                mainPanel, paneForGraphs, outgoingPanel,
+                paneForText, creatFieldButton,
+                outgoingPanelSettings, paneForNotebooks
+        );
+
+        outgoingPanel.setPrefHeight(mainManager.getHeight());
         outgoingPanel.setPrefWidth(400);
         outgoingPanel.setLayoutX(-400);
 
-        outgoingPanelSettings.setPrefHeight(coordinateManager.getHeight());
+        outgoingPanelSettings.setPrefHeight(mainManager.getHeight());
         outgoingPanelSettings.setPrefWidth(400);
         outgoingPanelSettings.setLayoutX(-400);
 
-        accordionSettings.setPrefHeight(coordinateManager.getHeight());
+        accordionSettings.setPrefHeight(mainManager.getHeight());
         accordionSettings.setPrefWidth(400);
 
-        paneForGraphs.setPrefHeight(coordinateManager.getHeight());
-        paneForGraphs.setPrefWidth(coordinateManager.getHeight());
+        paneForGraphs.setPrefHeight(mainManager.getHeight());
+        paneForGraphs.setPrefWidth(mainManager.getHeight());
+
+        paneForNotebooks.setSpacing(10);
 
         creatFieldButton.setPrefWidth(400);
 
-        openManager = new OpenManager(outgoingPanel, outgoingPanelSettings, controlManager);
-        drawManager = new DrawManager(paneForGraphs, functionManager, coordinateManager, controlManager);
-        textFieldsManager = new TextFieldsManager(paneForText, creatFieldButton, functionManager, drawManager);
-        notebookManager = new NotebookManager(paneForNotebooks, functionManager, drawManager, textFieldsManager);
-        textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager));
-        drawManager.makeNewFrame();
+        systemChoice.getItems().addAll("cartesian", "polar");
+        systemChoice.setOnAction(actionEvent -> {
+            mainManager.changingCoordinateSystem(systemChoice.getValue());
+        });
     }
-    public final FunctionManager functionManager =new FunctionManager();
-    public final CoordinateManager coordinateManager = new CoordinateManager();
-    private final ControlManager controlManager = new ControlManager();
-    public OpenManager openManager;
-    private DrawManager drawManager;
-    private TextFieldsManager textFieldsManager;
-    private NotebookManager notebookManager;
+    private MainManager mainManager;
 }

@@ -1,5 +1,6 @@
 package com.propcool.cmpm_project.manage;
 
+import com.propcool.cmpm_project.auxiliary.Point;
 import com.propcool.cmpm_project.components.GroupLines;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
@@ -20,6 +21,9 @@ public class DrawManager {
         this.functionManager = functionManager;
         this.coordinateManager = coordinateManager;
         this.controlManager = controlManager;
+    }
+    public void setCoordinateManager(CoordinateManager coordinateManager){
+        this.coordinateManager = coordinateManager;
     }
     /**
      * Пересоздание линий всех функций
@@ -96,18 +100,23 @@ public class DrawManager {
         int strokeWidth = cf.getWidth();
 
         Group groupLines = new GroupLines(function, coordinateManager, this, controlManager);
-        double x0 = 1, y0 = coordinateManager.getPixelY(function, x0);
+        Point point = coordinateManager.getCoordinate(function, coordinateManager.getMin());
+        double x0 = point.getX(), y0 = point.getY();
 
         double wight = coordinateManager.getWight();
         double height = coordinateManager.getHeight();
 
-        for (double x1 = x0; x1 < wight-4; x1 += step) {
-            double y1 = coordinateManager.getPixelY(function, x1);
+        for (double a = coordinateManager.getMin(); a < coordinateManager.getMax(); a += coordinateManager.getStep()) {
+            point = coordinateManager.getCoordinate(function, a);
+            double x1 = point.getX(), y1 = point.getY();
 
-            if (!Double.isNaN(y0) && !Double.isNaN(y1)) {
+            if (!Double.isNaN(y0) && !Double.isNaN(y1) &&
+                    y0 < height-4 && y0 > 4 && y1 < height-4 && y1 > 4 &&
+                    x0 < wight-4 && x0 > 4 && x1 < wight-4 && x1 > 4
+             ) {
                 Line line = createLine(x0, y0, x1, y1, color, strokeWidth);
 
-                if (y0 <= height-2 && y1 <= height-2 && y0 >= 2 && y1 >= 2) {
+                /*if (y0 <= height-2 && y1 <= height-2 && y0 >= 2 && y1 >= 2) {
                     groupLines.getChildren().add(line);
                 } else if (y0 > height-2 && y1 <= height-2 && y1 >= 2) {
                     line.setStartY(height-2);
@@ -121,10 +130,11 @@ public class DrawManager {
                 } else if (y0 <= height-2 && y1 < 2 && y0 >= 2) {
                     line.setEndY(2);
                     groupLines.getChildren().add(line);
-                }
+                }*/
+                groupLines.getChildren().add(line);
             }
-            x0 = x1;
-            y0 = coordinateManager.getPixelY(function, x0);
+            x0 = point.getX();
+            y0 = point.getY();
         }
         graphics.put(functionName, groupLines);
     }
@@ -175,8 +185,8 @@ public class DrawManager {
     }
     private final int step = 2;
     private final AnchorPane paneForGraphs;
-    private final CoordinateManager coordinateManager;
     private final Map<String, Group> graphics = new HashMap<>();
+    private CoordinateManager coordinateManager;
     private final FunctionManager functionManager;
     private final ControlManager controlManager;
 }

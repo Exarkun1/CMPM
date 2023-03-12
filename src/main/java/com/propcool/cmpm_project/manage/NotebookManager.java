@@ -5,6 +5,7 @@ import com.propcool.cmpm_project.notebooks.Notebook;
 import com.propcool.cmpm_project.notebooks.NotebookBuilder;
 import com.propcool.cmpm_project.notebooks.NotebookLoader;
 import com.propcool.cmpm_project.notebooks.NotebookSaver;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
@@ -19,18 +20,20 @@ import java.util.Map;
  * Менеджер тетрадей(экранов)
  * */
 public class NotebookManager {
-    public NotebookManager(VBox paneForNotebooks, FunctionManager functionManager, DrawManager drawManager, TextFieldsManager textFieldsManager) {
+    public NotebookManager(VBox paneForNotebooks, FunctionManager functionManager,
+                           TextFieldsManager textFieldsManager, MainManager mainManager) {
         this.paneForNotebooks = paneForNotebooks;
-        this.drawManager = drawManager;
+
         this.textFieldsManager = textFieldsManager;
         this.notebookBuilder = new NotebookBuilder(functionManager);
+        this.mainManager = mainManager;
     }
     /**
      * Запись тетради
      * */
-    public void record(String notebookName){
-        Notebook notebook = notebookBuilder.build();
-        NotebookBox notebookBox = new NotebookBox(notebookName, drawManager, this);
+    public void record(String notebookName, CoordinateManager coordinateManager){
+        Notebook notebook = notebookBuilder.build(coordinateManager);
+        NotebookBox notebookBox = new NotebookBox(notebookName, mainManager, this);
 
         NotebookBox prevNotebook = notebookBoxMap.get(notebookName);
         notebooks.put(notebookName, notebook);
@@ -43,13 +46,13 @@ public class NotebookManager {
     /**
      * Сохранение теради
      * */
-    public void save(Window window){
+    public void save(Window window, CoordinateManager coordinateManager){
         File file = fileChooser.showSaveDialog(window);
-        Notebook notebook = notebookBuilder.build();
+        Notebook notebook = notebookBuilder.build(coordinateManager);
         try {
             if(file != null) notebookSaver.save(notebook, file);
         } catch (IOException e) {
-            throw new RuntimeException("Не удалось сохранить тетрадь в файл", e);
+            saveAlert.show();
         }
     }
     /**
@@ -61,12 +64,12 @@ public class NotebookManager {
             if(file != null) {
                 Notebook notebook = notebookLoader.load(file);
                 openNotebook(notebook);
-                drawManager.makeNewFrame();
+                mainManager.changingCoordinateSystem(notebook.getSystemName());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Не удалось открыть файл", e);
+            loadAlert.show();
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Не удалось получить тетрадь из файла", e);
+            classAlert.show();
         }
     }
     /**
@@ -92,10 +95,13 @@ public class NotebookManager {
     public final Map<String, NotebookBox> notebookBoxMap = new HashMap<>();
     public final Map<String, Notebook> notebooks = new LinkedHashMap<>();
     private final VBox paneForNotebooks;
-    private final DrawManager drawManager;
+    private final MainManager mainManager;
     private final TextFieldsManager textFieldsManager;
     private final NotebookBuilder notebookBuilder;
     private final NotebookSaver notebookSaver = new NotebookSaver();
     private final NotebookLoader notebookLoader = new NotebookLoader();
     private final FileChooser fileChooser = new FileChooser();
+    private final Alert saveAlert = new Alert(Alert.AlertType.ERROR, "Не удалось сохранить тетрадь в файл");
+    private final Alert loadAlert = new Alert(Alert.AlertType.ERROR,"Не удалось открыть файл");
+    private final Alert classAlert = new Alert(Alert.AlertType.ERROR, "Не удалось получить тетрадь из файла");
 }

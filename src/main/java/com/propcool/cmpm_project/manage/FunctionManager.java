@@ -11,7 +11,9 @@ import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
 import com.propcool.cmpm_project.notebooks.data.CustomizableParameter;
 
 import java.util.*;
-
+/**
+ * Менеджер управления функциями и параметрами
+ * */
 public class FunctionManager {
     public void putFunction(String name, CustomizableFunction function){
         functions.put(name, function);

@@ -24,7 +24,14 @@ public class Notebook implements Serializable {
     public void setParameterDataSet(Set<ParameterData> parameterDataList) {
         this.parameterDataSet = parameterDataList;
     }
+    public String getSystemName() {
+        return systemName;
+    }
 
+    public void setSystemName(String systemName) {
+        this.systemName = systemName;
+    }
     private Set<FunctionData> functionDataSet;
     private Set<ParameterData> parameterDataSet;
+    private String systemName;
 }

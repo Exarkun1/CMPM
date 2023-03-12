@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
@@ -62,7 +63,10 @@
                         </TitledPane>
                         <TitledPane animated="false" text="Специальные возможности">
                            <content>
-                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <ChoiceBox fx:id="systemChoice" layoutX="57.0" layoutY="14.0" prefHeight="27.0" prefWidth="285.0" />
+                                 </children></AnchorPane>
                            </content>
                            <font>
                               <Font size="16.0" />
@@ -72,19 +76,25 @@
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="674.0" prefWidth="341.0">
                                  <children>
-                                    <Button layoutX="297.0" layoutY="20.0" mnemonicParsing="false" onAction="#recordNotebook" text="Записать" />
-                                    <TextField fx:id="nameNotebookField" layoutX="28.0" layoutY="20.0" prefHeight="27.0" prefWidth="269.0" />
-                                    <ScrollPane layoutX="29.0" layoutY="79.0" prefHeight="200.0" prefWidth="344.0">
+                                    <Button layoutX="293.0" layoutY="21.0" mnemonicParsing="false" onAction="#recordNotebook" text="Записать">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font></Button>
+                                    <TextField fx:id="nameNotebookField" layoutX="24.0" layoutY="21.0" prefHeight="27.0" prefWidth="269.0">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font></TextField>
+                                    <ScrollPane layoutX="27.0" layoutY="74.0" prefHeight="305.0" prefWidth="350.0">
                                        <content>
-                                          <VBox fx:id="paneForNotebooks" prefHeight="200.0" prefWidth="323.0" />
+                                          <VBox fx:id="paneForNotebooks" prefHeight="301.0" prefWidth="329.0" />
                                        </content>
                                     </ScrollPane>
-                                    <Button layoutX="63.0" layoutY="302.0" mnemonicParsing="false" onAction="#saveNotebook" text="Сохранить">
+                                    <Button layoutX="90.0" layoutY="415.0" mnemonicParsing="false" onAction="#saveNotebook" prefHeight="35.0" prefWidth="225.0" text=" Сохранить на устройстве">
                                        <font>
                                           <Font size="16.0" />
                                        </font>
                                     </Button>
-                                    <Button layoutX="250.0" layoutY="302.0" mnemonicParsing="false" onAction="#loadNotebook" text="Загрузить">
+                                    <Button layoutX="90.0" layoutY="477.0" mnemonicParsing="false" onAction="#loadNotebook" prefHeight="35.0" prefWidth="225.0" text="Загрузить с устройства">
                                        <font>
                                           <Font size="16.0" />
                                        </font>

@@ -1,10 +1,23 @@
 package com.propcool.cmpm_project.manage;
 
+import com.propcool.cmpm_project.auxiliary.Point;
 import com.propcool.cmpm_project.functions.Function;
-/**
- * Менеджер координат, содержит все координатные параметры
- * */
-public class CoordinateManager {
+
+public abstract class CoordinateManager {
+    public abstract String getName();
+    public abstract Point getCoordinate(Function function, double a);
+    /**
+     * Преобразование пиксельных X координат в обычные
+     * */
+    public abstract double getX(double pixelX, double pixelY);
+    /**
+     * Преобразование пиксельных Y координат в обычные
+     * */
+    public abstract double getY(double pixelX, double pixelY);
+    public abstract double getMin();
+    public abstract double getMax();
+    public abstract double getStep();
+    public abstract Point getCircleCoordinate(Function function, double x, double y);
     /**
      * Изменение положения мышки
      * */
@@ -49,21 +62,6 @@ public class CoordinateManager {
     /**
      * Получение пиксельных Y координат
      * */
-    public double getPixelY(Function function, double pixelX){
-        return centerY - function.get((pixelX - centerX) * pixelSize) / pixelSize;
-    }
-    /**
-     * Преобразование пиксельных X координат в обычные
-     * */
-    public double getX(double pixelX){
-        return (pixelX - centerX) * pixelSize;
-    }
-    /**
-     * Преобразование пиксельных Y координат в обычные
-     * */
-    public double getY(double pixelY){
-        return -(pixelY - centerY) * pixelSize;
-    }
     public boolean onScreen(double x, double y){
         return 2 <= x && x <= wight-2 && 2 <= y && y <= height-2;
     }
