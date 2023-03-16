@@ -61,12 +61,10 @@ public class TextFieldsManager {
      * */
     public void removeSliders(){
         List<String> deletedParams = new ArrayList<>();
-        met:
         for(var param : functionManager.getParameters().keySet()){
-            for(var cf : functionManager.getFunctions().values()){
-                if(cf.getParams().contains(param)) continue met;
+            if(functionManager.getParam(param).refIsEmpty()) {
+                deletedParams.add(param);
             }
-            deletedParams.add(param);
         }
         for(var param : deletedParams) {
             SliderBox sliderBox = sliders.remove(param);

@@ -40,12 +40,12 @@ public class PolarManager extends CoordinateManager {
 
     @Override
     public double getMax() {
-        return 2*Math.PI;
+        return 4*Math.PI;
     }
 
     @Override
     public double getStep() {
-        return 0.01;
+        return 0.02;
     }
 
     @Override

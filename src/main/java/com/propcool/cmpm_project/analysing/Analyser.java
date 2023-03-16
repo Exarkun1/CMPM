@@ -29,7 +29,7 @@ public class Analyser {
 
             String functionBase = text.replaceAll(".+=", ""); // Тело функции
 
-            Pattern pattern = Pattern.compile("[a-z]+\\(|\\d[a-z]|\\)x|\\d\\(");
+            Pattern pattern = Pattern.compile("[a-z]+\\(|\\)x|\\d\\(");
             Matcher matcher = pattern.matcher(functionBase);
             int count = 1;
             while (matcher.find()) {
@@ -40,6 +40,16 @@ public class Analyser {
                 }
                 else {
                     functionBase = new StringBuffer(functionBase).insert(index-count--, "!").toString(); // 5
+                }
+            }
+            pattern = Pattern.compile("\\d[a-z]");
+            matcher = pattern.matcher(functionBase);
+            count = 1;
+            while (matcher.find()) {
+                String group = matcher.group().substring(0, matcher.group().length()-1);
+                int index = matcher.end();
+                if(!functionManager.getKeyWords().containsKey(group)) {
+                    functionBase = new StringBuffer(functionBase).insert(index-count--, "#").toString(); // 4
                 }
             }
             text = text.replaceAll("=.+", "=" + functionBase);

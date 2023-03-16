@@ -19,8 +19,8 @@ public class ContainFactoryAdapter implements FunctionFactory, Contain{
     }
 
     @Override
-    public Function createFunction(String begin, String end, char symbol, List<String> params) {
-        return factory.createFunction(begin, end, symbol, params);
+    public Function createFunction(String begin, String end, char symbol, NamedFunction nf) {
+        return factory.createFunction(begin, end, symbol, nf);
     }
     private final FunctionFactory factory;
     private final Contain contain;

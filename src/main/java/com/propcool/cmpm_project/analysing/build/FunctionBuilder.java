@@ -2,10 +2,12 @@ package com.propcool.cmpm_project.analysing.build;
 
 import com.propcool.cmpm_project.analysing.Analyser;
 import com.propcool.cmpm_project.manage.FunctionManager;
+import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
 import com.propcool.cmpm_project.notebooks.data.CustomizableParameter;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.*;
+import com.propcool.cmpm_project.notebooks.data.FunctionData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,30 +22,45 @@ public class FunctionBuilder {
     /**
      * Анализ и построение функиии
      * */
-    public NamedFunction building(String text){
-        text = analyser.processing(text, functionManager);
-        if(text != null){
-            String functionName = text.replaceAll("\\(.+|=.+", "");
-            String functionBase = text.replaceAll(".+=", "");
+    public String building(String text){
+        String new_text = analyser.processing(text, functionManager);
+        if(new_text != null){
+            String functionName = new_text.replaceAll("\\(.+|=.+", "");
+            String functionBase = new_text.replaceAll(".+=", "");
 
-            List<String> params = new ArrayList<>();
             // Если функция имеет уникальное имя, то возвращаем функцию с этим именем
             if(!functionName.equals("y")) {
-                return new NamedFunction(functionName, buildingNotNamed(functionBase, params), params);
+                NamedFunction nf = new NamedFunction(functionName);
+                CustomizableFunction cf = new CustomizableFunction(buildingNotNamed(functionBase, nf), nf.getParams());
+                FunctionData functionData = cf.getData();
+                functionData.setExpression(text);
+                functionManager.putFunction(functionName, cf);
+                return functionName;
             }
             // Иначе добаляем уникальный идентификатор
             else {
-                String index = String.valueOf(count++);
-                return new NamedFunction(index, buildingNotNamed(functionBase, params), params);
+                String idY = String.valueOf(count_y++);
+                NamedFunction nf = new NamedFunction(idY);
+                CustomizableFunction cf = new CustomizableFunction(buildingNotNamed(functionBase, nf), nf.getParams());
+                FunctionData functionData = cf.getData();
+                functionData.setExpression(text);
+                functionManager.putFunction(idY, cf);
+                return idY;
             }
+        } else {
+            String idBad = (count_bad++)+"bad";
+            CustomizableFunction cf = new CustomizableFunction(null, new ArrayList<>());
+            FunctionData functionData = cf.getData();
+            functionData.setExpression(text);
+            functionManager.putFunction(idBad, cf);
+            return idBad;
         }
-        return null;
     }
     /**
      * Внутренняя реализация построителя функций через рекурсию
      * (также ведётся сохранение параметров функции в список)
      * */
-    public Function buildingNotNamed(String text, List<String> params){
+    public Function buildingNotNamed(String text, NamedFunction nf){
         // Удаление внешних пробелов, с проверкой, что функция не изменится
         text = removingOuterBrackets(text);
         // Выход из рекурсии
@@ -66,13 +83,15 @@ public class FunctionBuilder {
                 cp.setName(text);
                 functionManager.putParam(text, cp);
             }
-            params.add(text);
+            nf.getParams().add(text);
+            // Добавление ссылки на функцию в параметре
+            cp.getRefFunctions().add(nf.getName());
             return cp.getParam();
         }
 
         // Тело рекурсии, последовательный поиск символов операций по возрастанию их "силы"
         for(var factory : factories){
-            Function temp = searchingFunctions(text, params, factory);
+            Function temp = searchingFunctions(text, nf, factory);
             if(temp != null) return temp;
         }
         throw new RuntimeException("Не верные знаки");
@@ -101,7 +120,7 @@ public class FunctionBuilder {
     /**
      * Поиск разделителя функций и создание
      * */
-    private Function searchingFunctions(String text,List<String> params, ContainFactoryAdapter factory){
+    private Function searchingFunctions(String text, NamedFunction nf, ContainFactoryAdapter factory){
         int count = 0;
         for(int i = text.length()-1; i > 0; i--){
             char symbol = text.charAt(i);
@@ -111,13 +130,11 @@ public class FunctionBuilder {
             if(count == 0 && factory.contain(symbol)) {
                 String begin = text.substring(0, i);
                 String end = text.substring(i+1);
-                return factory.createFunction(begin, end, symbol, params);
+                return factory.createFunction(begin, end, symbol, nf);
             }
         }
         return null;
     }
-    private final Analyser analyser = new Analyser();
-    private static int count;
     /**
      * Список фабрик для стандартных функций
      * */
@@ -141,8 +158,11 @@ public class FunctionBuilder {
             new ContainFactoryAdapter((b, e, s, p) -> createFunctionByName(b, e, p),
                     s -> s == '!')
     );
-    private Function createFunctionByName(String begin, String end, List<String> params){
-        return functionManager.getKeyWord(begin).createFunction(begin, end, '\0', params);
+    private Function createFunctionByName(String begin, String end, NamedFunction nf){
+        return functionManager.getKeyWord(begin).createFunction(begin, end, '\0', nf);
     }
+    private final Analyser analyser = new Analyser();
+    private static int count_y;
+    private static int count_bad;
     private final FunctionManager functionManager;
 }

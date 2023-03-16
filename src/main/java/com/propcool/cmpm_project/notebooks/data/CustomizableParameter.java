@@ -1,6 +1,10 @@
 package com.propcool.cmpm_project.notebooks.data;
 
 import com.propcool.cmpm_project.functions.basic.Constant;
+
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Класс хранящий всю необходимую информацию о параметрах
  * */
@@ -37,7 +41,18 @@ public class CustomizableParameter {
     public ParameterData getData() {
         return parameterData;
     }
-    private final Constant param;
 
+    public Set<String> getRefFunctions() {
+        return refFunctions;
+    }
+    public boolean refIsEmpty(){
+        return refFunctions.isEmpty();
+    }
+    public void removeRef(String name){
+        refFunctions.remove(name);
+    }
+
+    private final Constant param;
     private final ParameterData parameterData = new ParameterData();
+    private final Set<String> refFunctions = new HashSet<>();
 }

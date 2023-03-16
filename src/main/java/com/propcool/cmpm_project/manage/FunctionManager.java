@@ -2,7 +2,6 @@ package com.propcool.cmpm_project.manage;
 
 import com.propcool.cmpm_project.analysing.build.FunctionBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionFactory;
-import com.propcool.cmpm_project.analysing.build.NamedFunction;
 import com.propcool.cmpm_project.functions.basic.Exp;
 import com.propcool.cmpm_project.functions.basic.Log;
 import com.propcool.cmpm_project.functions.basic.Pow;
@@ -36,7 +35,7 @@ public class FunctionManager {
     public CustomizableParameter getParam(String name){
         return parameters.get(name);
     }
-    public NamedFunction buildFunction(String text){
+    public String buildFunction(String text){
         return functionBuilder.building(text);
     }
     public void clearFunctions(){
@@ -54,6 +53,19 @@ public class FunctionManager {
     public Map<String, FunctionFactory> getKeyWords(){
         return Collections.unmodifiableMap(keyWords);
     }
+    /**
+     * Удаление ссылок на функцию в параметрах
+     * */
+    public void removeParamRef(String functionName){
+        CustomizableFunction function = getFunction(functionName);
+        // Удаление ссылок на данную функцию у параметров
+        if(function != null) {
+            for (var param : function.getParams()) {
+                getParam(param).removeRef(functionName);
+            }
+        }
+    }
+
     private final Map<String, FunctionFactory> keyWords = new HashMap<>();
     private final List<String> constants = List.of("pi", "e");
 

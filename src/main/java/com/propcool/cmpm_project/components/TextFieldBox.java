@@ -28,7 +28,7 @@ public class TextFieldBox extends HBox {
             textField.setDefaultColor(colorPicker.getValue());
             textField.processing();
         });
-        URL url = CmpmApplication.class.getResource("exit.png");
+        URL url = CmpmApplication.class.getResource("x.png");
         ImageView imageView = new ImageView(String.valueOf(url));
         imageView.setFitWidth(50);
         imageView.setFitHeight(50);

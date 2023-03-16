@@ -103,19 +103,16 @@ public class DrawManager {
         Point point = coordinateManager.getCoordinate(function, coordinateManager.getMin());
         double x0 = point.getX(), y0 = point.getY();
 
-        double wight = coordinateManager.getWight();
-        double height = coordinateManager.getHeight();
-
-        for (double a = coordinateManager.getMin(); a < coordinateManager.getMax(); a += coordinateManager.getStep()) {
+        double step = coordinateManager.getStep();
+        for (double a = coordinateManager.getMin(); a < coordinateManager.getMax(); a += step) {
             point = coordinateManager.getCoordinate(function, a);
             double x1 = point.getX(), y1 = point.getY();
 
-            if (!Double.isNaN(y0) && !Double.isNaN(y1) &&
-                    y0 < height-4 && y0 > 4 && y1 < height-4 && y1 > 4 &&
-                    x0 < wight-4 && x0 > 4 && x1 < wight-4 && x1 > 4
-             ) {
+            boolean start = coordinateManager.onScreen(x0, y0);
+            boolean end = coordinateManager.onScreen(x1, y1);
+            if (!Double.isNaN(y0) && !Double.isNaN(y1) && start && end) {
                 Line line = createLine(x0, y0, x1, y1, color, strokeWidth);
-
+                groupLines.getChildren().add(line);
                 /*if (y0 <= height-2 && y1 <= height-2 && y0 >= 2 && y1 >= 2) {
                     groupLines.getChildren().add(line);
                 } else if (y0 > height-2 && y1 <= height-2 && y1 >= 2) {
@@ -131,10 +128,9 @@ public class DrawManager {
                     line.setEndY(2);
                     groupLines.getChildren().add(line);
                 }*/
-                groupLines.getChildren().add(line);
             }
-            x0 = point.getX();
-            y0 = point.getY();
+            x0 = x1;
+            y0 = y1;
         }
         graphics.put(functionName, groupLines);
     }
