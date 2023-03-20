@@ -10,5 +10,18 @@ public abstract class Mono implements Function {
     public Mono(){
         this.func = new Variable();
     }
-    protected final Function func;
+    public Function getFunction(){
+        return func;
+    }
+    @Override
+    public Mono clone() {
+        try {
+            Mono mono = (Mono) super.clone();
+            mono.func = func.clone();
+            return mono;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    protected Function func;
 }

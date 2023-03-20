@@ -7,4 +7,13 @@ public class Variable implements Function {
     public double get(double x) {
         return x;
     }
+
+    @Override
+    public Variable clone() {
+        try {
+            return (Variable) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

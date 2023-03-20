@@ -10,6 +10,12 @@ public class Constant implements Function {
     public double get(double x) {
         return number;
     }
+
+    @Override
+    public Constant clone() {
+        return this;
+    }
+
     public void set(double number){
         this.number = number;
     }

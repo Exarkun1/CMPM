@@ -15,7 +15,6 @@ public class NamedFunction {
     public List<String> getParams() {
         return params;
     }
-
     private final String name;
     private final List<String> params = new ArrayList<>();
 }

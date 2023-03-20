@@ -1,6 +1,6 @@
 package com.propcool.cmpm_project.functions;
 
-public interface Function {
+public interface Function extends Cloneable {
     double get(double x);
     default double getLeftBorder(){
         return -Double.MAX_VALUE;
@@ -8,4 +8,5 @@ public interface Function {
     default double getRightBorder(){
         return Double.MAX_VALUE;
     }
+    Function clone();
 }

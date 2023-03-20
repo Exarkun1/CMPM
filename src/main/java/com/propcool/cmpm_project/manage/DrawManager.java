@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 /**
@@ -134,6 +135,11 @@ public class DrawManager {
         }
         graphics.put(functionName, groupLines);
     }
+    public void rebuildFunctions(Collection<String> functionNames){
+        for(var name : functionNames){
+            rebuildFunction(name);
+        }
+    }
     /**
      * Отбражение всех функций
      * */
@@ -148,6 +154,11 @@ public class DrawManager {
         Group group = graphics.get(functionName);
         if(group == null) return;
         paneForGraphs.getChildren().addAll(group);
+    }
+    public void redraw(Collection<String> functionNames){
+        for(var name : functionNames){
+            redraw(name);
+        }
     }
     /**
      * Очистка экрана

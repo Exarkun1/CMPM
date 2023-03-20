@@ -31,7 +31,8 @@ public class FunctionBuilder {
             // Если функция имеет уникальное имя, то возвращаем функцию с этим именем
             if(!functionName.equals("y")) {
                 NamedFunction nf = new NamedFunction(functionName);
-                CustomizableFunction cf = new CustomizableFunction(buildingNotNamed(functionBase, nf), nf.getParams());
+                CustomizableFunction cf = new CustomizableFunction(buildingNotNamed(functionBase, nf));
+                cf.addParams(nf.getParams());
                 FunctionData functionData = cf.getData();
                 functionData.setExpression(text);
                 functionManager.putFunction(functionName, cf);
@@ -41,7 +42,8 @@ public class FunctionBuilder {
             else {
                 String idY = String.valueOf(count_y++);
                 NamedFunction nf = new NamedFunction(idY);
-                CustomizableFunction cf = new CustomizableFunction(buildingNotNamed(functionBase, nf), nf.getParams());
+                CustomizableFunction cf = new CustomizableFunction(buildingNotNamed(functionBase, nf));
+                cf.addParams(nf.getParams());
                 FunctionData functionData = cf.getData();
                 functionData.setExpression(text);
                 functionManager.putFunction(idY, cf);
@@ -49,7 +51,7 @@ public class FunctionBuilder {
             }
         } else {
             String idBad = (count_bad++)+"bad";
-            CustomizableFunction cf = new CustomizableFunction(null, new ArrayList<>());
+            CustomizableFunction cf = new CustomizableFunction(null);
             FunctionData functionData = cf.getData();
             functionData.setExpression(text);
             functionManager.putFunction(idBad, cf);
@@ -64,7 +66,7 @@ public class FunctionBuilder {
         // Удаление внешних пробелов, с проверкой, что функция не изменится
         text = removingOuterBrackets(text);
         // Выход из рекурсии
-        if(text.equals("x")) return new Variable();
+        if(text.equals("x")) return new FunctionDecorator();
         else if(text.equals("e")) return new Constant(Math.E);
         else if(text.equals("pi")) return new Constant(Math.PI);
         else if(text.matches("\\d+|\\d+\\.\\d+")) return new Constant(Double.parseDouble(text));
@@ -159,7 +161,9 @@ public class FunctionBuilder {
                     s -> s == '!')
     );
     private Function createFunctionByName(String begin, String end, NamedFunction nf){
-        return functionManager.getKeyWord(begin).createFunction(begin, end, '\0', nf);
+        FunctionFactory functionFactory = functionManager.getKeyWord(begin);
+        if(functionFactory != null) return functionFactory.createFunction(begin, end, '\0', nf);
+        return functionManager.getFunctionFactory().createFunction(begin, end, '\0', nf);
     }
     private final Analyser analyser = new Analyser();
     private static int count_y;

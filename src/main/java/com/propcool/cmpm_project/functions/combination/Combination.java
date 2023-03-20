@@ -16,6 +16,26 @@ public abstract class Combination implements Function {
     public double getRightBorder() {
         return Math.min(func1.getLeftBorder(), func2.getLeftBorder());
     }
-    protected final Function func1;
-    protected final Function func2;
+
+    public Function getFunction1() {
+        return func1;
+    }
+
+    public Function getFunction2() {
+        return func2;
+    }
+
+    @Override
+    public Combination clone() {
+        try {
+            Combination combination = (Combination) super.clone();
+            combination.func1 = func1.clone();
+            combination.func2 = func2.clone();
+            return combination;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    protected Function func1;
+    protected Function func2;
 }

@@ -26,7 +26,7 @@ public class TextFieldBox extends HBox {
 
         colorPicker.setOnAction(actionEvent -> {
             textField.setDefaultColor(colorPicker.getValue());
-            textField.processing();
+            textField.getProcess().processing();
         });
         URL url = CmpmApplication.class.getResource("x.png");
         ImageView imageView = new ImageView(String.valueOf(url));
@@ -34,6 +34,8 @@ public class TextFieldBox extends HBox {
         imageView.setFitHeight(50);
 
         imageView.setOnMousePressed(mouseEvent -> {
+            functionManager.removeParamRefs(textField.getFunctionName());
+            //functionManager.removeFunctionRefs(textField.getFunctionName());
             textFieldsManager.removeTextField(this);
         });
         getChildren().addAll(colorPicker, textField, imageView);

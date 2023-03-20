@@ -18,7 +18,7 @@ public class Analyser {
      * 3)добавление 0 перед свободным минусом,
      * 4)вставка # в тех местах, где подразумевается умножение(2x -> 2#x),
      * 5)вставка ! в тех местах, где подразумевается функция(ln(x) -> ln!(x)),
-     * 6)проверка на то, что в функции нет параметра с тем же именем
+     * 6)проверка на то, что в функции не имннованна ключевым словом
      * */
     public String processing(String text, FunctionManager functionManager){
         if(checkingString(text)){
@@ -29,20 +29,19 @@ public class Analyser {
 
             String functionBase = text.replaceAll(".+=", ""); // Тело функции
 
-            Pattern pattern = Pattern.compile("[a-z]+\\(|\\)x|\\d\\(");
+            Pattern pattern = Pattern.compile("[a-z]+\\(");
             Matcher matcher = pattern.matcher(functionBase);
             int count = 1;
             while (matcher.find()) {
                 String group = matcher.group().substring(0, matcher.group().length()-1);
                 int index = matcher.end();
-                if(!functionManager.getKeyWords().containsKey(group)) {
+                if(functionManager.getKeyWords().containsKey(group) || functionManager.getFunctions().containsKey(group)) {
+                    functionBase = new StringBuffer(functionBase).insert(index-count--, "!").toString(); // 5
+                } else {
                     functionBase = new StringBuffer(functionBase).insert(index-count--, "#").toString(); // 4
                 }
-                else {
-                    functionBase = new StringBuffer(functionBase).insert(index-count--, "!").toString(); // 5
-                }
             }
-            pattern = Pattern.compile("\\d[a-z]");
+            pattern = Pattern.compile("\\d[a-z]|\\)x|\\d\\(");
             matcher = pattern.matcher(functionBase);
             count = 1;
             while (matcher.find()) {
@@ -54,10 +53,8 @@ public class Analyser {
             }
             text = text.replaceAll("=.+", "=" + functionBase);
 
-            /*String functionName = text.replaceAll("\\(.+|=.+", ""); // имя функции
-            pattern = Pattern.compile(functionName);
-            matcher = pattern.matcher(functionBase);
-            if(matcher.find()) return null;*/ // 6
+            String functionName = text.replaceAll("\\(.+|=.+", ""); // 6
+            if(functionManager.getKeyWords().containsKey(functionName)) return null;
 
             return text;
         }

@@ -2,9 +2,11 @@ package com.propcool.cmpm_project.manage;
 
 import com.propcool.cmpm_project.analysing.build.FunctionBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionFactory;
-import com.propcool.cmpm_project.functions.basic.Exp;
-import com.propcool.cmpm_project.functions.basic.Log;
-import com.propcool.cmpm_project.functions.basic.Pow;
+import com.propcool.cmpm_project.components.TextFieldBox;
+import com.propcool.cmpm_project.components.TextFieldOnPage;
+import com.propcool.cmpm_project.functions.Function;
+import com.propcool.cmpm_project.functions.basic.*;
+import com.propcool.cmpm_project.functions.combination.Combination;
 import com.propcool.cmpm_project.functions.mono.*;
 import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
 import com.propcool.cmpm_project.notebooks.data.CustomizableParameter;
@@ -56,13 +58,38 @@ public class FunctionManager {
     /**
      * Удаление ссылок на функцию в параметрах
      * */
-    public void removeParamRef(String functionName){
+    public void removeParamRefs(String functionName){
         CustomizableFunction function = getFunction(functionName);
         // Удаление ссылок на данную функцию у параметров
         if(function != null) {
             for (var param : function.getParams()) {
                 getParam(param).removeRef(functionName);
             }
+        }
+    }
+    public FunctionFactory getFunctionFactory(){
+        return (begin, end, symbol, nf) -> {
+            getFunction(begin).getRefFunctions().add(nf.getName());
+            Function function = getFunction(begin).getFunction().clone();
+            List<FunctionDecorator> decors = new ArrayList<>();
+            getFuncDecorators(function, decors);
+            for(var decor : decors){
+                decor.setFunction(functionBuilder.buildingNotNamed(end, nf));
+            }
+            return function;
+        };
+    }
+    public void getFuncDecorators(Function function, List<FunctionDecorator> decorators){
+        if(function instanceof FunctionDecorator decorator && !decorator.isChanged()) {
+            decorators.add(decorator);
+            decorator.setChanged(true);
+        } else if(function instanceof FunctionDecorator decorator) {
+            getFuncDecorators(decorator.getFunction(), decorators);
+        } else if(function instanceof Mono mono){
+            getFuncDecorators(mono.getFunction(), decorators);
+        } else if(function instanceof Combination combination){
+            getFuncDecorators(combination.getFunction1(), decorators);
+            getFuncDecorators(combination.getFunction2(), decorators);
         }
     }
 
