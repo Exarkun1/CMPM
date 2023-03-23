@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -39,8 +40,7 @@ public class TextFieldOnPage extends TextField {
         @Override
         public void processing() {
             functionManager.removeParamRefs(functionName);
-            //functionManager.removeFunctionRefs(functionName);
-            functionManager.removeFunction(functionName);
+            CustomizableFunction cf = functionManager.removeFunction(functionName);
             drawManager.remove(functionName);
 
             functionName = functionManager.buildFunction(getText());
@@ -50,6 +50,22 @@ public class TextFieldOnPage extends TextField {
 
             drawManager.rebuildFunction(functionName);
             drawManager.redraw(functionName);
+
+            // Обновление функций ссылающихся на данную
+            List<String> functionRefs = functionManager.rebuildRefsWithFunction(cf);
+            for(var name : functionRefs){
+                drawManager.remove(name);
+                drawManager.rebuildFunction(name);
+                drawManager.redraw(name);
+            }
+
+            // Обновление функций ссылающихся на параметр с именем данной
+            functionRefs = functionManager.rebuildRefsWithParam(functionName);
+            for(var name : functionRefs){
+                drawManager.remove(name);
+                drawManager.rebuildFunction(name);
+                drawManager.redraw(name);
+            }
 
             textFieldsManager.addSliders();
             textFieldsManager.removeSliders();

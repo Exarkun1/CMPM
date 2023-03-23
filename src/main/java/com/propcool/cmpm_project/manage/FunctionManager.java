@@ -67,6 +67,9 @@ public class FunctionManager {
             }
         }
     }
+    /**
+     * Создание фабрики для кастомной функции
+     * */
     public FunctionFactory getFunctionFactory(){
         return (begin, end, symbol, nf) -> {
             getFunction(begin).getRefFunctions().add(nf.getName());
@@ -79,6 +82,9 @@ public class FunctionManager {
             return function;
         };
     }
+    /**
+     * Выдача функций находящихся над x
+     * */
     public void getFuncDecorators(Function function, List<FunctionDecorator> decorators){
         if(function instanceof FunctionDecorator decorator && !decorator.isChanged()) {
             decorators.add(decorator);
@@ -91,6 +97,42 @@ public class FunctionManager {
             getFuncDecorators(combination.getFunction1(), decorators);
             getFuncDecorators(combination.getFunction2(), decorators);
         }
+    }
+    /**
+     * Преодразование функций, ссылающих на параметр с таким же именен, что и у передаваемой
+     * */
+    public List<String> rebuildRefsWithParam(String functionName){
+        List<String> refs = new ArrayList<>();
+        CustomizableParameter cp = getParam(functionName);
+        if(cp == null) return refs;
+        for(var name : cp.getRefFunctions()){
+            if(name.equals(functionName)) continue;
+            CustomizableFunction oldCf = removeFunction(name);
+            String newFunctionName = buildFunction(oldCf.getExpression());
+            CustomizableFunction newCf = getFunction(newFunctionName);
+            newCf.setColor(oldCf.getColor());
+            newCf.setWidth(oldCf.getWidth());
+            refs.add(name);
+            cp.getRefFunctions().remove(name);
+        }
+        return refs;
+    }
+    /**
+     * Преобразование функций ссылающихся на данную
+     * */
+    public List<String> rebuildRefsWithFunction(CustomizableFunction cf){
+        List<String> refs = new ArrayList<>();
+        if(cf == null) return refs;
+        for(var name : cf.getRefFunctions()){
+            CustomizableFunction oldCf = removeFunction(name);
+            String newFunctionName = buildFunction(oldCf.getExpression());
+            CustomizableFunction newCf = getFunction(newFunctionName);
+            newCf.setColor(oldCf.getColor());
+            newCf.setWidth(oldCf.getWidth());
+            refs.add(name);
+            cf.getRefFunctions().remove(name);
+        }
+        return refs;
     }
 
     private final Map<String, FunctionFactory> keyWords = new HashMap<>();
