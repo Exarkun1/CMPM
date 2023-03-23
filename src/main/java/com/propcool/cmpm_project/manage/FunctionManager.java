@@ -113,6 +113,8 @@ public class FunctionManager {
             newCf.setColor(oldCf.getColor());
             newCf.setWidth(oldCf.getWidth());
             refs.add(name);
+        }
+        for(var name : refs){
             cp.getRefFunctions().remove(name);
         }
         return refs;
@@ -130,6 +132,8 @@ public class FunctionManager {
             newCf.setColor(oldCf.getColor());
             newCf.setWidth(oldCf.getWidth());
             refs.add(name);
+        }
+        for(var name : refs){
             cf.getRefFunctions().remove(name);
         }
         return refs;
