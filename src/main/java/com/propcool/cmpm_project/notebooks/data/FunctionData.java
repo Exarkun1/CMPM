@@ -28,8 +28,14 @@ public class FunctionData implements Serializable {
     public void setWidth(int width) {
         this.width = width;
     }
-
+    public int getDefaultName() {
+        return defaultName;
+    }
+    public void setDefaultName(int defaultName) {
+        this.defaultName = defaultName;
+    }
     private String expression;
     private String color;
     private int width;
+    private int defaultName;
 }

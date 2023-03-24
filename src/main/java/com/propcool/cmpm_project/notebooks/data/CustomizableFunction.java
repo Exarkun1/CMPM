@@ -42,6 +42,13 @@ public class CustomizableFunction {
 
     public void setWidth(int width) { functionData.setWidth(width);}
 
+    public int getDefaultName(){
+        return functionData.getDefaultName();
+    }
+    public void setDefaultName(int defaultName){
+        functionData.setDefaultName(defaultName);
+    }
+
     public FunctionData getData() { return functionData;}
     public void addParams(Collection<String> params){
         this.params.addAll(params);

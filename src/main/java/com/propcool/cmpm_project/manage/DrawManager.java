@@ -9,9 +9,12 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
-import java.util.Collection;
+import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 /**
  * Менеджер рисования, создаёт линии для графиков и добавляет их на панель
@@ -37,30 +40,39 @@ public class DrawManager {
         double pixelSize = coordinateManager.getPixelSize();
 
         Group groupXY = new Group();
+        Group groupText = new Group();
         double dist = 1/pixelSize;
         // Создание линий на расстоянии 1 для эмитации клеточек
         for(double y = centerY+dist; y < height; y += dist){
             if(y > 0){
                 Line lineX = createLine(0, y, wight, y, Color.LIGHTGRAY, 2);
                 groupXY.getChildren().add(lineX);
+                Text counter = createCounterY(y);
+                if(pixelSize < 0.02 && y+dist/3 < height && centerX >= 20 && centerX <= wight-20) groupText.getChildren().add(counter);
             }
         }
         for(double y = centerY-dist; y > 0; y -= dist){
             if(y < height){
                 Line lineX = createLine(0, y, wight, y, Color.LIGHTGRAY, 2);
                 groupXY.getChildren().add(lineX);
+                Text counter = createCounterY(y);
+                if(pixelSize < 0.02 && y-dist/3 > 0 && centerX >= 20 && centerX <= wight-20) groupText.getChildren().add(counter);
             }
         }
         for(double x = centerX+dist; x < wight; x += dist){
             if(x > 0){
                 Line lineY = createLine(x, 0, x, height, Color.LIGHTGRAY, 2);
                 groupXY.getChildren().add(lineY);
+                Text counter = createCounterX(x);
+                if(pixelSize < 0.02 && x+dist/3 < wight && centerY >= 20 && centerY <= height-20) groupText.getChildren().add(counter);
             }
         }
         for(double x = centerX-dist; x > 0; x -= dist){
             if(x < wight){
                 Line lineY = createLine(x, 0, x, height, Color.LIGHTGRAY, 2);
                 groupXY.getChildren().add(lineY);
+                Text counter = createCounterX(x);
+                if(pixelSize < 0.02 && x-dist/3 > 0 && centerY >= 20 && centerY <= height-20) groupText.getChildren().add(counter);
             }
         }
 
@@ -76,11 +88,16 @@ public class DrawManager {
         if(centerX >= 0 && centerX <= wight)
             groupXY.getChildren().add(lineY);
 
-        graphics.put("", groupXY);
+        Text counter = createCounterX(coordinateManager.getCenterX());
+        if(pixelSize < 0.02 && centerX >= 20 && centerX <= wight-20 && centerY >= 20 && centerY <= height-20) groupText.getChildren().add(counter);
+
+        graphics.put("1xy", groupXY);
 
         for (var functionName : functionManager.getFunctions().keySet()){
             rebuildFunction(functionName);
         }
+
+        graphics.put("1t", groupText);
     }
 
     private Line createLine(double x0, double y0, double x1, double y1, Color color, int strokeWidth){
@@ -88,6 +105,22 @@ public class DrawManager {
         line.setStroke(color);
         line.setStrokeWidth(strokeWidth);
         return line;
+    }
+    private Text createCounterY(double y){
+        double y0 = -(y-coordinateManager.getCenterY())*coordinateManager.getPixelSize();
+        Text counter = new Text(format.format(y0));
+        counter.setLayoutX(coordinateManager.getCenterX()+3);
+        counter.setLayoutY(y+15);
+        counter.setFont(new Font(14));
+        return counter;
+    }
+    private Text createCounterX(double x){
+        double x0 = (x-coordinateManager.getCenterX())*coordinateManager.getPixelSize();
+        Text counter = new Text(format.format(x0));
+        counter.setLayoutX(x+3);
+        counter.setLayoutY(coordinateManager.getCenterY()+15);
+        counter.setFont(new Font(14));
+        return counter;
     }
     /**
      * Пересоздание линий одной функции
@@ -182,8 +215,9 @@ public class DrawManager {
     }
     private final int step = 2;
     private final AnchorPane paneForGraphs;
-    private final Map<String, Group> graphics = new HashMap<>();
+    private final Map<String, Group> graphics = new LinkedHashMap<>();
     private CoordinateManager coordinateManager;
     private final FunctionManager functionManager;
     private final ControlManager controlManager;
+    private final DecimalFormat format = new DecimalFormat("#.#");
 }

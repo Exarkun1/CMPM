@@ -1,9 +1,9 @@
 package com.propcool.cmpm_project.manage;
 
+import com.propcool.cmpm_project.analysing.build.DifBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionFactory;
-import com.propcool.cmpm_project.components.TextFieldBox;
-import com.propcool.cmpm_project.components.TextFieldOnPage;
+import com.propcool.cmpm_project.analysing.build.NamedFunction;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.Combination;
@@ -37,8 +37,8 @@ public class FunctionManager {
     public CustomizableParameter getParam(String name){
         return parameters.get(name);
     }
-    public String buildFunction(String text){
-        return functionBuilder.building(text);
+    public String buildFunction(String text, int defaultName){
+        return functionBuilder.building(text, defaultName);
     }
     public void clearFunctions(){
         functions.clear();
@@ -54,6 +54,21 @@ public class FunctionManager {
     }
     public Map<String, FunctionFactory> getKeyWords(){
         return Collections.unmodifiableMap(keyWords);
+    }
+    public Function returnParam(String name, NamedFunction nf){
+        CustomizableParameter cp = getParam(name);
+        if(cp == null) {
+            Constant c = new Constant(1);
+            cp = new CustomizableParameter(c);
+            cp.setArea(10);
+            cp.setValue(1);
+            cp.setName(name);
+            putParam(name, cp);
+        }
+        nf.getParams().add(name);
+        // Добавление ссылки на функцию в параметре
+        cp.getRefFunctions().add(nf.getName());
+        return cp.getParam();
     }
     /**
      * Удаление ссылок на функцию в параметрах
@@ -108,10 +123,11 @@ public class FunctionManager {
         for(var name : cp.getRefFunctions()){
             if(name.equals(functionName)) continue;
             CustomizableFunction oldCf = removeFunction(name);
-            String newFunctionName = buildFunction(oldCf.getExpression());
+            String newFunctionName = buildFunction(oldCf.getExpression(), oldCf.getDefaultName());
             CustomizableFunction newCf = getFunction(newFunctionName);
             newCf.setColor(oldCf.getColor());
             newCf.setWidth(oldCf.getWidth());
+            newCf.setDefaultName(oldCf.getDefaultName());
             refs.add(name);
         }
         for(var name : refs){
@@ -127,10 +143,11 @@ public class FunctionManager {
         if(cf == null) return refs;
         for(var name : cf.getRefFunctions()){
             CustomizableFunction oldCf = removeFunction(name);
-            String newFunctionName = buildFunction(oldCf.getExpression());
+            String newFunctionName = buildFunction(oldCf.getExpression(), oldCf.getDefaultName());
             CustomizableFunction newCf = getFunction(newFunctionName);
             newCf.setColor(oldCf.getColor());
             newCf.setWidth(oldCf.getWidth());
+            newCf.setDefaultName(oldCf.getDefaultName());
             refs.add(name);
         }
         for(var name : refs){
@@ -139,12 +156,17 @@ public class FunctionManager {
         return refs;
     }
 
+    public Function buildDif(Function function){
+        return difBuilder.buildDif(function);
+    }
+
     private final Map<String, FunctionFactory> keyWords = new HashMap<>();
     private final List<String> constants = List.of("pi", "e");
 
     private final  Map<String, CustomizableFunction> functions = new HashMap<>();
     private final  Map<String, CustomizableParameter> parameters = new HashMap<>();
     private final FunctionBuilder functionBuilder = new FunctionBuilder(this);
+    private final DifBuilder difBuilder = new DifBuilder();
 
     public FunctionManager(){
         keyWords.put("sqrt", (b, e, s, p) -> new Pow(functionBuilder.buildingNotNamed(e, p), 0.5));

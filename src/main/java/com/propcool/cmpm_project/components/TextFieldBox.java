@@ -4,6 +4,7 @@ import com.propcool.cmpm_project.CmpmApplication;
 import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.manage.TextFieldsManager;
+import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
 import javafx.geometry.Pos;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.image.ImageView;
@@ -11,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
+import java.util.List;
 
 /**
  * Панель для элементов, связанных с текстовыми полями, и самим полем
@@ -35,8 +37,18 @@ public class TextFieldBox extends HBox {
 
         imageView.setOnMousePressed(mouseEvent -> {
             functionManager.removeParamRefs(textField.getFunctionName());
-            //functionManager.removeFunctionRefs(textField.getFunctionName());
+            CustomizableFunction cf = functionManager.removeFunction(textField.getFunctionName());
             textFieldsManager.removeTextField(this);
+
+            List<String> functionRefs = functionManager.rebuildRefsWithFunction(cf);
+            for(var name : functionRefs){
+                drawManager.remove(name);
+                drawManager.rebuildFunction(name);
+                drawManager.redraw(name);
+            }
+
+            textFieldsManager.addSliders();
+            textFieldsManager.removeSliders();
         });
         getChildren().addAll(colorPicker, textField, imageView);
     }

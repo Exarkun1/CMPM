@@ -4,8 +4,11 @@ import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.combination.Exponential;
 
 public class Exp extends Exponential {
+    public Exp(Constant c, Function f){
+        super(c, f);
+    }
     public Exp(double number, Function f) {
-        super(new Constant(number), f);
+        this(new Constant(number), f);
     }
     public Exp(Function f) {
         this(Math.E, f);
@@ -14,4 +17,8 @@ public class Exp extends Exponential {
         this(new Variable());
     }
     public Exp(double number){this(number, new Variable());}
+    @Override
+    public Constant getFunction1() {
+        return (Constant) func1;
+    }
 }

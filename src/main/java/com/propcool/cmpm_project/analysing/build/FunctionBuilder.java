@@ -3,7 +3,6 @@ package com.propcool.cmpm_project.analysing.build;
 import com.propcool.cmpm_project.analysing.Analyser;
 import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
-import com.propcool.cmpm_project.notebooks.data.CustomizableParameter;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.*;
@@ -22,41 +21,36 @@ public class FunctionBuilder {
     /**
      * Анализ и построение функиии
      * */
-    public String building(String text){
+    public String building(String text, int defaultName){
         String new_text = analyser.processing(text, functionManager);
+        CustomizableFunction cf;
+        String functionName;
         if(new_text != null){
-            String functionName = new_text.replaceAll("\\(.+|=.+", "");
+            functionName = new_text.replaceAll("\\(.+|=.+", "");
             String functionBase = new_text.replaceAll(".+=", "");
 
             // Если функция имеет уникальное имя, то возвращаем функцию с этим именем
             if(!functionName.equals("y")) {
                 NamedFunction nf = new NamedFunction(functionName);
-                CustomizableFunction cf = new CustomizableFunction(buildingNotNamed(functionBase, nf));
+                cf = new CustomizableFunction(buildingNotNamed(functionBase, nf));
                 cf.addParams(nf.getParams());
-                FunctionData functionData = cf.getData();
-                functionData.setExpression(text);
-                functionManager.putFunction(functionName, cf);
-                return functionName;
             }
             // Иначе добаляем уникальный идентификатор
             else {
-                String idY = String.valueOf(count_y++);
-                NamedFunction nf = new NamedFunction(idY);
-                CustomizableFunction cf = new CustomizableFunction(buildingNotNamed(functionBase, nf));
+                functionName = String.valueOf(defaultName);
+                NamedFunction nf = new NamedFunction(functionName);
+                cf = new CustomizableFunction(buildingNotNamed(functionBase, nf));
                 cf.addParams(nf.getParams());
-                FunctionData functionData = cf.getData();
-                functionData.setExpression(text);
-                functionManager.putFunction(idY, cf);
-                return idY;
             }
         } else {
-            String idBad = (count_bad++)+"bad";
-            CustomizableFunction cf = new CustomizableFunction(null);
-            FunctionData functionData = cf.getData();
-            functionData.setExpression(text);
-            functionManager.putFunction(idBad, cf);
-            return idBad;
+            functionName = (defaultName)+"bad";
+            cf = new CustomizableFunction(null);
         }
+        FunctionData functionData = cf.getData();
+        functionData.setExpression(text);
+        functionData.setDefaultName(defaultName);
+        functionManager.putFunction(functionName, cf);
+        return functionName;
     }
     /**
      * Внутренняя реализация построителя функций через рекурсию
@@ -70,32 +64,15 @@ public class FunctionBuilder {
         else if(text.equals("e")) return new Constant(Math.E);
         else if(text.equals("pi")) return new Constant(Math.PI);
         else if(text.matches("\\d+|\\d+\\.\\d+")) return new Constant(Double.parseDouble(text));
-        else if(text.matches("[a-z]+\\d+|[a-z]+")){
-            //Временно удалена возможность добавления кастомных функций в другую функцию(на доработку)
-            //CustomizableFunction cf = Elements.functions.get(text);
-            //if(cf != null){
-                //return cf.getFunction();
-            //}
-            CustomizableParameter cp = functionManager.getParam(text);
-            if(cp == null) {
-                Constant c = new Constant(1);
-                cp = new CustomizableParameter(c);
-                cp.setArea(10);
-                cp.setValue(1);
-                cp.setName(text);
-                functionManager.putParam(text, cp);
-            }
-            nf.getParams().add(text);
-            // Добавление ссылки на функцию в параметре
-            cp.getRefFunctions().add(nf.getName());
-            return cp.getParam();
-        }
+        else if(text.matches("[a-z]+\\d+|[a-z]+")) return functionManager.returnParam(text, nf);
 
         // Тело рекурсии, последовательный поиск символов операций по возрастанию их "силы"
         for(var factory : factories){
             Function temp = searchingFunctions(text, nf, factory);
             if(temp != null) return temp;
         }
+        Function dif = searchingDifferentials(text, nf);
+        if(dif != null) return dif;
         throw new RuntimeException("Не верные знаки");
     }
     /**
@@ -138,6 +115,54 @@ public class FunctionBuilder {
         return null;
     }
     /**
+     * Создание производной функции
+     * */
+    private Function searchingDifferentials(String text, NamedFunction nf){
+        int count = 0;
+        for(int i = text.length()-1; i > 0; i--){
+            char symbol = text.charAt(i);
+            if(symbol == ')') count++;
+            else if(symbol == '(') count--;
+
+            if(count == 0 && symbol == '\'') {
+                int j = i+1;
+                while(symbol == '\''){
+                    symbol = text.charAt(--i);
+                }
+                String begin = text.substring(0, i+1);
+                String end = text.substring(j);
+
+                CustomizableFunction cf = functionManager.getFunction(begin);
+                Function dif;
+                if(cf != null) {
+                    dif = cf.getFunction().clone();
+                    cf.getRefFunctions().add(nf.getName());
+                }
+                else {
+                    // Производная стандартной функции или параметра
+                    FunctionFactory ff = functionManager.getKeyWord(begin);
+                    if(ff != null) dif = ff.createFunction(begin, end, '!', nf);
+                    else return functionManager.buildDif(functionManager.returnParam(begin, nf));
+                }
+
+                // Ищем производную столько раз сколько '
+                for(int k = 0; k < j-i-1; k++){
+                    dif = functionManager.buildDif(dif);
+                }
+
+                // Подставляем в производную значения
+                List<FunctionDecorator> decors = new ArrayList<>();
+                functionManager.getFuncDecorators(dif, decors);
+                for(var decor : decors){
+                    decor.setFunction(buildingNotNamed(end, nf));
+                }
+
+                return dif;
+            }
+        }
+        return null;
+    }
+    /**
      * Список фабрик для стандартных функций
      * */
     private final List<ContainFactoryAdapter> factories = List.of(
@@ -154,7 +179,16 @@ public class FunctionBuilder {
             new ContainFactoryAdapter((b, e, s, p) -> new Multiply(buildingNotNamed(b, p), buildingNotNamed(e, p)),
                     s -> s == '#'),
 
-            new ContainFactoryAdapter((b, e, s, p) -> new Exponential(buildingNotNamed(b, p), buildingNotNamed(e, p)),
+            new ContainFactoryAdapter((b, e, s, p) -> {
+                Function first = buildingNotNamed(b, p);
+                Function second = buildingNotNamed(e, p);
+                if(second instanceof Constant c){
+                    return new Pow(first, c);
+                } else if (first instanceof Constant c) {
+                    return new Exp(c, second);
+                }
+                else return new Exponential(first, second);
+            },
                     s -> s == '^'),
 
             new ContainFactoryAdapter((b, e, s, p) -> createFunctionByName(b, e, p),
@@ -166,7 +200,5 @@ public class FunctionBuilder {
         return functionManager.getFunctionFactory().createFunction(begin, end, '\0', nf);
     }
     private final Analyser analyser = new Analyser();
-    private static int count_y;
-    private static int count_bad;
     private final FunctionManager functionManager;
 }

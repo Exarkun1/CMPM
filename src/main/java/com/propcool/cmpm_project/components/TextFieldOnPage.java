@@ -20,6 +20,7 @@ import java.util.Set;
 public class TextFieldOnPage extends TextField {
     public TextFieldOnPage(String text, FunctionManager functionManager, DrawManager drawManager, TextFieldsManager textFieldsManager){
         super(text);
+        this.index = counter++;
         this.functionManager = functionManager;
         this.drawManager = drawManager;
         this.textFieldsManager = textFieldsManager;
@@ -43,7 +44,7 @@ public class TextFieldOnPage extends TextField {
             CustomizableFunction cf = functionManager.removeFunction(functionName);
             drawManager.remove(functionName);
 
-            functionName = functionManager.buildFunction(getText());
+            functionName = functionManager.buildFunction(getText(), index);
             functionData = functionManager.getFunction(functionName).getData();
             functionData.setColor(defaultColor.toString());
             functionData.setWidth(defaultWidth);
@@ -90,4 +91,6 @@ public class TextFieldOnPage extends TextField {
     private FunctionData functionData;
     private Color defaultColor = Color.GREEN;
     private int defaultWidth = 3;
+    private final int index;
+    private static int counter = 0;
 }

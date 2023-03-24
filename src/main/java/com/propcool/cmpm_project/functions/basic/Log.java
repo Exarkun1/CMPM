@@ -14,6 +14,10 @@ public class Log extends Logarithm {
         this(new Variable());
     }
     @Override
+    public Constant getFunction1(){
+        return (Constant) super.getFunction1();
+    }
+    @Override
     public double getLeftBorder() {
         return func2 instanceof Variable ? 0 : super.getLeftBorder();
     }

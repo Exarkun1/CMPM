@@ -2,8 +2,6 @@ package com.propcool.cmpm_project.analysing.build;
 
 import com.propcool.cmpm_project.functions.Function;
 
-import java.util.List;
-
 /**
  * Адаптер для объединения FunctionFactory и Contain
  * */

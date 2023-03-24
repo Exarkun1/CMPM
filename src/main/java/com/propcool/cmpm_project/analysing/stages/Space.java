@@ -37,5 +37,5 @@ public enum Space implements State{
             {Number.A, Number.B, Word.A, Base.B, End.E, End.E, Base.C, End.E, N, End.E, End.E},
             {Number.A, Number.B, Word.A, Base.B, End.E, Base.E, Base.C, End.E, N2, End.E, End.E}
     };
-    private int index;
+    private final int index;
 }

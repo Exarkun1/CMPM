@@ -14,8 +14,9 @@ public enum Word implements State {
         else if(c == '+' || c == '-' || c == '*' || c == '/' || c == '^') return 2;
         else if(c == '(') return 3;
         else if(c == ')') return 4;
-        else if(c == ' ' || c == '\t' || c == '\n') return 5;
-        else return 6;
+        else if(c == '\'') return 5;
+        else if(c == ' ' || c == '\t' || c == '\n') return 6;
+        else return 7;
     }
 
     @Override
@@ -28,9 +29,9 @@ public enum Word implements State {
         return index;
     }
     private static final State[][] matrix = {
-            //a + ( ) \t e f
-            {A, B, Base.A, Base.C, Base.D, Space.Y, End.E, End.F},
-            {End.E, B, Base.A, Base.C, Base.D, Space.Y, End.E, End.F}
+            //a 0 + ( ) ' \t e f
+            {A, B, Base.A, Base.C, Base.D, Dif.A, Space.Y, End.E, End.F},
+            {End.E, B, Base.A, Base.C, Base.D, Dif.A, Space.Y, End.E, End.F}
     };
     private final int index;
 }
