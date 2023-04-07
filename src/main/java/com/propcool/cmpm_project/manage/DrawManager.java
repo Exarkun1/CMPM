@@ -137,6 +137,9 @@ public class DrawManager {
         if(functionName.matches("\\d+imp")) rebuildImplicitFunction(functionName, function, color, strokeWidth);
         else rebuildExplicitFunction(functionName, function, color, strokeWidth);
     }
+    /**
+     * Построение неявной функции
+     * */
     public void rebuildImplicitFunction(String functionName, Function function, Color color, int strokeWidth){
         // Здесь будет алгоритм отрисовки неявных функций
         int x0 = (int)(-coordinateManager.getCenterX()*coordinateManager.getPixelSize())-1;
@@ -145,17 +148,22 @@ public class DrawManager {
         int y0 = (int)((coordinateManager.getCenterY()-coordinateManager.getHeight())*coordinateManager.getPixelSize())-1;
         int y1 = (int)(coordinateManager.getCenterY()*coordinateManager.getPixelSize())+1;
 
+        double step = coordinateManager.getPixelSize()*100;
         List<Line> lines = new ArrayList<>();
-        for(int i = y0; i < y1; i++){
-            for(int j = x0; j < x1; j++){
-                Quadtree quadtree = new Quadtree(new Point(j, i), 1, 1, function, coordinateManager);
+        for(double i = y0; i < y1; i+=step){
+            for(double j = x0; j < x1; j+=step){
+                Quadtree quadtree = new Quadtree(new Point(j, i), step, 1, function, coordinateManager);
                 lines.addAll(quadtree.gridSearch(color, strokeWidth));
             }
         }
-
+        /*Quadtree quadtree = new Quadtree(new Point(-1, -3), 1, 1, function, coordinateManager);
+        lines.addAll(quadtree.gridSearch(color, strokeWidth));*/
         Group group = new Group(lines.toArray(Line[]::new));
         graphics.put(functionName, group);
     }
+    /**
+     * Построение явной функции
+     * */
     public void rebuildExplicitFunction(String functionName, Function function, Color color, int strokeWidth){
 
         Group groupLines = new GroupLines(function, coordinateManager, this, controlManager);

@@ -46,12 +46,12 @@ public class MainManager {
     }
     public void scale(double delta, double x, double y){
         if(delta < 0){
-            coordinateManagers.get("cartesian").zoomIn(x, y);
-            coordinateManagers.get("polar").zoomIn(x, y);
-        }
-        else{
             coordinateManagers.get("cartesian").zoomOut(x, y);
             coordinateManagers.get("polar").zoomOut(x, y);
+        }
+        else{
+            coordinateManagers.get("cartesian").zoomIn(x, y);
+            coordinateManagers.get("polar").zoomIn(x, y);
         }
         drawManager.makeNewFrame();
     }

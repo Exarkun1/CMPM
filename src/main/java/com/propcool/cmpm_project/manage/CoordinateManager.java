@@ -38,9 +38,9 @@ public abstract class CoordinateManager {
         setMouse(x, y);
     }
     /**
-     * Приближение к точке
+     * Отдпление от точки
      * */
-    public void zoomIn(double x, double y){
+    public void zoomOut(double x, double y){
         double dx = x-centerX;
         double dy = y-centerY;
 
@@ -49,9 +49,9 @@ public abstract class CoordinateManager {
         centerY += dy*(zoomCoef-1)/zoomCoef;
     }
     /**
-     * Отдпление от точки
+     * Приближение к точке
      * */
-    public void zoomOut(double x, double y){
+    public void zoomIn(double x, double y){
         double dx = x-centerX;
         double dy = y-centerY;
 

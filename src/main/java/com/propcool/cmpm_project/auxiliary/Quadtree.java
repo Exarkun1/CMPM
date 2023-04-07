@@ -7,7 +7,9 @@ import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Квадрант для построения неявной функции
+ * */
 public class Quadtree {
     public Quadtree(Point point, double size, int level, Function function, CoordinateManager coordinateManager) {
         this.level = level;
@@ -68,7 +70,7 @@ public class Quadtree {
         double f1 = function.get(x1, y1);
         double f2 = function.get(x2, y2);
         double r = f2 - f1;
-        return  new Point(x1, y2 -  f2 * (y2 - y1)/r);
+        return new Point(x1, y2 -  f2 * (y2 - y1)/r);
     }
     private void interpolate(List<Line> lines, Color color, int strokeWidth){
         Point p1, p2;
@@ -119,10 +121,19 @@ public class Quadtree {
     }
 
     private void gridSearch(List<Line> lines, Color color, int strokeWidth){
-        signs[0] =  function.get(point.getX(), point.getY()) < 0 ? -1 : 1;
-        signs[1] =  function.get(point.getX() + size, point.getY()) < 0 ? -1 : 1;
-        signs[2] =  function.get(point.getX() + size, point.getY() + size) < 0 ? -1 : 1;
-        signs[3] =  function.get(point.getX(), point.getY() + size) < 0 ? -1 : 1;
+        /*boolean isZeros = false;
+        signs[0] = (int)function.get(point.getX(), point.getY());
+        signs[1] = (int)function.get(point.getX() + size, point.getY());
+        signs[2] = (int)function.get(point.getX() + size, point.getY() + size);
+        signs[3] = (int)function.get(point.getX(), point.getY() + size);
+        if(isZeros()) isZeros = true;*/
+
+        signs[0] = getSign(point.getX(), point.getY());
+        signs[1] = getSign(point.getX() + size, point.getY());
+        signs[2] = getSign(point.getX() + size, point.getY() + size);
+        signs[3] = getSign(point.getX(), point.getY() + size);
+        zerosToSign();
+
         if(isIntersect()) {
             isSegment = true;
             if(level < maxLevel){
@@ -133,6 +144,30 @@ public class Quadtree {
             }
             else interpolate(lines, color, strokeWidth);
         }
+    }
+    private int getSign(double x, double y){
+        double z = function.get(x, y);
+        return (z < 0) ? -1 : (z > 0) ? 1 : 0;
+    }
+    private void zerosToSign(){
+        met:
+        for(int i = 0; i < 4; i++){
+            if(signs[i] != 0) continue;
+            for(int j = 0; j < 4; j++){
+                if(signs[j] == 1) {
+                    signs[i] = -1;
+                    continue met;
+                }
+                else if(signs[j] == -1) {
+                    signs[i] = 1;
+                    continue met;
+                }
+            }
+            signs[i] = 1;
+        }
+    }
+    private boolean isZeros(){
+        return signs[0] == 0 && signs[1] == 0 && signs[2] == 0 && signs[3] == 0;
     }
 
     private final Quadtree[] children = new Quadtree[4];
