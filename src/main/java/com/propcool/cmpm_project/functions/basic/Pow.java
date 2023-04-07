@@ -11,7 +11,7 @@ public class Pow extends Exponential {
         this(f, new Constant(number));
     }
     public Pow(double number) {
-        this(new Variable(), number);
+        this(new VariableX(), number);
     }
     @Override
     public Constant getFunction2() {

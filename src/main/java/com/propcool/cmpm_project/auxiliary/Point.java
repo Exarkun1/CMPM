@@ -5,6 +5,9 @@ public class Point {
         this.x = x;
         this.y = y;
     }
+    public Point(Point point){
+        this(point.getX(), point.getY());
+    }
 
     public double getX() {
         return x;

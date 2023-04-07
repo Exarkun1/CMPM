@@ -29,8 +29,14 @@ public class FunctionBuilder {
             functionName = new_text.replaceAll("\\(.+|=.+", "");
             String functionBase = new_text.replaceAll(".+=", "");
 
+            if(functionName.equals("0")) {
+                functionName = defaultName+"imp";
+                NamedFunction nf = new NamedFunction(functionName);
+                cf = new CustomizableFunction(buildingNotNamed(functionBase, nf));
+                cf.addParams(nf.getParams());
+            }
             // Если функция имеет уникальное имя, то возвращаем функцию с этим именем
-            if(!functionName.equals("y")) {
+            else if(!functionName.equals("y")) {
                 NamedFunction nf = new NamedFunction(functionName);
                 cf = new CustomizableFunction(buildingNotNamed(functionBase, nf));
                 cf.addParams(nf.getParams());
@@ -60,7 +66,8 @@ public class FunctionBuilder {
         // Удаление внешних пробелов, с проверкой, что функция не изменится
         text = removingOuterBrackets(text);
         // Выход из рекурсии
-        if(text.equals("x")) return new FunctionDecorator();
+        if(text.equals("x")) return new FunctionDecoratorX();
+        else if(nf.getName().matches("\\d+imp") && text.equals("y")) return new FunctionDecoratorY();
         else if(text.equals("e")) return new Constant(Math.E);
         else if(text.equals("pi")) return new Constant(Math.PI);
         else if(text.matches("\\d+|\\d+\\.\\d+")) return new Constant(Double.parseDouble(text));
@@ -151,7 +158,7 @@ public class FunctionBuilder {
                 }
 
                 // Подставляем в производную значения
-                List<FunctionDecorator> decors = new ArrayList<>();
+                List<FunctionDecoratorX> decors = new ArrayList<>();
                 functionManager.getFuncDecorators(dif, decors);
                 for(var decor : decors){
                     decor.setFunction(buildingNotNamed(end, nf));

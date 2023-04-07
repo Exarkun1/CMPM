@@ -7,8 +7,9 @@ public class CTan extends Mono {
         super(f);
     }
     public CTan(){}
+
     @Override
-    public double get(double x) {
-        return Math.cos(func.get(x)) / Math.sin(func.get(x));
+    public double get(double x, double y) {
+        return Math.cos(func.get(x, y)) / Math.sin(func.get(x, y));
     }
 }

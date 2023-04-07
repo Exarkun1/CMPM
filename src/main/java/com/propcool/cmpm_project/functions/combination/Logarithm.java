@@ -7,9 +7,8 @@ public class Logarithm extends Combination {
     public Logarithm(Function f1, Function f2) {
         super(f1, f2);
     }
-
     @Override
-    public double get(double x) {
-        return Math.log(func2.get(x)) / Math.log(func1.get(x));
+    public double get(double x, double y) {
+        return Math.log(func2.get(x, y)) / Math.log(func1.get(x, y));
     }
 }

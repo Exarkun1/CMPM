@@ -9,7 +9,7 @@ public class Tan extends Mono {
     public Tan(){}
 
     @Override
-    public double get(double x) {
-        return Math.sin(func.get(x)) / Math.cos(func.get(x));
+    public double get(double x, double y) {
+        return Math.sin(func.get(x, y)) / Math.cos(func.get(x, y));
     }
 }

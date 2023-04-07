@@ -11,7 +11,7 @@ public class Log extends Logarithm {
         this(Math.E, f);
     }
     public Log(){
-        this(new Variable());
+        this(new VariableX());
     }
     @Override
     public Constant getFunction1(){
@@ -19,6 +19,6 @@ public class Log extends Logarithm {
     }
     @Override
     public double getLeftBorder() {
-        return func2 instanceof Variable ? 0 : super.getLeftBorder();
+        return func2 instanceof VariableX ? 0 : super.getLeftBorder();
     }
 }

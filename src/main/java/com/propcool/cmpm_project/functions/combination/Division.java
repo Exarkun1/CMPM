@@ -6,9 +6,8 @@ public class Division extends Combination {
     public Division(Function f1, Function f2) {
         super(f1, f2);
     }
-
     @Override
-    public double get(double x) {
-        return func1.get(x) / func2.get(x);
+    public double get(double x, double y) {
+        return func1.get(x, y) / func2.get(x, y);
     }
 }

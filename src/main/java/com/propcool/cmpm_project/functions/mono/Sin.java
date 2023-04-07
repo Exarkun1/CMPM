@@ -7,9 +7,8 @@ public class Sin extends Mono {
         super(f);
     }
     public Sin(){}
-
     @Override
-    public double get(double x) {
-        return Math.sin(func.get(x));
+    public double get(double x, double y) {
+        return Math.sin(func.get(x, y));
     }
 }

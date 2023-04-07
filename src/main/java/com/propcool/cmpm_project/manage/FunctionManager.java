@@ -89,7 +89,7 @@ public class FunctionManager {
         return (begin, end, symbol, nf) -> {
             getFunction(begin).getRefFunctions().add(nf.getName());
             Function function = getFunction(begin).getFunction().clone();
-            List<FunctionDecorator> decors = new ArrayList<>();
+            List<FunctionDecoratorX> decors = new ArrayList<>();
             getFuncDecorators(function, decors);
             for(var decor : decors){
                 decor.setFunction(functionBuilder.buildingNotNamed(end, nf));
@@ -100,11 +100,11 @@ public class FunctionManager {
     /**
      * Выдача функций находящихся над x
      * */
-    public void getFuncDecorators(Function function, List<FunctionDecorator> decorators){
-        if(function instanceof FunctionDecorator decorator && !decorator.isChanged()) {
+    public void getFuncDecorators(Function function, List<FunctionDecoratorX> decorators){
+        if(function instanceof FunctionDecoratorX decorator && !decorator.isChanged()) {
             decorators.add(decorator);
             decorator.setChanged(true);
-        } else if(function instanceof FunctionDecorator decorator) {
+        } else if(function instanceof FunctionDecoratorX decorator) {
             getFuncDecorators(decorator.getFunction(), decorators);
         } else if(function instanceof Mono mono){
             getFuncDecorators(mono.getFunction(), decorators);
@@ -128,6 +128,7 @@ public class FunctionManager {
             newCf.setColor(oldCf.getColor());
             newCf.setWidth(oldCf.getWidth());
             newCf.setDefaultName(oldCf.getDefaultName());
+            newCf.setVisible(oldCf.isVisible());
             refs.add(name);
         }
         for(var name : refs){
@@ -143,11 +144,16 @@ public class FunctionManager {
         if(cf == null) return refs;
         for(var name : cf.getRefFunctions()){
             CustomizableFunction oldCf = removeFunction(name);
+            if(oldCf == null) {
+                refs.add(name);
+                continue;
+            } // Исправление ошибки пустой ссылки на функцию
             String newFunctionName = buildFunction(oldCf.getExpression(), oldCf.getDefaultName());
             CustomizableFunction newCf = getFunction(newFunctionName);
             newCf.setColor(oldCf.getColor());
             newCf.setWidth(oldCf.getWidth());
             newCf.setDefaultName(oldCf.getDefaultName());
+            newCf.setVisible(oldCf.isVisible());
             refs.add(name);
         }
         for(var name : refs){
@@ -157,7 +163,7 @@ public class FunctionManager {
     }
 
     public Function buildDif(Function function){
-        return difBuilder.buildDif(function);
+        return difBuilder.difX(function);
     }
 
     private final Map<String, FunctionFactory> keyWords = new HashMap<>();

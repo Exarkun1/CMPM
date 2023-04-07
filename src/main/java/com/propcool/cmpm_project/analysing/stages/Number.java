@@ -10,14 +10,13 @@ public enum Number implements State{
     @Override
     public int checkSymbol(char c) {
         if(c >= '0' && c <= '9') return 0;
-        else if(c >= 'a' && c <= 'z' && c != 'y' && c != 'x') return 1;
-        else if(c == 'x') return 2;
-        else if(c == '+' || c == '-' || c == '*' || c == '/' || c == '^') return 3;
-        else if(c == '(') return 4;
-        else if(c == ')') return 5;
-        else if(c == ',') return 6;
-        else if(c == ' ' || c == '\t' || c == '\n') return 7;
-        else return 8;
+        else if(c >= 'a' && c <= 'z') return 1;
+        else if(c == '+' || c == '-' || c == '*' || c == '/' || c == '^') return 2;
+        else if(c == '(') return 3;
+        else if(c == ')') return 4;
+        else if(c == ',') return 5;
+        else if(c == ' ' || c == '\t' || c == '\n') return 6;
+        else return 7;
     }
 
     @Override
@@ -30,11 +29,11 @@ public enum Number implements State{
         return index;
     }
     private static final State[][] matrix = {
-            //1 a x + ( ) , \t e f
-            {End.E, Word.A, Base.B, Base.A, Base.C, Base.D, C, Space.Y, End.E, End.F},
-            {B, Word.A, Base.B, Base.A, Base.C, Base.D, C, Space.Y, End.E, End.F},
-            {D, End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E},
-            {D, End.E, End.E, Base.A, End.E, Base.D, End.E, Space.Y, End.E, End.F}
+            //1 a + ( ) , \t e f
+            {End.E, Word.A, Base.A, Base.B, Base.C, C, Space.Y, End.E, End.F},
+            {B, Word.A, Base.A, Base.B, Base.C, C, Space.Y, End.E, End.F},
+            {D, End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E},
+            {D, End.E, Base.A, End.E, Base.C, End.E, Space.Y, End.E, End.F}
     };
     private final int index;
 }

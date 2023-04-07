@@ -8,7 +8,7 @@ public class Abs extends Mono {
     }
     public Abs(){}
     @Override
-    public double get(double x) {
-        return Math.abs(func.get(x));
+    public double get(double x, double y) {
+        return Math.abs(func.get(x, y));
     }
 }

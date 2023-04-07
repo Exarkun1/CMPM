@@ -1,10 +1,8 @@
 package com.propcool.cmpm_project;
 
-import com.propcool.cmpm_project.analysing.build.DifBuilder;
 import com.propcool.cmpm_project.functions.Function;
-import com.propcool.cmpm_project.functions.basic.Pow;
-import com.propcool.cmpm_project.functions.basic.Variable;
-import com.propcool.cmpm_project.functions.combination.Exponential;
+import com.propcool.cmpm_project.functions.basic.VariableX;
+import com.propcool.cmpm_project.functions.basic.VariableY;
 import com.propcool.cmpm_project.functions.combination.Multiply;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

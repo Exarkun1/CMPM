@@ -1,8 +1,11 @@
 package com.propcool.cmpm_project.manage;
 
 import com.propcool.cmpm_project.auxiliary.Point;
+import com.propcool.cmpm_project.auxiliary.Quadtree;
 import com.propcool.cmpm_project.components.GroupLines;
 import com.propcool.cmpm_project.functions.Function;
+import com.propcool.cmpm_project.functions.basic.FunctionDecoratorY;
+import com.propcool.cmpm_project.functions.combination.Difference;
 import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -13,9 +16,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+
 /**
  * Менеджер рисования, создаёт линии для графиков и добавляет их на панель
  * */
@@ -96,7 +98,6 @@ public class DrawManager {
         for (var functionName : functionManager.getFunctions().keySet()){
             rebuildFunction(functionName);
         }
-
         graphics.put("1t", groupText);
     }
 
@@ -127,11 +128,35 @@ public class DrawManager {
      * */
     public void rebuildFunction(String functionName){
         CustomizableFunction cf = functionManager.getFunction(functionName);
-        if(cf == null || cf.getFunction() == null) return;
+        if(cf == null || cf.getFunction() == null || !cf.isVisible()) return;
 
         Function function = cf.getFunction();
         Color color = cf.getColor();
         int strokeWidth = cf.getWidth();
+
+        if(functionName.matches("\\d+imp")) rebuildImplicitFunction(functionName, function, color, strokeWidth);
+        else rebuildExplicitFunction(functionName, function, color, strokeWidth);
+    }
+    public void rebuildImplicitFunction(String functionName, Function function, Color color, int strokeWidth){
+        // Здесь будет алгоритм отрисовки неявных функций
+        int x0 = (int)(-coordinateManager.getCenterX()*coordinateManager.getPixelSize())-1;
+        int x1 = (int)((coordinateManager.getWight()-coordinateManager.getCenterX())*coordinateManager.getPixelSize())+1;
+
+        int y0 = (int)((coordinateManager.getCenterY()-coordinateManager.getHeight())*coordinateManager.getPixelSize())-1;
+        int y1 = (int)(coordinateManager.getCenterY()*coordinateManager.getPixelSize())+1;
+
+        List<Line> lines = new ArrayList<>();
+        for(int i = y0; i < y1; i++){
+            for(int j = x0; j < x1; j++){
+                Quadtree quadtree = new Quadtree(new Point(j, i), 1, 1, function, coordinateManager);
+                lines.addAll(quadtree.gridSearch(color, strokeWidth));
+            }
+        }
+
+        Group group = new Group(lines.toArray(Line[]::new));
+        graphics.put(functionName, group);
+    }
+    public void rebuildExplicitFunction(String functionName, Function function, Color color, int strokeWidth){
 
         Group groupLines = new GroupLines(function, coordinateManager, this, controlManager);
         Point point = coordinateManager.getCoordinate(function, coordinateManager.getMin());
@@ -147,21 +172,6 @@ public class DrawManager {
             if (!Double.isNaN(y0) && !Double.isNaN(y1) && start && end) {
                 Line line = createLine(x0, y0, x1, y1, color, strokeWidth);
                 groupLines.getChildren().add(line);
-                /*if (y0 <= height-2 && y1 <= height-2 && y0 >= 2 && y1 >= 2) {
-                    groupLines.getChildren().add(line);
-                } else if (y0 > height-2 && y1 <= height-2 && y1 >= 2) {
-                    line.setStartY(height-2);
-                    groupLines.getChildren().add(line);
-                } else if (y0 <= height-2 && y1 > height-2 && y0 >= 2) {
-                    line.setEndY(height-2);
-                    groupLines.getChildren().add(line);
-                } else if (y0 < 2 && y1 <= height-2 && y1 >= 2) {
-                    line.setStartY(2);
-                    groupLines.getChildren().add(line);
-                } else if (y0 <= height-2 && y1 < 2 && y0 >= 2) {
-                    line.setEndY(2);
-                    groupLines.getChildren().add(line);
-                }*/
             }
             x0 = x1;
             y0 = y1;

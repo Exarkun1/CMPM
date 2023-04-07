@@ -9,7 +9,7 @@ public class Cos extends Mono {
     public Cos(){}
 
     @Override
-    public double get(double x) {
-        return Math.cos(func.get(x));
+    public double get(double x, double y) {
+        return Math.cos(func.get(x, y));
     }
 }

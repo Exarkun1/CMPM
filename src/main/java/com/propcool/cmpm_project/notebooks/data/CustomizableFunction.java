@@ -48,6 +48,12 @@ public class CustomizableFunction {
     public void setDefaultName(int defaultName){
         functionData.setDefaultName(defaultName);
     }
+    public boolean isVisible(){
+        return functionData.isVisible();
+    }
+    public void setVisible(boolean visible){
+        functionData.setVisible(visible);
+    }
 
     public FunctionData getData() { return functionData;}
     public void addParams(Collection<String> params){

@@ -6,8 +6,9 @@ public class Constant implements Function {
     public Constant(double number){
         set(number);
     }
+
     @Override
-    public double get(double x) {
+    public double get(double x, double y) {
         return number;
     }
 

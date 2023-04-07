@@ -41,7 +41,7 @@ public class Analyser {
                     functionBase = new StringBuffer(functionBase).insert(index-count--, "#").toString(); // 4
                 }
             }
-            pattern = Pattern.compile("\\d[a-z]|\\)x|\\d\\(");
+            pattern = Pattern.compile("\\d[a-z]|\\d\\(");
             matcher = pattern.matcher(functionBase);
             count = 1;
             while (matcher.find()) {
@@ -71,8 +71,8 @@ public class Analyser {
             // у каждого состояния своя матрица, проверка символов и индексы
             state = state.getMatrix()[state.getIndex()][state.checkSymbol(text.charAt(i))];
 
-            if (state == Base.C) counter++;
-            else if (state == Base.D) counter--;
+            if (state == Base.B) counter++;
+            else if (state == Base.C) counter--;
 
             if (state == End.E || counter < 0) return false;
         }

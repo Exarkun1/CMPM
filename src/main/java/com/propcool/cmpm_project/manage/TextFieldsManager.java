@@ -92,6 +92,7 @@ public class TextFieldsManager {
             box.getTextField().setText(data.getExpression());
             box.getColorPicker().setValue(Color.valueOf(data.getColor()));
             box.getTextField().setDefaultColor(Color.valueOf(data.getColor()));
+            box.getTextField().setDefaultVisible(data.isVisible());
             box.getTextField().getProcess().processing();
             textFields.add(box);
             addTextField(box);

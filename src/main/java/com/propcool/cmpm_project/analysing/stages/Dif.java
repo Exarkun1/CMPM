@@ -23,7 +23,7 @@ public enum Dif implements State {
     }
     private static final State[][] matrix = {
             // ' ( e f
-            {A, Base.C, End.E, End.E}
+            {A, Base.B, End.E, End.E}
     };
     private final int index;
 }

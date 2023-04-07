@@ -30,8 +30,8 @@ public enum Word implements State {
     }
     private static final State[][] matrix = {
             //a 0 + ( ) ' \t e f
-            {A, B, Base.A, Base.C, Base.D, Dif.A, Space.Y, End.E, End.F},
-            {End.E, B, Base.A, Base.C, Base.D, Dif.A, Space.Y, End.E, End.F}
+            {A, B, Base.A, Base.B, Base.C, Dif.A, Space.Y, End.E, End.F},
+            {End.E, B, Base.A, Base.B, Base.C, Dif.A, Space.Y, End.E, End.F}
     };
     private final int index;
 }

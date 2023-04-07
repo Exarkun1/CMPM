@@ -5,21 +5,18 @@ import com.propcool.cmpm_project.manage.FProcess;
 import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.manage.TextFieldsManager;
 import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
-import com.propcool.cmpm_project.notebooks.data.CustomizableParameter;
 import com.propcool.cmpm_project.notebooks.data.FunctionData;
-import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.controlsfx.control.textfield.CustomTextField;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Класс текстового поля для функции
  * */
-public class TextFieldOnPage extends TextField {
+public class TextFieldOnPage extends CustomTextField {
     public TextFieldOnPage(String text, FunctionManager functionManager, DrawManager drawManager, TextFieldsManager textFieldsManager){
-        super(text);
         this.index = counter++;
         this.functionManager = functionManager;
         this.drawManager = drawManager;
@@ -28,7 +25,6 @@ public class TextFieldOnPage extends TextField {
         setPrefWidth(285);
 
         setOnKeyReleased(keyEvent -> process.processing());
-        //setOnMouseClicked(mouseEvent -> processing());
     }
     public TextFieldOnPage(FunctionManager functionManager, DrawManager drawManager, TextFieldsManager textFieldsManager){
         this("", functionManager, drawManager, textFieldsManager);
@@ -47,6 +43,7 @@ public class TextFieldOnPage extends TextField {
             functionName = functionManager.buildFunction(getText(), index);
             functionData = functionManager.getFunction(functionName).getData();
             functionData.setColor(defaultColor.toString());
+            functionData.setVisible(defaultVisible);
             functionData.setWidth(defaultWidth);
 
             drawManager.rebuildFunction(functionName);
@@ -75,6 +72,9 @@ public class TextFieldOnPage extends TextField {
     public void setDefaultColor(Color color){
         this.defaultColor = color;
     }
+    public void setDefaultVisible(boolean visible){
+        this.defaultVisible = visible;
+    }
     public void setDefaultWidth(int defaultWidth) {
         this.defaultWidth = defaultWidth;
     }
@@ -90,6 +90,7 @@ public class TextFieldOnPage extends TextField {
     private final TextFieldsManager textFieldsManager;
     private FunctionData functionData;
     private Color defaultColor = Color.GREEN;
+    private boolean defaultVisible = true;
     private int defaultWidth = 3;
     private final int index;
     private static int counter = 0;

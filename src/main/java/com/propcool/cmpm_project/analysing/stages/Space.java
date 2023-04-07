@@ -11,14 +11,13 @@ public enum Space implements State{
     public int checkSymbol(char c) {
         if(c == '0') return 0;
         else if(c >= '1' && c <= '9') return 1;
-        else if(c >= 'a' && c <= 'z' && c != 'y' && c != 'x') return 2;
-        else if(c == 'x') return 3;
-        else if(c == '+' || c == '*' || c == '/' || c == '^') return 4;
-        else if(c == '-' ) return 5;
-        else if(c == '(') return 6;
-        else if(c == ')') return 7;
-        else if(c == ' ' || c == '\t' || c == '\n') return 8;
-        else return 9;
+        else if(c >= 'a' && c <= 'z') return 2;
+        else if(c == '+' || c == '*' || c == '/' || c == '^') return 3;
+        else if(c == '-' ) return 4;
+        else if(c == '(') return 5;
+        else if(c == ')') return 6;
+        else if(c == ' ' || c == '\t' || c == '\n') return 7;
+        else return 8;
     }
 
     @Override
@@ -32,10 +31,10 @@ public enum Space implements State{
     }
     // 0
     private static final State[][] matrix = {
-            // 0 1 a x + - ( ) \t e f
-            {End.E, End.E, End.E, End.E, Base.A, Base.A, End.E, Base.D, Y, End.E, End.F},
-            {Number.A, Number.B, Word.A, Base.B, End.E, End.E, Base.C, End.E, N, End.E, End.E},
-            {Number.A, Number.B, Word.A, Base.B, End.E, Base.E, Base.C, End.E, N2, End.E, End.E}
+            // 0 1 a + - ( ) \t e f
+            {End.E, End.E, End.E, Base.A, Base.A, End.E, Base.C, Y, End.E, End.F},
+            {Number.A, Number.B, Word.A, End.E, End.E, Base.B, End.E, N, End.E, End.E},
+            {Number.A, Number.B, Word.A, End.E, Base.E, Base.B, End.E, N2, End.E, End.E}
     };
     private final int index;
 }

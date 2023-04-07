@@ -34,8 +34,16 @@ public class FunctionData implements Serializable {
     public void setDefaultName(int defaultName) {
         this.defaultName = defaultName;
     }
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
     private String expression;
     private String color;
     private int width;
     private int defaultName;
+    private boolean visible;
 }

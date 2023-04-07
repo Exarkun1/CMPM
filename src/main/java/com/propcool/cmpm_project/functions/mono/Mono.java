@@ -1,14 +1,14 @@
 package com.propcool.cmpm_project.functions.mono;
 
 import com.propcool.cmpm_project.functions.Function;
-import com.propcool.cmpm_project.functions.basic.Variable;
+import com.propcool.cmpm_project.functions.basic.VariableX;
 /** Внешняя функция одной переменной */
 public abstract class Mono implements Function {
     public Mono(Function f){
         this.func = f;
     }
     public Mono(){
-        this.func = new Variable();
+        this.func = new VariableX();
     }
     public Function getFunction(){
         return func;

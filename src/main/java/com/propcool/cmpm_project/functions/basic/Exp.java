@@ -14,9 +14,9 @@ public class Exp extends Exponential {
         this(Math.E, f);
     }
     public Exp() {
-        this(new Variable());
+        this(new VariableX());
     }
-    public Exp(double number){this(number, new Variable());}
+    public Exp(double number){this(number, new VariableX());}
     @Override
     public Constant getFunction1() {
         return (Constant) func1;

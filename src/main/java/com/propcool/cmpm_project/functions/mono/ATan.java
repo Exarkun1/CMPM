@@ -7,8 +7,9 @@ public class ATan extends Mono{
         super(f);
     }
     public ATan(){}
+
     @Override
-    public double get(double x) {
-        return Math.atan(func.get(x));
+    public double get(double x, double y) {
+        return Math.atan(func.get(x, y));
     }
 }

@@ -6,8 +6,8 @@ public class ConstantSum extends Constant{
         this.constant = constant;
     }
     @Override
-    public double get(double x) {
-        return constant.get(x) + super.get(x);
+    public double get(double x, double y) {
+        return constant.get(x, y) + super.get(x, y);
     }
     private final Constant constant;
 }
