@@ -1,5 +1,6 @@
 package com.propcool.cmpm_project;
 
+import com.propcool.cmpm_project.analysing.build.DifBuilder;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.Difference;
@@ -26,11 +27,12 @@ public class CmpmApplication extends Application {
 
     public static void main(String[] args) {
         launch(args);
-        /*Function f = new Difference(new Division(new Constant(1), new FunctionDecoratorX()), new FunctionDecoratorY());
-        System.out.println(f.get(-1, -1));
-        System.out.println(f.get(-1, -2));
-        System.out.println(f.get(0, -2));
-        System.out.println(f.get(0, -1));
+        /*Function f = new Difference(new FunctionDecoratorX(), new Multiply(new FunctionDecoratorY(), new FunctionDecoratorY()));
+        Function dif = new DifBuilder().difY(f);
+        System.out.println(dif.get(-1, -1));
+        System.out.println(dif.get(-1, -5));
+        System.out.println(dif.get(0, -2));
+        System.out.println(dif.get(0, -1));
         System.exit(0);*/
     }
 }

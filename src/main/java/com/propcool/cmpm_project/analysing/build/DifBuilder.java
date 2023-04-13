@@ -4,21 +4,29 @@ import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.*;
 import com.propcool.cmpm_project.functions.mono.*;
-
+/**
+ * Класс для поиска производных
+ * */
 public class DifBuilder {
+    /**
+     * производная по x
+     * */
     public Function difX(Function function){
         return dif(function, new DifX());
     }
+    /**
+     * Производная по y
+     * */
     public Function difY(Function function) {
         return dif(function, new DifY());
     }
     private Function dif(Function function, Dif d){
         if(function instanceof VariableX){
             return difVariableX(d);
-        } else if(function instanceof VariableY f){
+        } else if(function instanceof VariableY){
             return difVariableY(d);
         } else if(function instanceof FunctionDecorator f){
-            return difDecorator(f);
+            return difDecorator(f, d);
         } else if(function instanceof Constant){
             return difConstant();
         } else if(function instanceof Sum f){
@@ -61,8 +69,8 @@ public class DifBuilder {
         if (d instanceof DifY) return new Constant(1);
         else return new Constant(0);
     }
-    private Function difDecorator(FunctionDecorator f){
-        return difX(f.getFunction());
+    private Function difDecorator(FunctionDecorator f, Dif d){
+        return dif(f.getFunction(), d);
     }
     private Function difConstant(){
         return new Constant(0);

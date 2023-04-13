@@ -3,7 +3,7 @@ package com.propcool.cmpm_project.analysing.stages;
  * Состояние имени функции(не буду прописывать каждое), так как здесь всё линейно)
  * */
 public enum Name implements State {
-    A(0), B(1), C(2), D(3), E(4), F(5), G(6), I(7), K(8);
+    A(0), B(1), C(2), D(3), E(4), F(5), G(6), I(7), K(8), L(9);
     Name(int index){
         this.index = index;
     }
@@ -18,8 +18,9 @@ public enum Name implements State {
         else if(c == '(') return 6;
         else if(c == ')') return 7;
         else if(c == '=') return 8;
-        else if(c == ' ' || c == '\t' || c == '\n') return 9;
-        else return 10;
+        else if(c == '\'') return 9;
+        else if(c == ' ' || c == '\t' || c == '\n') return 10;
+        else return 11;
     }
 
     @Override
@@ -31,16 +32,17 @@ public enum Name implements State {
         return index;
     }
     private static final State[][] matrix = {
-            //a y x 0 1 - ( ) = \t e f
-            {C, B, End.E, B, End.E, End.E, End.E, End.E, End.E, G, End.E, End.E},
-            {C, End.E, End.E, End.E, End.E, End.E, E, End.E, D, I, End.E, End.E},
-            {C, C, End.E, K, K, End.E, E, End.E, End.E, End.E, End.E, End.E},
-            {Word.A, Word.A, Word.A, Number.A, Number.B, Base.A, Base.B, End.E, End.E, Space.N2, End.E, End.E},
-            {End.E, End.E, F, End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E},
-            {End.E, End.E, End.E, End.E, End.E, End.E, End.E, B, End.E, End.E, End.E, End.E},
-            {End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E, G, End.E, End.E},
-            {End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E, D, I, End.E, End.E},
-            {End.E, End.E, End.E, K, K, End.E, E, End.E, End.E, End.E, End.E, End.E},
+            //a y x 0 1 - ( ) = ' \t e f
+            {C, B, End.E, B, End.E, End.E, End.E, End.E, End.E, End.E, G, End.E, End.E},
+            {C, End.E, End.E, End.E, End.E, End.E, E, End.E, D, L, I, End.E, End.E},
+            {C, C, End.E, K, K, End.E, E, End.E, End.E, End.E, End.E, End.E, End.E},
+            {Word.A, Word.A, Word.A, Number.A, Number.B, Base.A, Base.B, End.E, End.E, End.E, Space.N2, End.E, End.E},
+            {End.E, End.E, F, End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E},
+            {End.E, End.E, End.E, End.E, End.E, End.E, End.E, B, End.E, End.E, End.E, End.E, End.E},
+            {End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E, G, End.E, End.E},
+            {End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E, D, End.E, I, End.E, End.E},
+            {End.E, End.E, End.E, K, K, End.E, E, End.E, End.E, End.E, End.E, End.E, End.E},
+            {End.E, End.E, End.E, End.E, End.E, End.E, E, End.E, D, End.E, I, End.E, End.E}
     };
     private final int index;
 

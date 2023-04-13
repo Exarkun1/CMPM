@@ -9,9 +9,9 @@ public class VariableY implements Function {
     }
 
     @Override
-    public VariableX clone() {
+    public VariableY clone() {
         try {
-            return (VariableX) super.clone();
+            return (VariableY) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }

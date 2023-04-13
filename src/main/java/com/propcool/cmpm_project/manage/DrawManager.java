@@ -134,14 +134,18 @@ public class DrawManager {
         Color color = cf.getColor();
         int strokeWidth = cf.getWidth();
 
-        if(functionName.matches("\\d+imp")) rebuildImplicitFunction(functionName, function, color, strokeWidth);
-        else rebuildExplicitFunction(functionName, function, color, strokeWidth);
+        if(functionName.matches("\\d+imp") && coordinateManager instanceof CartesianManager){
+            rebuildImplicitFunction(functionName, function, color, strokeWidth);
+        } else if(functionName.matches("\\d+dif") && coordinateManager instanceof CartesianManager){
+            rebuildDifferentialEquation(functionName, function, color, strokeWidth);
+        } else if(!functionName.matches("\\d+imp") && !functionName.matches("\\d+dif")) {
+            rebuildExplicitFunction(functionName, function, color, strokeWidth);
+        }
     }
     /**
      * Построение неявной функции
      * */
     public void rebuildImplicitFunction(String functionName, Function function, Color color, int strokeWidth){
-        // Здесь будет алгоритм отрисовки неявных функций
         int x0 = (int)(-coordinateManager.getCenterX()*coordinateManager.getPixelSize())-1;
         int x1 = (int)((coordinateManager.getWight()-coordinateManager.getCenterX())*coordinateManager.getPixelSize())+1;
 
@@ -156,8 +160,6 @@ public class DrawManager {
                 lines.addAll(quadtree.gridSearch(color, strokeWidth));
             }
         }
-        /*Quadtree quadtree = new Quadtree(new Point(-1, -3), 1, 1, function, coordinateManager);
-        lines.addAll(quadtree.gridSearch(color, strokeWidth));*/
         Group group = new Group(lines.toArray(Line[]::new));
         graphics.put(functionName, group);
     }
@@ -187,13 +189,19 @@ public class DrawManager {
         graphics.put(functionName, groupLines);
     }
     /**
-     * Отбражение всех функций
+     * Отображение дифференциального уравнения
+     * */
+    public void rebuildDifferentialEquation(String functionName, Function function, Color color, int strokeWidth){
+        System.out.println("Differential Equation");
+    }
+    /**
+     * Отображение всех функций
      * */
     public void redrawAll(){
         paneForGraphs.getChildren().addAll(graphics.values());
     }
     /**
-     * Отбражение одной функции
+     * Отображение одной функции
      * */
 
     public void redraw(String functionName){
