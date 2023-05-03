@@ -4,13 +4,13 @@ import com.propcool.cmpm_project.auxiliary.Point;
 import com.propcool.cmpm_project.auxiliary.Quadtree;
 import com.propcool.cmpm_project.components.GroupLines;
 import com.propcool.cmpm_project.functions.Function;
-import com.propcool.cmpm_project.functions.basic.FunctionDecoratorY;
-import com.propcool.cmpm_project.functions.combination.Difference;
 import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -44,7 +44,7 @@ public class DrawManager {
         Group groupXY = new Group();
         Group groupText = new Group();
         double dist = 1/pixelSize;
-        // Создание линий на расстоянии 1 для эмитации клеточек
+        // Создание линий на расстоянии 1 для имитации клеточек
         for(double y = centerY+dist; y < height; y += dist){
             if(y > 0){
                 Line lineX = createLine(0, y, wight, y, Color.LIGHTGRAY, 2);
@@ -167,8 +167,7 @@ public class DrawManager {
      * Построение явной функции
      * */
     public void rebuildExplicitFunction(String functionName, Function function, Color color, int strokeWidth){
-
-        Group groupLines = new GroupLines(function, coordinateManager, this, controlManager);
+        Group groupLines = new GroupLines(function, coordinateManager, this, controlManager, functionManager);
         Point point = coordinateManager.getCoordinate(function, coordinateManager.getMin());
         double x0 = point.getX(), y0 = point.getY();
 
@@ -195,7 +194,7 @@ public class DrawManager {
         System.out.println("Differential Equation");
     }
     /**
-     * Отображение всех функций
+     * Отображение всех элементов
      * */
     public void redrawAll(){
         paneForGraphs.getChildren().addAll(graphics.values());
@@ -203,7 +202,6 @@ public class DrawManager {
     /**
      * Отображение одной функции
      * */
-
     public void redraw(String functionName){
         Group group = graphics.get(functionName);
         if(group == null) return;
@@ -228,7 +226,8 @@ public class DrawManager {
     /**
      * Создание полностью нового кадра
      * */
-    public void makeNewFrame(){
+    public void makeNewFrame() {
+        setLastGroupLines(null);
         clear();
         rebuildAllFunctions();
         redrawAll();
@@ -239,11 +238,31 @@ public class DrawManager {
     public void removeNodes(Node... nodes){
         paneForGraphs.getChildren().removeAll(nodes);
     }
+    public void addPoint(Circle point) {
+        points.add(point);
+        addNodes(point);
+    }
+    public void clearPoints() {
+        if(points.isEmpty()) return;
+        removeNodes(points.toArray(Node[]::new));
+        points.clear();
+    }
+
+    public GroupLines getLastGroupLines() {
+        return lastGroupLines;
+    }
+
+    public void setLastGroupLines(GroupLines lastGroupLines) {
+        this.lastGroupLines = lastGroupLines;
+    }
+
     private final int step = 2;
     private final AnchorPane paneForGraphs;
     private final Map<String, Group> graphics = new LinkedHashMap<>();
     private CoordinateManager coordinateManager;
     private final FunctionManager functionManager;
     private final ControlManager controlManager;
+    private final Set<Circle> points = new HashSet<>();
+    private GroupLines lastGroupLines;
     private final DecimalFormat format = new DecimalFormat("#.#");
 }

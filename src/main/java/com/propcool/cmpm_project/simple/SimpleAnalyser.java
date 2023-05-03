@@ -1,26 +1,18 @@
-package com.propcool.cmpm_project.analysing;
+package com.propcool.cmpm_project.simple;
 
 import com.propcool.cmpm_project.analysing.stages.Base;
 import com.propcool.cmpm_project.analysing.stages.End;
 import com.propcool.cmpm_project.analysing.stages.Name;
 import com.propcool.cmpm_project.analysing.stages.State;
-import com.propcool.cmpm_project.manage.FunctionManager;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-/**
- * Анализатор строки
- * */
-public class Analyser {
-    /**
-     * Проверка и обработка функции: 1)здесь происходит удаление пробелов,
-     * 2)замена запятых на точки,
-     * 3)добавление 0 перед свободным минусом,
-     * 4)вставка # в тех местах, где подразумевается умножение(2x -> 2#x),
-     * 5)вставка ! в тех местах, где подразумевается функция(ln(x) -> ln!(x)),
-     * 6)проверка на то, что в функции не имннованна ключевым словом
-     * */
-    public String processing(String text, FunctionManager functionManager){
+
+public class SimpleAnalyser {
+    public SimpleAnalyser(KeyWords keyWords) {
+        this.keyWords = keyWords;
+    }
+    public String processing(String text){
         if(checkingString(text)){
             text = text.replaceAll("\\s+", ""); // 1
             text = text.replaceAll(",", "."); // 2
@@ -35,23 +27,27 @@ public class Analyser {
             while (matcher.find()) {
                 String group = matcher.group().substring(0, matcher.group().length()-1);
                 int index = matcher.end();
-                if(functionManager.getKeyWords().containsKey(group) || functionManager.getFunctions().containsKey(group)) {
-                    functionBase = new StringBuffer(functionBase).insert(index-count--, "!").toString(); // 5
-                } else {
+                if(!keyWords.contain(group)) {
                     functionBase = new StringBuffer(functionBase).insert(index-count--, "#").toString(); // 4
+                }
+                else {
+                    functionBase = new StringBuffer(functionBase).insert(index-count--, "!").toString(); // 5
                 }
             }
             pattern = Pattern.compile("\\d[a-z]|\\d\\(");
             matcher = pattern.matcher(functionBase);
             count = 1;
             while (matcher.find()) {
+                String group = matcher.group().substring(0, matcher.group().length()-1);
                 int index = matcher.end();
-                functionBase = new StringBuffer(functionBase).insert(index-count--, "#").toString(); // 4
+                if(!keyWords.contain(group)) {
+                    functionBase = new StringBuffer(functionBase).insert(index-count--, "#").toString(); // 4
+                }
             }
             text = text.replaceAll("=.+", "=" + functionBase);
 
             String functionName = text.replaceAll("\\(.+|=.+", ""); // 6
-            if(functionManager.getKeyWords().containsKey(functionName)) return null;
+            if(keyWords.contain(functionName)) return null;
 
             return text;
         }
@@ -76,4 +72,5 @@ public class Analyser {
         // Последнее состояние любой матрицы указывает на способность выхода из автомата в данный момент
         return counter == 0 && state.getMatrix()[state.getIndex()][state.getMatrix()[0].length-1] == End.F;
     }
+    private final KeyWords keyWords;
 }

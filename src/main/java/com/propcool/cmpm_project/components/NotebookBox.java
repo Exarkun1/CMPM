@@ -5,6 +5,7 @@ import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.manage.MainManager;
 import com.propcool.cmpm_project.manage.NotebookManager;
 import com.propcool.cmpm_project.notebooks.Notebook;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
@@ -29,11 +30,14 @@ public class NotebookBox extends HBox {
         setAlignment(Pos.CENTER);
         setSpacing(10);
         openButton.setOnAction(actionEvent -> {
-            Notebook notebook = notebookManager.getNotebook(notebookName);
-            notebookManager.openNotebook(notebook);
-            mainManager.changingCoordinateSystem(notebook.getSystemName());
+            Platform.runLater(() -> {
+                Notebook notebook = notebookManager.getNotebook(notebookName);
+                notebookManager.openNotebook(notebook);
+                mainManager.changingCoordinateSystem(notebook.getSystemName());
+            });
         });
-        deleteButton.setOnAction(actionEvent -> notebookManager.deleteNotebook(notebookName));
+        deleteButton.setOnAction(actionEvent -> Platform.runLater(() -> notebookManager.deleteNotebook(notebookName))
+        );
         getChildren().addAll(name, openButton, deleteButton);
     }
 }

@@ -6,6 +6,7 @@ import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.manage.TextFieldsManager;
 import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
 import com.propcool.cmpm_project.notebooks.data.FunctionData;
+import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.controlsfx.control.textfield.CustomTextField;
@@ -36,37 +37,40 @@ public class TextFieldOnPage extends CustomTextField {
     private final FProcess process = new FProcess() {
         @Override
         public void processing() {
-            functionManager.removeParamRefs(functionName);
-            CustomizableFunction cf = functionManager.removeFunction(functionName);
-            drawManager.remove(functionName);
+            Platform.runLater(() -> {
+                functionManager.removeParamRefs(functionName);
+                CustomizableFunction cf = functionManager.removeFunction(functionName);
+                drawManager.remove(functionName);
 
-            functionName = functionManager.buildFunction(getText(), index);
-            functionData = functionManager.getFunction(functionName).getData();
-            functionData.setColor(defaultColor.toString());
-            functionData.setVisible(defaultVisible);
-            functionData.setWidth(defaultWidth);
+                functionName = functionManager.buildFunction(getText(), index);
+                functionData = functionManager.getFunction(functionName).getData();
+                functionData.setColor(defaultColor.toString());
+                functionData.setVisible(defaultVisible);
+                functionData.setWidth(defaultWidth);
 
-            drawManager.rebuildFunction(functionName);
-            drawManager.redraw(functionName);
+                drawManager.rebuildFunction(functionName);
+                drawManager.redraw(functionName);
 
-            // Обновление функций ссылающихся на данную
-            List<String> functionRefs = functionManager.rebuildRefsWithFunction(cf);
-            for(var name : functionRefs){
-                drawManager.remove(name);
-                drawManager.rebuildFunction(name);
-                drawManager.redraw(name);
-            }
+                // Обновление функций ссылающихся на данную
+                List<String> functionRefs = functionManager.rebuildRefsWithFunction(cf);
+                for (var name : functionRefs) {
+                    drawManager.remove(name);
+                    drawManager.rebuildFunction(name);
+                    drawManager.redraw(name);
+                }
 
-            // Обновление функций ссылающихся на параметр с именем данной
-            functionRefs = functionManager.rebuildRefsWithParam(functionName);
-            for(var name : functionRefs){
-                drawManager.remove(name);
-                drawManager.rebuildFunction(name);
-                drawManager.redraw(name);
-            }
+                // Обновление функций ссылающихся на параметр с именем данной
+                functionRefs = functionManager.rebuildRefsWithParam(functionName);
+                for (var name : functionRefs) {
+                    drawManager.remove(name);
+                    drawManager.rebuildFunction(name);
+                    drawManager.redraw(name);
+                }
 
-            textFieldsManager.addSliders();
-            textFieldsManager.removeSliders();
+                textFieldsManager.addSliders();
+                textFieldsManager.removeSliders();
+                drawManager.clearPoints();
+            });
         }
     };
     public void setDefaultColor(Color color){
@@ -91,7 +95,7 @@ public class TextFieldOnPage extends CustomTextField {
     private FunctionData functionData;
     private Color defaultColor = Color.GREEN;
     private boolean defaultVisible = true;
-    private int defaultWidth = 3;
+    private int defaultWidth = 2;
     private final int index;
     private static int counter = 0;
 }

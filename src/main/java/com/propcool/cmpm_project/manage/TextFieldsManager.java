@@ -3,6 +3,7 @@ package com.propcool.cmpm_project.manage;
 import com.propcool.cmpm_project.components.SliderBox;
 import com.propcool.cmpm_project.components.TextFieldBox;
 import com.propcool.cmpm_project.notebooks.Notebook;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -105,7 +106,6 @@ public class TextFieldsManager {
         for(var data : notebook.getParameterDataSet()){
             SliderBox box = sliders.get(data.getName());
             if(box != null) box.getSlider().setParam(data.getValue());
-            //sliders.get(data.getName()).getSlider().setArea(data.getArea());
         }
     }
 

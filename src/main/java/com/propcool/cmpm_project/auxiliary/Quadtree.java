@@ -121,13 +121,6 @@ public class Quadtree {
     }
 
     private void gridSearch(List<Line> lines, Color color, int strokeWidth){
-        /*boolean isZeros = false;
-        signs[0] = (int)function.get(point.getX(), point.getY());
-        signs[1] = (int)function.get(point.getX() + size, point.getY());
-        signs[2] = (int)function.get(point.getX() + size, point.getY() + size);
-        signs[3] = (int)function.get(point.getX(), point.getY() + size);
-        if(isZeros()) isZeros = true;*/
-
         signs[0] = getSign(point.getX(), point.getY());
         signs[1] = getSign(point.getX() + size, point.getY());
         signs[2] = getSign(point.getX() + size, point.getY() + size);
@@ -165,9 +158,6 @@ public class Quadtree {
             }
             signs[i] = 1;
         }
-    }
-    private boolean isZeros(){
-        return signs[0] == 0 && signs[1] == 0 && signs[2] == 0 && signs[3] == 0;
     }
 
     private final Quadtree[] children = new Quadtree[4];

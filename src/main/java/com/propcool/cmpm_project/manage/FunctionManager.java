@@ -1,9 +1,11 @@
 package com.propcool.cmpm_project.manage;
 
-import com.propcool.cmpm_project.analysing.build.DifBuilder;
+import com.propcool.cmpm_project.auxiliary.DifBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionFactory;
 import com.propcool.cmpm_project.analysing.build.NamedFunction;
+import com.propcool.cmpm_project.auxiliary.Point;
+import com.propcool.cmpm_project.auxiliary.RootSearcher;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.Combination;
@@ -109,8 +111,8 @@ public class FunctionManager {
         } else if(function instanceof Mono mono){
             getFuncDecorators(mono.getFunction(), decorators);
         } else if(function instanceof Combination combination){
-            getFuncDecorators(combination.getFunction1(), decorators);
-            getFuncDecorators(combination.getFunction2(), decorators);
+            getFuncDecorators(combination.getFunc1(), decorators);
+            getFuncDecorators(combination.getFunc2(), decorators);
         }
     }
     /**
@@ -161,18 +163,37 @@ public class FunctionManager {
         }
         return refs;
     }
-
     public Function buildDif(Function function){
         return difBuilder.difX(function);
     }
+    public Set<Point> searchRoots(Function function, double start, double end) {
+        Set<Point> points = new HashSet<>();
+        for(double step = start; step < end; step += 0.1) {
+            try {
+                double x = rootSearcher.rootX(function, step, step + 0.1);
+                points.add(new Point(x, 0));
+            } catch (RuntimeException ignored) {}
+        }
+        return points;
+    }
+    public Set<Point> searchIntersects(Function f, Function g, double start, double end) {
+        Set<Point> points = new HashSet<>();
+        for(double step = start; step < end; step += 0.1) {
+            try {
+                Point point = rootSearcher.intersectionX(f, g, step, step + 0.1);
+                points.add(point);
+            } catch (RuntimeException ignored) {}
+        }
+        return points;
+    }
 
-    private final Map<String, FunctionFactory> keyWords = new HashMap<>();
+    private final Map<String, FunctionFactory> keyWords = new LinkedHashMap<>();
     private final List<String> constants = List.of("pi", "e");
-
-    private final  Map<String, CustomizableFunction> functions = new HashMap<>();
-    private final  Map<String, CustomizableParameter> parameters = new HashMap<>();
+    private final  Map<String, CustomizableFunction> functions = new LinkedHashMap<>();
+    private final  Map<String, CustomizableParameter> parameters = new LinkedHashMap<>();
     private final FunctionBuilder functionBuilder = new FunctionBuilder(this);
     private final DifBuilder difBuilder = new DifBuilder();
+    private final RootSearcher rootSearcher = new RootSearcher(1e-6);
 
     public FunctionManager(){
         keyWords.put("sqrt", (b, e, s, p) -> new Pow(functionBuilder.buildingNotNamed(e, p), 0.5));

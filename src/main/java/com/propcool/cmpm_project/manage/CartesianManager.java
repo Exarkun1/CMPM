@@ -27,11 +27,11 @@ public class CartesianManager extends CoordinateManager {
 
     @Override
     public double getMin() {
-        return 1;
+        return 0;
     }
     @Override
     public double getMax() {
-        return getWight()-4;
+        return getWight()-2;
     }
 
     @Override
@@ -44,5 +44,15 @@ public class CartesianManager extends CoordinateManager {
         Point point = getCoordinate(function, x);
         double new_y = point.getY();
         return new Point(x, new_y);
+    }
+
+    @Override
+    public double getPixelX(double x, double y) {
+        return x / getPixelSize() + getCenterX();
+    }
+
+    @Override
+    public double getPixelY(double x, double y) {
+        return -y / getPixelSize() + getCenterY();
     }
 }

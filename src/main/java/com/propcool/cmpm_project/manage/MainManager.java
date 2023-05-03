@@ -1,6 +1,9 @@
 package com.propcool.cmpm_project.manage;
 
 import com.propcool.cmpm_project.components.TextFieldBox;
+import com.propcool.cmpm_project.functions.Function;
+import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -21,12 +24,13 @@ public class MainManager {
         drawManager = new DrawManager(paneForGraphs, functionManager, coordinateManager, controlManager);
         textFieldsManager = new TextFieldsManager(paneForText, creatFieldButton, functionManager, drawManager);
         notebookManager = new NotebookManager(paneForNotebooks, functionManager, textFieldsManager, this);
-        textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager));
 
         coordinateManagers.put("cartesian", coordinateManager);
         coordinateManagers.put("polar", new PolarManager());
-
-        drawManager.makeNewFrame();
+        Platform.runLater(() -> {
+            textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager));
+            drawManager.makeNewFrame();
+        });
     }
     public int getWidth(){
         return coordinateManager.getWight();
@@ -34,11 +38,20 @@ public class MainManager {
     public int getHeight(){
         return coordinateManager.getHeight();
     }
+    public double getCenterX() {
+        return coordinateManager.getCenterX();
+    }
+    public double getCenterY() {
+        return coordinateManager.getCenterY();
+    }
+    public double getPixelSize() {
+        return coordinateManager.getPixelSize();
+    }
     public void shift(double x, double y){
         if(controlManager.isLineDragged()) return;
         coordinateManagers.get("cartesian").shift(x, y);
         coordinateManagers.get("polar").shift(x, y);
-        drawManager.makeNewFrame();
+        Platform.runLater(drawManager::makeNewFrame);
     }
     public void setMouse(double x, double y){
         coordinateManagers.get("cartesian").setMouse(x, y);
@@ -53,7 +66,7 @@ public class MainManager {
             coordinateManagers.get("cartesian").zoomIn(x, y);
             coordinateManagers.get("polar").zoomIn(x, y);
         }
-        drawManager.makeNewFrame();
+        Platform.runLater(drawManager::makeNewFrame);
     }
     public void openTextFields(){
         openManager.openTextFields();
@@ -63,7 +76,7 @@ public class MainManager {
     }
     public void addTextField(){
         // делаем ползунки и кнопку добавления полей для параметров ниже текстовых полей
-        textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager));
+        Platform.runLater(() -> textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager)));
     }
     public void recordNotebook(String name){
         notebookManager.record(name, coordinateManager);
@@ -72,12 +85,25 @@ public class MainManager {
         notebookManager.save(mainPanel.getScene().getWindow(), coordinateManager);
     }
     public void loadNotebook(){
-        notebookManager.load(mainPanel.getScene().getWindow());
+        Platform.runLater(() -> notebookManager.load(mainPanel.getScene().getWindow()));
     }
     public void changingCoordinateSystem(String name){
-        coordinateManager = coordinateManagers.get(name);
-        drawManager.setCoordinateManager(coordinateManager);
-        drawManager.makeNewFrame();
+        Platform.runLater(() -> {
+            coordinateManager = coordinateManagers.get(name);
+            drawManager.setCoordinateManager(coordinateManager);
+            drawManager.makeNewFrame();
+        });
+    }
+    public void searchRoots(String name) {
+        Platform.runLater(() -> {
+            CustomizableFunction cf = functionManager.getFunction(name);
+            if (cf == null) return;
+            Function function = cf.getFunction();
+            double start = -getCenterX() * getPixelSize();
+            double end = getCenterX() * getPixelSize();
+            functionManager.searchRoots(function, start, end);
+            drawManager.makeNewFrame();
+        });
     }
     private final FunctionManager functionManager = new FunctionManager();
     private CoordinateManager coordinateManager = new CartesianManager();

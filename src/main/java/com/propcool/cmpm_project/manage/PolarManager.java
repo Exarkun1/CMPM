@@ -61,4 +61,14 @@ public class PolarManager extends CoordinateManager {
         return new Point(xx, yy);
         //y=-sin(x)/(cos(x)^2+sin(x)*cos(x))
     }
+
+    @Override
+    public double getPixelX(double x, double y) {
+        return Double.NaN;
+    }
+
+    @Override
+    public double getPixelY(double x, double y) {
+        return Double.NaN;
+    }
 }

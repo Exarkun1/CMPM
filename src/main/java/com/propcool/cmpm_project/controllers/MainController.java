@@ -44,6 +44,10 @@ public class MainController implements Initializable {
     private VBox paneForNotebooks;
     @FXML
     private ChoiceBox<String> systemChoice;
+    @FXML
+    private TextField choiceFunctionField;
+    @FXML
+    private Button findRootButton;
     /**
      * Сдвиг координат
      * */
@@ -106,6 +110,11 @@ public class MainController implements Initializable {
     @FXML
     void loadNotebook(ActionEvent event) {
         mainManager.loadNotebook();
+    }
+    @FXML
+    void findRoots(ActionEvent event) {
+        //mainManager.searchRoots(choiceFunctionField.getText());
+        System.out.println("Hello");
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

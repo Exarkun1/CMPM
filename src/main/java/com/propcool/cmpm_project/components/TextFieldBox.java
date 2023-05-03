@@ -5,6 +5,7 @@ import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.manage.TextFieldsManager;
 import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -37,19 +38,22 @@ public class TextFieldBox extends HBox {
         xView.setFitHeight(50);
 
         xView.setOnMousePressed(mouseEvent -> {
-            functionManager.removeParamRefs(textField.getFunctionName());
-            CustomizableFunction cf = functionManager.removeFunction(textField.getFunctionName());
-            textFieldsManager.removeTextField(this);
+            Platform.runLater(() -> {
+                functionManager.removeParamRefs(textField.getFunctionName());
+                CustomizableFunction cf = functionManager.removeFunction(textField.getFunctionName());
+                textFieldsManager.removeTextField(this);
 
-            List<String> functionRefs = functionManager.rebuildRefsWithFunction(cf);
-            for(var name : functionRefs){
-                drawManager.remove(name);
-                drawManager.rebuildFunction(name);
-                drawManager.redraw(name);
-            }
+                List<String> functionRefs = functionManager.rebuildRefsWithFunction(cf);
+                for (var name : functionRefs) {
+                    drawManager.remove(name);
+                    drawManager.rebuildFunction(name);
+                    drawManager.redraw(name);
+                }
 
-            textFieldsManager.addSliders();
-            textFieldsManager.removeSliders();
+                textFieldsManager.addSliders();
+                textFieldsManager.removeSliders();
+                drawManager.clearPoints();
+            });
         });
         getChildren().addAll(colorPicker, textField, xView);
     }

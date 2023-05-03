@@ -3,6 +3,7 @@ package com.propcool.cmpm_project.components;
 import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.notebooks.data.CustomizableParameter;
+import javafx.application.Platform;
 import javafx.scene.control.Slider;
 /**
  * Класс ползунка для параметра
@@ -18,10 +19,12 @@ public class SliderOnPage extends Slider {
         setShowTickLabels(true);
         setShowTickMarks(true);
         setOnMouseDragged(mouseEvent -> {
-            CustomizableParameter cp = functionManager.getParam(parameterName);
-            cp.setValue(getValue());
-            cp.getParam().set(getValue());
-            drawManager.makeNewFrame();
+            Platform.runLater(() -> {
+                CustomizableParameter cp = functionManager.getParam(parameterName);
+                cp.setValue(getValue());
+                cp.getParam().set(getValue());
+                drawManager.makeNewFrame();
+            });
         });
     }
     public SliderOnPage(String parameterName, FunctionManager functionManager, DrawManager drawManager){

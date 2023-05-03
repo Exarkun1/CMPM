@@ -98,7 +98,7 @@ public class FunctionBuilder {
         while (true){
             if (text.charAt(0) == '(' && text.charAt(text.length()-1) == ')') {
                 String temp = text.substring(1, text.length()-1);
-                // Так как мы уже изменили функцию(так что она уже не рабочаю), надо вернуть её в нормальное состояние для проверки
+                // Так как мы уже изменили функцию(так что она уже не рабочую), надо вернуть её в нормальное состояние для проверки
                 String tempAnalysable = ("y=" + temp)
                         .replaceAll("!", "")
                         .replaceAll("#", "")

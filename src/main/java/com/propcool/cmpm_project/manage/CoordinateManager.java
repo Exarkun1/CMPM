@@ -18,6 +18,8 @@ public abstract class CoordinateManager {
     public abstract double getMax();
     public abstract double getStep();
     public abstract Point getCircleCoordinate(Function function, double x, double y);
+    public abstract double getPixelX(double x, double y);
+    public abstract double getPixelY(double x, double y);
     /**
      * Изменение положения мышки
      * */
