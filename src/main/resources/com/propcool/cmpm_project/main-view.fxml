@@ -72,16 +72,6 @@
                                           <Font size="16.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="choiceFunctionField" layoutX="75.0" layoutY="105.0" prefHeight="35.0" prefWidth="250.0" promptText="Имя или номер функции">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </TextField>
-                                    <Button fx:id="findRootButton" layoutX="74.0" layoutY="154.0" mnemonicParsing="false" onAction="#findRoots" prefHeight="35.0" prefWidth="250.0" text="Найти корни">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Button>
                                  </children></AnchorPane>
                            </content>
                            <font>

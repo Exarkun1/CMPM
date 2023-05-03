@@ -38,10 +38,5 @@ public class CmpmApplication extends Application {
 
     public static void main(String[] args) {
         launch(args);
-        Function f = new SimpleBuilder().build("0=x^2+y^2-1");
-        Function g = new SimpleBuilder().build("0=x^2+y^2+x*y+2x+y");
-        RootSearcher rs = new RootSearcher(0.001);
-        System.out.println(rs.intersectionXY(f, g, -1, 1));
-        Platform.exit();
     }
 }
