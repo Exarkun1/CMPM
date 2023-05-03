@@ -40,10 +40,12 @@ public class GroupLines extends Group {
                     newPosition(x, y);
                     drawManager.addNodes(circle, text);
 
+                    drawManager.clearPoints();
                     reduceLines();
                     enlargeLines();
                     solve(function);
                     intersect(function);
+                    extremes(function);
                 } catch (IllegalArgumentException ignored) {}
             });
         });
@@ -123,6 +125,12 @@ public class GroupLines extends Group {
                 addPoints(points);
             }
         }
+    }
+    private void extremes(Function function) {
+        double x0 = coordinateManager.getX(coordinateManager.getMin(), 0);
+        double x1 = coordinateManager.getX(coordinateManager.getMax(), 0);
+        Set<Point> points = functionManager.searchExtremes(function, x0, x1);
+        addPoints(points);
     }
     private void addPoints(Set<Point> points) {
         for(var point : points) {

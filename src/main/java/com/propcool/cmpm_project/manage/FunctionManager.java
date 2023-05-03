@@ -186,6 +186,16 @@ public class FunctionManager {
         }
         return points;
     }
+    public Set<Point> searchExtremes(Function f, double start, double end) {
+        Set<Point> points = new HashSet<>();
+        for(double step = start; step < end; step += 0.1) {
+            try {
+                Point point = rootSearcher.extreme(f, step, step + 0.1);
+                points.add(point);
+            } catch (RuntimeException ignored) {}
+        }
+        return points;
+    }
 
     private final Map<String, FunctionFactory> keyWords = new LinkedHashMap<>();
     private final List<String> constants = List.of("pi", "e");

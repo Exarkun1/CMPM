@@ -49,6 +49,11 @@ public class RootSearcher {
                 db.difX(g), db.difY(g)
         );
     }
+    public Point extreme(Function f, double a, double b) {
+        Function dif = db.difX(f);
+        double x = rootX(dif, a, b);
+        return new Point(x, f.get(x));
+    }
     private final double e;
     private final DifBuilder db = new DifBuilder();
 }
