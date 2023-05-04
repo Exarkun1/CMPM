@@ -63,12 +63,14 @@ public class PolarManager extends CoordinateManager {
     }
 
     @Override
-    public double getPixelX(double x, double y) {
-        return Double.NaN;
+    public double getPixelX(double fi, double r) {
+        double x = r * Math.cos(fi);
+        return x / getPixelSize() + getCenterX();
     }
 
     @Override
-    public double getPixelY(double x, double y) {
-        return Double.NaN;
+    public double getPixelY(double fi, double r) {
+        double y = r * Math.sin(fi);
+        return -y / getPixelSize() + getCenterY();
     }
 }

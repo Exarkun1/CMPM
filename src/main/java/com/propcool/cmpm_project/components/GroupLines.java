@@ -9,6 +9,7 @@ import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
 import javafx.application.Platform;
 import javafx.scene.Group;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -22,13 +23,15 @@ import java.util.Set;
  * Класс для группы линий
  * */
 public class GroupLines extends Group {
-    public GroupLines(Function function, CoordinateManager coordinateManager, DrawManager drawManager, ControlManager controlManager, FunctionManager functionManager){
+    public GroupLines(Function function, Color color,
+                      CoordinateManager coordinateManager, DrawManager drawManager,
+                      ControlManager controlManager, FunctionManager functionManager
+    ){
         this.coordinateManager = coordinateManager;
         this.drawManager = drawManager;
         this.functionManager = functionManager;
         text.setFont(new Font(16));
-        circle.setFill(Color.GRAY);
-        circle.setStroke(Color.BLACK);
+        circle.setFill(color);
         // Вызывается кружок с координатами при нажатии
         setOnMousePressed(mouseEvent -> {
             Platform.runLater(() -> {
@@ -38,7 +41,6 @@ public class GroupLines extends Group {
                     double x = point.getX();
                     double y = point.getY();
                     newPosition(x, y);
-                    drawManager.addNodes(circle, text);
 
                     drawManager.clearPoints();
                     reduceLines();
@@ -46,6 +48,8 @@ public class GroupLines extends Group {
                     solve(function);
                     intersect(function);
                     extremes(function);
+
+                    drawManager.addNodes(circle, paneForText);
                 } catch (IllegalArgumentException ignored) {}
             });
         });
@@ -66,14 +70,14 @@ public class GroupLines extends Group {
         // Удаление кружка
         setOnMouseReleased(mouseEvent -> {
             Platform.runLater(() -> {
-                drawManager.removeNodes(circle, text);
+                drawManager.removeNodes(circle, paneForText);
                 controlManager.setLineDragged();
             });
         });
     }
     private String getText(double x, double y, String pattern){
         DecimalFormat format = new DecimalFormat(pattern);
-        return "("+ format.format(coordinateManager.getX(x, y)) + ", " + format.format(coordinateManager.getY(x, y))+ ")";
+        return "("+ format.format(coordinateManager.getX(x, y)) + "; " + format.format(coordinateManager.getY(x, y))+ ")";
     }
     private void enlargeLines() {
         if(isEnlarges) return;
@@ -91,21 +95,23 @@ public class GroupLines extends Group {
             Line line = (Line)elem;
             line.setStrokeWidth(line.getStrokeWidth()/2);
         }
+        groupLines.setEnlarges(false);
     }
     private void visibleCircle(){
         circle.setVisible(true);
-        text.setVisible(true);
+        paneForText.setVisible(true);
     }
     private void noVisibleCircle(){
         circle.setVisible(false);
-        text.setVisible(false);
+        paneForText.setVisible(false);
     }
     private void newPosition(double x, double y) {
         circle.setCenterX(x);
         circle.setCenterY(y);
         text.setText(getText(x, y, "#.###"));
-        text.setX(x + 10);
-        text.setY(y);
+        if(paneForText == null) paneForText = getPane(text, x, y);
+        paneForText.setLayoutX(x-text.getBoundsInLocal().getWidth()/2);
+        paneForText.setLayoutY(y-text.getBoundsInLocal().getHeight()-10);
     }
     private void solve(Function function) {
         double x0 = coordinateManager.getX(coordinateManager.getMin(), 0);
@@ -139,7 +145,7 @@ public class GroupLines extends Group {
             if(!Double.isNaN(x) && !Double.isNaN(y)) {
                 Circle circle = new Circle(x, y, 5);
                 circle.setFill(Color.LIGHTGRAY);
-                StackPane pane = getTextPane(x, y, 18);
+                StackPane pane = getTextPane(x, y);
                 circle.setOnMouseEntered(mouseEvent -> Platform.runLater(() -> drawManager.addNodes(pane)));
                 circle.setOnMouseExited(mouseEvent -> Platform.runLater(() -> drawManager.removeNodes(pane)));
                 drawManager.addPoint(circle);
@@ -147,9 +153,12 @@ public class GroupLines extends Group {
         }
     }
 
-    private StackPane getTextPane(double x, double y, double f) {
+    private StackPane getTextPane(double x, double y) {
         Text text = new Text(getText(x, y, "#.#####"));
-        text.setFont(new Font(f));
+        text.setFont(new Font(18));
+        return getPane(text, x, y);
+    }
+    private StackPane getPane(Text text, double x, double y) {
         double textWight = text.getBoundsInLocal().getWidth() + 4;
         double textHeight = text.getBoundsInLocal().getHeight();
         Rectangle box = new Rectangle(textWight, textHeight);
@@ -159,8 +168,18 @@ public class GroupLines extends Group {
         pane.setLayoutY(y-textHeight-10);
         return pane;
     }
+
+    public boolean isEnlarges() {
+        return isEnlarges;
+    }
+
+    public void setEnlarges(boolean enlarges) {
+        isEnlarges = enlarges;
+    }
+
     private final Circle circle = new Circle(5);
     private final Text text = new Text();
+    private Pane paneForText;
     private final CoordinateManager coordinateManager;
     private final DrawManager drawManager;
     private final FunctionManager functionManager;

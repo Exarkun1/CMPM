@@ -51,7 +51,7 @@ public class MainManager {
         if(controlManager.isLineDragged()) return;
         coordinateManagers.get("cartesian").shift(x, y);
         coordinateManagers.get("polar").shift(x, y);
-        Platform.runLater(drawManager::makeNewFrame);
+        drawManager.makeNewFrame();
     }
     public void setMouse(double x, double y){
         coordinateManagers.get("cartesian").setMouse(x, y);
@@ -66,7 +66,7 @@ public class MainManager {
             coordinateManagers.get("cartesian").zoomIn(x, y);
             coordinateManagers.get("polar").zoomIn(x, y);
         }
-        Platform.runLater(drawManager::makeNewFrame);
+        drawManager.makeNewFrame();
     }
     public void openTextFields(){
         openManager.openTextFields();
@@ -91,17 +91,6 @@ public class MainManager {
         Platform.runLater(() -> {
             coordinateManager = coordinateManagers.get(name);
             drawManager.setCoordinateManager(coordinateManager);
-            drawManager.makeNewFrame();
-        });
-    }
-    public void searchRoots(String name) {
-        Platform.runLater(() -> {
-            CustomizableFunction cf = functionManager.getFunction(name);
-            if (cf == null) return;
-            Function function = cf.getFunction();
-            double start = -getCenterX() * getPixelSize();
-            double end = getCenterX() * getPixelSize();
-            functionManager.searchRoots(function, start, end);
             drawManager.makeNewFrame();
         });
     }

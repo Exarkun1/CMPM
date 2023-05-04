@@ -203,7 +203,7 @@ public class FunctionManager {
     private final  Map<String, CustomizableParameter> parameters = new LinkedHashMap<>();
     private final FunctionBuilder functionBuilder = new FunctionBuilder(this);
     private final DifBuilder difBuilder = new DifBuilder();
-    private final RootSearcher rootSearcher = new RootSearcher(1e-6);
+    private final RootSearcher rootSearcher = new RootSearcher(1e-6, 100);
 
     public FunctionManager(){
         keyWords.put("sqrt", (b, e, s, p) -> new Pow(functionBuilder.buildingNotNamed(e, p), 0.5));

@@ -8,7 +8,6 @@ import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -167,7 +166,7 @@ public class DrawManager {
      * Построение явной функции
      * */
     public void rebuildExplicitFunction(String functionName, Function function, Color color, int strokeWidth){
-        Group groupLines = new GroupLines(function, coordinateManager, this, controlManager, functionManager);
+        Group groupLines = new GroupLines(function, color, coordinateManager, this, controlManager, functionManager);
         Point point = coordinateManager.getCoordinate(function, coordinateManager.getMin());
         double x0 = point.getX(), y0 = point.getY();
 

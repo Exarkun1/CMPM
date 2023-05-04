@@ -62,6 +62,8 @@ public class DifBuilder {
             return difACos(f, d);
         } else if(function instanceof ATan f){
             return difATan(f, d);
+        } else if(function instanceof Abs f) {
+            return difAbs(f, d);
         } else throw new RuntimeException("Не получилось найти производную");
     }
     private Function difVariableX(Dif d){
@@ -184,6 +186,12 @@ public class DifBuilder {
                         new Constant(1),
                         new Pow(f.getFunction().clone(), 2)
                 )
+        );
+    }
+    private Function difAbs(Abs f, Dif d) {
+        return new Division(
+                new Multiply(f.getFunction().clone(), d.dif(f.getFunction())),
+                new Abs(f.getFunction().clone())
         );
     }
     private interface Dif{

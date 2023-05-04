@@ -6,14 +6,14 @@ import com.propcool.cmpm_project.functions.vector.Matrix;
 import com.propcool.cmpm_project.functions.vector.Vector;
 
 public class RootSearcher {
-    public RootSearcher(double e) {
+    public RootSearcher(double e, int maxIteration) {
         this.e = e;
+        this.maxIteration = maxIteration;
     }
     public double rootX(Function f, double a, double b) {
         if(f.get(a) * f.get(b) > 0) throw new RuntimeException("Границы значений функции одного знака");
         Function df = db.difX(f);
         double x = a, prevX = b;
-        int index = 0;
         while(Math.abs(x-prevX) >= e) {
             double v = f.get(x);
             double dv = df.get(x);
@@ -55,5 +55,6 @@ public class RootSearcher {
         return new Point(x, f.get(x));
     }
     private final double e;
+    private final int maxIteration;
     private final DifBuilder db = new DifBuilder();
 }
