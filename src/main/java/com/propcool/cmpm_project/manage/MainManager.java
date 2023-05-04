@@ -1,10 +1,9 @@
 package com.propcool.cmpm_project.manage;
 
 import com.propcool.cmpm_project.components.TextFieldBox;
-import com.propcool.cmpm_project.functions.Function;
-import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -33,7 +32,7 @@ public class MainManager {
         });
     }
     public int getWidth(){
-        return coordinateManager.getWight();
+        return coordinateManager.getWidth();
     }
     public int getHeight(){
         return coordinateManager.getHeight();
@@ -93,6 +92,36 @@ public class MainManager {
             drawManager.setCoordinateManager(coordinateManager);
             drawManager.makeNewFrame();
         });
+    }
+    public void keyPressed(KeyCode code) {
+        switch (code) {
+            case RIGHT -> {
+                coordinateManager.shiftCenter(-20, 0);
+                drawManager.makeNewFrame();
+            }
+            case LEFT -> {
+                coordinateManager.shiftCenter(20, 0);
+                drawManager.makeNewFrame();
+            }
+            case UP -> {
+                coordinateManager.shiftCenter(0, 20);
+                drawManager.makeNewFrame();
+            }
+            case DOWN -> {
+                coordinateManager.shiftCenter(0, -20);
+                drawManager.makeNewFrame();
+            }
+            case EQUALS -> {
+                coordinateManager.zoomCenter(1/1.3);
+                drawManager.makeNewFrame();
+            }
+            case MINUS -> {
+                coordinateManager.zoomCenter(1.3);
+                drawManager.makeNewFrame();
+            }
+            case ESCAPE -> openTextFields();
+            case F1 -> openSettings();
+        }
     }
     private final FunctionManager functionManager = new FunctionManager();
     private CoordinateManager coordinateManager = new CartesianManager();

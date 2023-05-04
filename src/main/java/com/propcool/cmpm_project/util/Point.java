@@ -1,4 +1,4 @@
-package com.propcool.cmpm_project.auxiliary;
+package com.propcool.cmpm_project.util;
 
 public class Point {
     public Point(double x, double y) {

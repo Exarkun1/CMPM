@@ -1,6 +1,6 @@
 package com.propcool.cmpm_project.components;
 
-import com.propcool.cmpm_project.auxiliary.Point;
+import com.propcool.cmpm_project.util.Point;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.manage.ControlManager;
 import com.propcool.cmpm_project.manage.CoordinateManager;

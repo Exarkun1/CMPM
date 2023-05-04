@@ -1,6 +1,6 @@
 package com.propcool.cmpm_project.manage;
 
-import com.propcool.cmpm_project.auxiliary.Point;
+import com.propcool.cmpm_project.util.Point;
 import com.propcool.cmpm_project.functions.Function;
 
 public class PolarManager extends CoordinateManager {

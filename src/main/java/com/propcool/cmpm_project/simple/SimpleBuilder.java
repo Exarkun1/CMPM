@@ -1,18 +1,10 @@
 package com.propcool.cmpm_project.simple;
 
-import com.propcool.cmpm_project.analysing.Analyser;
-import com.propcool.cmpm_project.analysing.build.ContainFactoryAdapter;
-import com.propcool.cmpm_project.analysing.build.FunctionFactory;
-import com.propcool.cmpm_project.analysing.build.NamedFunction;
-import com.propcool.cmpm_project.auxiliary.DifBuilder;
+import com.propcool.cmpm_project.util.DifBuilder;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.*;
 import com.propcool.cmpm_project.functions.mono.*;
-import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SimpleBuilder {
     public Function build(String text) {

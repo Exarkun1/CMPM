@@ -1,11 +1,11 @@
 package com.propcool.cmpm_project.manage;
 
-import com.propcool.cmpm_project.auxiliary.DifBuilder;
+import com.propcool.cmpm_project.util.DifBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionFactory;
 import com.propcool.cmpm_project.analysing.build.NamedFunction;
-import com.propcool.cmpm_project.auxiliary.Point;
-import com.propcool.cmpm_project.auxiliary.RootSearcher;
+import com.propcool.cmpm_project.util.Point;
+import com.propcool.cmpm_project.util.RootSearcher;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.Combination;

@@ -1,6 +1,6 @@
 package com.propcool.cmpm_project.manage;
 
-import com.propcool.cmpm_project.auxiliary.Point;
+import com.propcool.cmpm_project.util.Point;
 import com.propcool.cmpm_project.functions.Function;
 /**
  * Менеджер координат, содержит все координатные параметры
@@ -31,7 +31,7 @@ public class CartesianManager extends CoordinateManager {
     }
     @Override
     public double getMax() {
-        return getWight()-2;
+        return getWidth()-2;
     }
 
     @Override

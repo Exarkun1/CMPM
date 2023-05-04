@@ -1,9 +1,18 @@
 package com.propcool.cmpm_project.manage;
 
-import com.propcool.cmpm_project.auxiliary.Point;
+import com.propcool.cmpm_project.util.Point;
 import com.propcool.cmpm_project.functions.Function;
 
+import java.awt.*;
+
 public abstract class CoordinateManager {
+    public CoordinateManager() {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.width = (int)screenSize.getWidth();
+        this.height = (int)(screenSize.getHeight()-115);
+        this.centerX = width/2.;
+        this.centerY = height/2.;
+    }
     public abstract String getName();
     public abstract Point getCoordinate(Function function, double a);
     /**
@@ -34,46 +43,47 @@ public abstract class CoordinateManager {
         double dx = x-mouseX;
         double dy = y-mouseY;
 
-        centerX += dx;
-        centerY += dy;
+        shiftCenter(dx, dy);
 
         setMouse(x, y);
     }
     /**
-     * Отдпление от точки
+     * Отдаление от точки
      * */
     public void zoomOut(double x, double y){
         double dx = x-centerX;
         double dy = y-centerY;
 
-        pixelSize *= zoomCoef;
-        centerX += dx*(zoomCoef-1)/zoomCoef;
-        centerY += dy*(zoomCoef-1)/zoomCoef;
+        zoomCenter(zoomCoef);
+        shiftCenter(dx*(zoomCoef-1)/zoomCoef, dy*(zoomCoef-1)/zoomCoef);
     }
     /**
      * Приближение к точке
      * */
     public void zoomIn(double x, double y){
-        double dx = x-centerX;
-        double dy = y-centerY;
+        double dx = centerX-x;
+        double dy = centerY-y;
 
-        pixelSize /= zoomCoef;
-        centerX -= dx*(zoomCoef-1);
-        centerY -= dy*(zoomCoef-1);
+        zoomCenter(1/zoomCoef);
+        shiftCenter(dx*(zoomCoef-1), dy*(zoomCoef-1));
     }
-    /**
-     * Получение пиксельных Y координат
-     * */
+    public void shiftCenter(double dx, double dy) {
+        centerX += dx;
+        centerY += dy;
+    }
+    public void zoomCenter(double zoomCoef) {
+        pixelSize *= zoomCoef;
+    }
     public boolean onScreen(double x, double y){
-        return 2 <= x && x <= wight-2 && 2 <= y && y <= height-2;
+        return 2 <= x && x <= width -2 && 2 <= y && y <= height-2;
     }
 
     public int getHeight() {
         return height;
     }
 
-    public int getWight() {
-        return wight;
+    public int getWidth() {
+        return width;
     }
 
     public double getPixelSize() {
@@ -89,9 +99,9 @@ public abstract class CoordinateManager {
     }
 
     private double pixelSize = 0.01;
-    private final int height = 1056-91, half_height = height/2;
-    private final int wight = 1936, half_wight = wight/2;
-    private double centerX = half_wight, centerY = half_height;
+    private final int height;
+    private final int width;
+    private double centerX, centerY;
     private double mouseX, mouseY;
     private final double zoomCoef = 1.075;
 }

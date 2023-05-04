@@ -1,4 +1,4 @@
-package com.propcool.cmpm_project.auxiliary;
+package com.propcool.cmpm_project.util;
 
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
@@ -9,7 +9,7 @@ import com.propcool.cmpm_project.functions.mono.*;
  * */
 public class DifBuilder {
     /**
-     * производная по x
+     * Производная по x
      * */
     public Function difX(Function function){
         return dif(function, new DifX());

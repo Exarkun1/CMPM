@@ -4,6 +4,7 @@ module com.propcool.cmpm_project {
 
     requires org.controlsfx.controls;
     requires org.kordamp.bootstrapfx.core;
+    requires java.desktop;
 
     opens com.propcool.cmpm_project to javafx.fxml;
     exports com.propcool.cmpm_project;

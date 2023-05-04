@@ -1,7 +1,7 @@
 package com.propcool.cmpm_project.manage;
 
-import com.propcool.cmpm_project.auxiliary.Point;
-import com.propcool.cmpm_project.auxiliary.Quadtree;
+import com.propcool.cmpm_project.util.Point;
+import com.propcool.cmpm_project.util.Quadtree;
 import com.propcool.cmpm_project.components.GroupLines;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
@@ -35,7 +35,7 @@ public class DrawManager {
      * */
     public void rebuildAllFunctions(){
         double height = coordinateManager.getHeight();
-        double wight = coordinateManager.getWight();
+        double wight = coordinateManager.getWidth();
         double centerX = coordinateManager.getCenterX();
         double centerY = coordinateManager.getCenterY();
         double pixelSize = coordinateManager.getPixelSize();
@@ -146,7 +146,7 @@ public class DrawManager {
      * */
     public void rebuildImplicitFunction(String functionName, Function function, Color color, int strokeWidth){
         int x0 = (int)(-coordinateManager.getCenterX()*coordinateManager.getPixelSize())-1;
-        int x1 = (int)((coordinateManager.getWight()-coordinateManager.getCenterX())*coordinateManager.getPixelSize())+1;
+        int x1 = (int)((coordinateManager.getWidth()-coordinateManager.getCenterX())*coordinateManager.getPixelSize())+1;
 
         int y0 = (int)((coordinateManager.getCenterY()-coordinateManager.getHeight())*coordinateManager.getPixelSize())-1;
         int y1 = (int)(coordinateManager.getCenterY()*coordinateManager.getPixelSize())+1;

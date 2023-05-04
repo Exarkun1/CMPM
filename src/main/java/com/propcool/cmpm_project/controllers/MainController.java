@@ -9,6 +9,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
@@ -106,6 +107,13 @@ public class MainController implements Initializable {
     @FXML
     void loadNotebook(ActionEvent event) {
         mainManager.loadNotebook();
+    }
+    /**
+     * Нажатие клавиши
+     * */
+    @FXML
+    void keyTyped(KeyEvent event) {
+        mainManager.keyPressed(event.getCode());
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

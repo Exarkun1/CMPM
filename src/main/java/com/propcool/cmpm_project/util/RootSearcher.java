@@ -1,4 +1,4 @@
-package com.propcool.cmpm_project.auxiliary;
+package com.propcool.cmpm_project.util;
 
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.combination.Difference;

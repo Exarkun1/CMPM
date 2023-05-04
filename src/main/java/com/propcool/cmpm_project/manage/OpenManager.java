@@ -1,6 +1,7 @@
 package com.propcool.cmpm_project.manage;
 
 import javafx.animation.TranslateTransition;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 /**
@@ -16,6 +17,7 @@ public class OpenManager {
      * Открытие панели с текстовыми полями
      * */
     public void openTextFields(){
+        if(controlManager.isSettingsOpen()) openSettings();
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), outgoingPanel);
         translateTransition.setToX(controlManager.isMenuOpen() ? -400 : 400);
         translateTransition.play();
@@ -25,12 +27,12 @@ public class OpenManager {
      * Открытие панели настроек
      * */
     public void openSettings(){
+        if(controlManager.isMenuOpen()) openTextFields();
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), outgoingPanelSettings);
         translateTransition.setToX(controlManager.isSettingsOpen() ? -400 : 400);
         translateTransition.play();
         controlManager.setSettingsOpen();
     }
-
     private final BorderPane outgoingPanel;
     private final BorderPane outgoingPanelSettings;
     private final ControlManager controlManager;
