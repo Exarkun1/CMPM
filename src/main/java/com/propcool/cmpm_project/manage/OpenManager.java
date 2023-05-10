@@ -1,7 +1,6 @@
 package com.propcool.cmpm_project.manage;
 
 import javafx.animation.TranslateTransition;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 /**

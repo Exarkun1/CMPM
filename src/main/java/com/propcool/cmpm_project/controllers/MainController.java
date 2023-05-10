@@ -16,6 +16,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.*;
 /**
@@ -38,13 +39,16 @@ public class MainController implements Initializable {
     private VBox paneForText;
     @FXML
     private Button creatFieldButton;
-
     @FXML
     private TextField nameNotebookField;
     @FXML
     private VBox paneForNotebooks;
     @FXML
     private ChoiceBox<String> systemChoice;
+    @FXML
+    private TextField xCauchyField;
+    @FXML
+    private TextField yCauchyField;
     /**
      * Сдвиг координат
      * */
@@ -115,6 +119,29 @@ public class MainController implements Initializable {
     void keyTyped(KeyEvent event) {
         mainManager.keyPressed(event.getCode());
     }
+    @FXML
+    void zoomInPressed(MouseEvent event) {
+        mainManager.scale(1);
+    }
+    @FXML
+    void zoomOutPressed(MouseEvent event) {
+        mainManager.scale(-1);
+    }
+    @FXML
+    void showDirectionsField(ActionEvent event) {
+        mainManager.showDirectionsField();
+    }
+    @FXML
+    void saveCauchy(ActionEvent event) {
+        try {
+            mainManager.setCauchyPoint(
+                    Double.parseDouble(xCauchyField.getText()),
+                    Double.parseDouble(yCauchyField.getText())
+            );
+        } catch (NumberFormatException e) {
+            mainManager.cauchyAlert();
+        }
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         mainManager = new MainManager(
@@ -142,9 +169,7 @@ public class MainController implements Initializable {
         creatFieldButton.setPrefWidth(400);
 
         systemChoice.getItems().addAll("cartesian", "polar");
-        systemChoice.setOnAction(actionEvent -> {
-            mainManager.changingCoordinateSystem(systemChoice.getValue());
-        });
+        systemChoice.setOnAction(actionEvent -> mainManager.changingCoordinateSystem(systemChoice.getValue()));
     }
     private MainManager mainManager;
 }

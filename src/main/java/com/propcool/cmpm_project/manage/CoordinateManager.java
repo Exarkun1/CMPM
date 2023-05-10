@@ -29,6 +29,24 @@ public abstract class CoordinateManager {
     public abstract Point getCircleCoordinate(Function function, double x, double y);
     public abstract double getPixelX(double x, double y);
     public abstract double getPixelY(double x, double y);
+    public double getX(Point p) {
+        return getX(p.getX(), p.getY());
+    }
+    public double getY(Point p) {
+        return getY(p.getX(), p.getY());
+    }
+    public Point getXY(Point p) {
+        return new Point(getX(p), getY(p));
+    }
+    public double getPixelX(Point p) {
+        return getPixelX(p.getX(), p.getY());
+    }
+    public double getPixelY(Point p) {
+        return getPixelY(p.getX(), p.getY());
+    }
+    public Point getPixelXY(Point p) {
+        return new Point(getPixelX(p), getPixelY(p));
+    }
     /**
      * Изменение положения мышки
      * */
@@ -44,7 +62,6 @@ public abstract class CoordinateManager {
         double dy = y-mouseY;
 
         shiftCenter(dx, dy);
-
         setMouse(x, y);
     }
     /**
@@ -76,6 +93,9 @@ public abstract class CoordinateManager {
     }
     public boolean onScreen(double x, double y){
         return 2 <= x && x <= width -2 && 2 <= y && y <= height-2;
+    }
+    public boolean onScreen(Point p){
+        return onScreen(p.getX(), p.getY());
     }
 
     public int getHeight() {

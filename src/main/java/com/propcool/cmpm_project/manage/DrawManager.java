@@ -1,5 +1,6 @@
 package com.propcool.cmpm_project.manage;
 
+import com.propcool.cmpm_project.util.Inclines;
 import com.propcool.cmpm_project.util.Point;
 import com.propcool.cmpm_project.util.Quadtree;
 import com.propcool.cmpm_project.components.GroupLines;
@@ -155,8 +156,12 @@ public class DrawManager {
         List<Line> lines = new ArrayList<>();
         for(double i = y0; i < y1; i+=step){
             for(double j = x0; j < x1; j+=step){
-                Quadtree quadtree = new Quadtree(new Point(j, i), step, 1, function, coordinateManager);
-                lines.addAll(quadtree.gridSearch(color, strokeWidth));
+                Quadtree quadtree = new Quadtree(
+                        new Point(j, i), step,
+                        1, function, coordinateManager,
+                        color, strokeWidth
+                        );
+                lines.addAll(quadtree.gridSearch());
             }
         }
         Group group = new Group(lines.toArray(Line[]::new));
@@ -190,7 +195,14 @@ public class DrawManager {
      * Отображение дифференциального уравнения
      * */
     public void rebuildDifferentialEquation(String functionName, Function function, Color color, int strokeWidth){
-        System.out.println("Differential Equation");
+        Inclines inclines = new Inclines(function, coordinateManager, color, strokeWidth);
+        List<Line> lines = new ArrayList<>();
+        if(controlManager.isDirectionsShowed()) lines.addAll(inclines.tangentField());
+
+        lines.addAll(inclines.integralCurve(functionManager.getCauchyPoint()));
+        Group group = new Group(lines.toArray(Line[]::new));
+
+        graphics.put(functionName, group);
     }
     /**
      * Отображение всех элементов

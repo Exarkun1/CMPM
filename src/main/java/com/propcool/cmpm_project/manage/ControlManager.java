@@ -15,6 +15,10 @@ public class ControlManager {
         return lineDragged;
     }
 
+    public boolean isDirectionsShowed() {
+        return directionsShowed;
+    }
+
     public void setMenuOpen() {
         menuOpen = !menuOpen;
     }
@@ -26,8 +30,9 @@ public class ControlManager {
     public void setLineDragged() {
         lineDragged = !lineDragged;
     }
-
+    public void setDirectionsShowed() { directionsShowed = !directionsShowed; }
     private boolean menuOpen = false;
     private boolean settingsOpen = false;
     private boolean lineDragged = false;
+    private boolean directionsShowed = true;
 }

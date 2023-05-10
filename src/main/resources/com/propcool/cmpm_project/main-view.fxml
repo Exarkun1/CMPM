@@ -18,14 +18,24 @@
    <top>
       <AnchorPane prefHeight="50.0" prefWidth="817.0" style="-fx-background-color: #002d40;" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="8.0" layoutY="4.0" onMousePressed="#openTextFields" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="48.0" fitWidth="53.0" layoutX="8.0" onMousePressed="#openTextFields" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@burger.png" />
+                  <Image url="@menu.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="46.0" fitWidth="45.0" layoutX="74.0" layoutY="2.0" onMousePressed="#openSettings" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="58.0" layoutY="3.0" onMousePressed="#openSettings" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@settings.png" />
+                  <Image url="@parameters.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="46.0" fitWidth="45.0" layoutX="102.0" layoutY="2.0" onMousePressed="#zoomInPressed" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@plus.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="46.0" fitWidth="45.0" layoutX="147.0" layoutY="2.0" onMousePressed="#zoomOutPressed" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@minus.png" />
                </image>
             </ImageView>
          </children></AnchorPane>
@@ -54,9 +64,36 @@
                <center>
                   <Accordion fx:id="accordionSettings" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="780.0" prefWidth="400.0" BorderPane.alignment="CENTER">
                      <panes>
-                        <TitledPane animated="false" prefHeight="460.0" prefWidth="350.0" text="Настройки функций">
+                        <TitledPane animated="false" prefHeight="460.0" prefWidth="350.0" text="Дифференциальные уравнения">
                            <content>
-                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="469.0" prefWidth="348.0" />
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="469.0" prefWidth="348.0">
+                                 <children>
+                                    <Label layoutX="21.0" layoutY="46.0" text="Задача Коши:">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField layoutX="146.0" layoutY="27.0" prefHeight="27.0" prefWidth="100.0" promptText="x" fx:id="xCauchyField">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextField fx:id="yCauchyField" layoutX="146.0" layoutY="73.0" prefHeight="27.0" prefWidth="100.0" promptText="y">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                    <Button layoutX="39.0" layoutY="128.0" mnemonicParsing="false" onAction="#showDirectionsField" text="Показать/убрать поле направлений">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Button>
+                                    <Button layoutX="260.0" layoutY="40.0" mnemonicParsing="false" onAction="#saveCauchy" text="Применить">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Button>
+                                 </children></AnchorPane>
                            </content>
                            <font>
                               <Font size="16.0" />

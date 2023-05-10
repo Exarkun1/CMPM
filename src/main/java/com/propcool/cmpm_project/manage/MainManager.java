@@ -67,6 +67,17 @@ public class MainManager {
         }
         drawManager.makeNewFrame();
     }
+    public void scale(double delta){
+        if(delta < 0){
+            coordinateManagers.get("cartesian").zoomCenter(1.3);
+            coordinateManagers.get("polar").zoomCenter(1.3);
+        }
+        else{
+            coordinateManagers.get("cartesian").zoomCenter(1/1.3);
+            coordinateManagers.get("polar").zoomCenter(1/1.3);
+        }
+        drawManager.makeNewFrame();
+    }
     public void openTextFields(){
         openManager.openTextFields();
     }
@@ -96,32 +107,53 @@ public class MainManager {
     public void keyPressed(KeyCode code) {
         switch (code) {
             case RIGHT -> {
-                coordinateManager.shiftCenter(-20, 0);
+                coordinateManagers.get("cartesian").shiftCenter(-20, 0);
+                coordinateManagers.get("polar").shiftCenter(-20, 0);
                 drawManager.makeNewFrame();
             }
             case LEFT -> {
-                coordinateManager.shiftCenter(20, 0);
+                coordinateManagers.get("cartesian").shiftCenter(20, 0);
+                coordinateManagers.get("polar").shiftCenter(20, 0);
                 drawManager.makeNewFrame();
             }
             case UP -> {
-                coordinateManager.shiftCenter(0, 20);
+                coordinateManagers.get("cartesian").shiftCenter(0, 20);
+                coordinateManagers.get("polar").shiftCenter(0, 20);
                 drawManager.makeNewFrame();
             }
             case DOWN -> {
-                coordinateManager.shiftCenter(0, -20);
+                coordinateManagers.get("cartesian").shiftCenter(0, -20);
+                coordinateManagers.get("polar").shiftCenter(0, -20);
                 drawManager.makeNewFrame();
             }
             case EQUALS -> {
-                coordinateManager.zoomCenter(1/1.3);
+                coordinateManagers.get("cartesian").zoomCenter(1/1.3);
+                coordinateManagers.get("polar").zoomCenter(1/1.3);
                 drawManager.makeNewFrame();
             }
             case MINUS -> {
-                coordinateManager.zoomCenter(1.3);
+                coordinateManagers.get("cartesian").zoomCenter(1.3);
+                coordinateManagers.get("polar").zoomCenter(1.3);
                 drawManager.makeNewFrame();
             }
             case ESCAPE -> openTextFields();
             case F1 -> openSettings();
         }
+    }
+    public void setCauchyPoint(double x, double y) {
+        Platform.runLater(() -> {
+            functionManager.setCauchyPoint(x, y);
+            drawManager.makeNewFrame();
+        });
+    }
+    public void cauchyAlert() {
+        functionManager.cauchyAlert();
+    }
+    public void showDirectionsField() {
+        Platform.runLater(() -> {
+            controlManager.setDirectionsShowed();
+            drawManager.makeNewFrame();
+        });
     }
     private final FunctionManager functionManager = new FunctionManager();
     private CoordinateManager coordinateManager = new CartesianManager();

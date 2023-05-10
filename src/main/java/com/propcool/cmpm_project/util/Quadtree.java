@@ -11,28 +11,42 @@ import java.util.List;
  * Квадрант для построения неявной функции
  * */
 public class Quadtree {
-    public Quadtree(Point point, double size, int level, Function function, CoordinateManager coordinateManager) {
+    public Quadtree(Point point, double size,
+                    int level, Function function,
+                    CoordinateManager coordinateManager,
+                    Color color, int strokeWidth
+    ) {
         this.level = level;
         this.size = size;
         this.point = point;
         this.function = function;
         this.coordinateManager = coordinateManager;
+        this.color = color;
+        this.strokeWidth = strokeWidth;
     }
 
     public void subdivide(){
         double child_size = size / 2;
         int child_level = level + 1;
         children[0] = new Quadtree(
-                new Point(point.getX(), point.getY()), child_size, child_level, function, coordinateManager
+                new Point(point.getX(), point.getY()), child_size,
+                child_level, function, coordinateManager,
+                color, strokeWidth
         );
         children[1] = new Quadtree(
-                new Point(point.getX() + child_size, point.getY()), child_size, child_level, function, coordinateManager
+                new Point(point.getX() + child_size, point.getY()), child_size,
+                child_level, function, coordinateManager,
+                color, strokeWidth
         );
         children[2] = new Quadtree(
-                new Point(point.getX() + child_size, point.getY() + child_size), child_size, child_level, function, coordinateManager
+                new Point(point.getX() + child_size, point.getY() + child_size), child_size,
+                child_level, function, coordinateManager,
+                color, strokeWidth
         );
         children[3] = new Quadtree(
-                new Point(point.getX(), point.getY() + child_size), child_size, child_level, function, coordinateManager
+                new Point(point.getX(), point.getY() + child_size),
+                child_size, child_level, function, coordinateManager,
+                color, strokeWidth
         );
         this.isSubDiv = true;
     }
@@ -54,9 +68,9 @@ public class Quadtree {
         }
         return false;
     }
-    public List<Line> gridSearch(Color color, int strokeWidth){
+    public List<Line> gridSearch(){
         List<Line> lines = new ArrayList<>();
-        gridSearch(lines, color, strokeWidth);
+        gridSearch(lines);
         return lines;
     }
 
@@ -72,7 +86,7 @@ public class Quadtree {
         double r = f2 - f1;
         return new Point(x1, y2 -  f2 * (y2 - y1)/r);
     }
-    private void interpolate(List<Line> lines, Color color, int strokeWidth){
+    private void interpolate(List<Line> lines){
         Point p1, p2;
         if(signs[0] != signs[1] && signs[1] == signs[2] && signs[1] == signs[3]) {
             p1 = interpolateX(point.getX(), point.getY(), point.getX() + size, point.getY());
@@ -102,7 +116,9 @@ public class Quadtree {
             p1 = new Point(0, 0);
             p2 = new Point(0, 0);
         }
-        //Line(p1, p2) Отрисовываем линию
+        addLine(lines, p1, p2);
+    }
+    private void addLine(List<Line> lines, Point p1, Point p2) {
         double centerX = coordinateManager.getCenterX();
         double centerY = coordinateManager.getCenterY();
         double pixelSize = coordinateManager.getPixelSize();
@@ -120,7 +136,7 @@ public class Quadtree {
         }
     }
 
-    private void gridSearch(List<Line> lines, Color color, int strokeWidth){
+    private void gridSearch(List<Line> lines){
         signs[0] = getSign(point.getX(), point.getY());
         signs[1] = getSign(point.getX() + size, point.getY());
         signs[2] = getSign(point.getX() + size, point.getY() + size);
@@ -132,10 +148,10 @@ public class Quadtree {
             if(level < maxLevel){
                 subdivide();
                 for(int i = 0; i < 4; i++){
-                    children[i].gridSearch(lines, color, strokeWidth);
+                    children[i].gridSearch(lines);
                 }
             }
-            else interpolate(lines, color, strokeWidth);
+            else interpolate(lines);
         }
     }
     private int getSign(double x, double y){
@@ -170,4 +186,6 @@ public class Quadtree {
     private final int[] signs = new int[4];
     private final Function function;
     private final CoordinateManager coordinateManager;
+    private final Color color;
+    private final int strokeWidth;
 }

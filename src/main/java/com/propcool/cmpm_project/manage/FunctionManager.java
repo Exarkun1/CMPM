@@ -12,6 +12,7 @@ import com.propcool.cmpm_project.functions.combination.Combination;
 import com.propcool.cmpm_project.functions.mono.*;
 import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
 import com.propcool.cmpm_project.notebooks.data.CustomizableParameter;
+import javafx.scene.control.Alert;
 
 import java.util.*;
 /**
@@ -197,6 +198,16 @@ public class FunctionManager {
         return points;
     }
 
+    public Point getCauchyPoint() {
+        return cauchyPoint;
+    }
+    public void setCauchyPoint(double x, double y) {
+        cauchyPoint.setX(x);
+        cauchyPoint.setY(y);
+    }
+    public void cauchyAlert() {
+        cauchyAlert.show();
+    }
     private final Map<String, FunctionFactory> keyWords = new LinkedHashMap<>();
     private final List<String> constants = List.of("pi", "e");
     private final  Map<String, CustomizableFunction> functions = new LinkedHashMap<>();
@@ -204,6 +215,8 @@ public class FunctionManager {
     private final FunctionBuilder functionBuilder = new FunctionBuilder(this);
     private final DifBuilder difBuilder = new DifBuilder();
     private final RootSearcher rootSearcher = new RootSearcher(1e-6, 100);
+    private final Point cauchyPoint = new Point(0, 0);
+    private final Alert cauchyAlert = new Alert(Alert.AlertType.ERROR,"Не верные данные в задаче Коши");
 
     public FunctionManager(){
         keyWords.put("sqrt", (b, e, s, p) -> new Pow(functionBuilder.buildingNotNamed(e, p), 0.5));
