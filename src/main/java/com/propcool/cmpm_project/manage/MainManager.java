@@ -155,6 +155,15 @@ public class MainManager {
             drawManager.makeNewFrame();
         });
     }
+    public void setPolarBorders(double start, double end) {
+        Platform.runLater(() ->{
+            ((PolarManager)coordinateManagers.get("polar")).setBorders(start, end);
+            if(coordinateManager instanceof PolarManager) drawManager.makeNewFrame();
+        });
+    }
+    public void polarAlert() {
+        ((PolarManager)coordinateManagers.get("polar")).polarAlert();
+    }
     private final FunctionManager functionManager = new FunctionManager();
     private CoordinateManager coordinateManager = new CartesianManager();
     private final ControlManager controlManager = new ControlManager();

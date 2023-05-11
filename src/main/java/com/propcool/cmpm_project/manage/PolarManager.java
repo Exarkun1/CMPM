@@ -2,6 +2,7 @@ package com.propcool.cmpm_project.manage;
 
 import com.propcool.cmpm_project.util.Point;
 import com.propcool.cmpm_project.functions.Function;
+import javafx.scene.control.Alert;
 
 public class PolarManager extends CoordinateManager {
     @Override
@@ -35,12 +36,12 @@ public class PolarManager extends CoordinateManager {
 
     @Override
     public double getMin() {
-        return 0;
+        return min;
     }
 
     @Override
     public double getMax() {
-        return 4*Math.PI;
+        return max;
     }
 
     @Override
@@ -73,4 +74,14 @@ public class PolarManager extends CoordinateManager {
         double y = r * Math.sin(fi);
         return -y / getPixelSize() + getCenterY();
     }
+    public void polarAlert() {
+        polarAlert.show();
+    }
+    public void setBorders(double start, double end) {
+        min = start;
+        max = end;
+    }
+    private final Alert polarAlert = new Alert(Alert.AlertType.ERROR,"Не верные данные в границах");
+    private double min = 0;
+    private double max = 4*Math.PI;
 }

@@ -49,6 +49,10 @@ public class MainController implements Initializable {
     private TextField xCauchyField;
     @FXML
     private TextField yCauchyField;
+    @FXML
+    private TextField startPolar;
+    @FXML
+    private TextField endPolar;
     /**
      * Сдвиг координат
      * */
@@ -140,6 +144,17 @@ public class MainController implements Initializable {
             );
         } catch (NumberFormatException e) {
             mainManager.cauchyAlert();
+        }
+    }
+    @FXML
+    void savePolar(ActionEvent event) {
+        try {
+            mainManager.setPolarBorders(
+                    Double.parseDouble(startPolar.getText()),
+                    Double.parseDouble(endPolar.getText())
+            );
+        } catch (NumberFormatException e) {
+            mainManager.polarAlert();
         }
     }
     @Override

@@ -2,6 +2,7 @@ package com.propcool.cmpm_project.manage;
 
 import com.propcool.cmpm_project.util.Point;
 import com.propcool.cmpm_project.functions.Function;
+import javafx.scene.control.Alert;
 
 import java.awt.*;
 
