@@ -198,6 +198,10 @@ public class FunctionManager {
         return points;
     }
 
+    public Point searchIntersectsXY(Function f, Function g, double x, double y) {
+        return rootSearcher.intersectionXY(f, g, x, y);
+    }
+
     public Point getCauchyPoint() {
         return cauchyPoint;
     }

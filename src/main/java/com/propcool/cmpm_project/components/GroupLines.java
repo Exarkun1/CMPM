@@ -22,16 +22,13 @@ import java.util.Set;
 /**
  * Класс для группы линий
  * */
-public class GroupLines extends Group {
+public class GroupLines extends AbstractGroupLines {
     public GroupLines(Function function, Color color,
                       CoordinateManager coordinateManager, DrawManager drawManager,
                       ControlManager controlManager, FunctionManager functionManager
     ){
-        this.coordinateManager = coordinateManager;
-        this.drawManager = drawManager;
+        super(coordinateManager, drawManager, color);
         this.functionManager = functionManager;
-        text.setFont(new Font(16));
-        circle.setFill(color);
         // Вызывается кружок с координатами при нажатии
         setOnMousePressed(mouseEvent -> {
             Platform.runLater(() -> {
@@ -75,44 +72,6 @@ public class GroupLines extends Group {
             });
         });
     }
-    private String getText(double x, double y, String pattern){
-        DecimalFormat format = new DecimalFormat(pattern);
-        return "("+ format.format(coordinateManager.getX(x, y)) + "; " + format.format(coordinateManager.getY(x, y))+ ")";
-    }
-    private void enlargeLines() {
-        if(isEnlarges) return;
-        for(var elem : getChildren()){
-            Line line = (Line)elem;
-            line.setStrokeWidth(line.getStrokeWidth()*2);
-        }
-        isEnlarges = true;
-        drawManager.setLastGroupLines(this);
-    }
-    private void reduceLines() {
-        GroupLines groupLines = drawManager.getLastGroupLines();
-        if(groupLines == null || groupLines == this) return;
-        for(var elem : groupLines.getChildren()){
-            Line line = (Line)elem;
-            line.setStrokeWidth(line.getStrokeWidth()/2);
-        }
-        groupLines.setEnlarges(false);
-    }
-    private void visibleCircle(){
-        circle.setVisible(true);
-        paneForText.setVisible(true);
-    }
-    private void noVisibleCircle(){
-        circle.setVisible(false);
-        paneForText.setVisible(false);
-    }
-    private void newPosition(double x, double y) {
-        circle.setCenterX(x);
-        circle.setCenterY(y);
-        text.setText(getText(x, y, "#.###"));
-        if(paneForText == null) paneForText = getPane(text, x, y);
-        paneForText.setLayoutX(x-text.getBoundsInLocal().getWidth()/2);
-        paneForText.setLayoutY(y-text.getBoundsInLocal().getHeight()-10);
-    }
     private void solve(Function function) {
         double x0 = coordinateManager.getX(coordinateManager.getMin(), 0);
         double x1 = coordinateManager.getX(coordinateManager.getMax(), 0);
@@ -140,48 +99,8 @@ public class GroupLines extends Group {
     }
     private void addPoints(Set<Point> points) {
         for(var point : points) {
-            double x = coordinateManager.getPixelX(point.getX(), point.getY());
-            double y = coordinateManager.getPixelY(point.getX(), point.getY());
-            if(!Double.isNaN(x) && !Double.isNaN(y)) {
-                Circle circle = new Circle(x, y, 5);
-                circle.setFill(Color.LIGHTGRAY);
-                StackPane pane = getTextPane(x, y);
-                circle.setOnMouseEntered(mouseEvent -> Platform.runLater(() -> drawManager.addNodes(pane)));
-                circle.setOnMouseExited(mouseEvent -> Platform.runLater(() -> drawManager.removeNodes(pane)));
-                drawManager.addPoint(circle);
-            }
+            addPoint(point);
         }
     }
-
-    private StackPane getTextPane(double x, double y) {
-        Text text = new Text(getText(x, y, "#.#####"));
-        text.setFont(new Font(18));
-        return getPane(text, x, y);
-    }
-    private StackPane getPane(Text text, double x, double y) {
-        double textWight = text.getBoundsInLocal().getWidth() + 4;
-        double textHeight = text.getBoundsInLocal().getHeight();
-        Rectangle box = new Rectangle(textWight, textHeight);
-        box.setFill(Color.LIGHTGRAY);
-        StackPane pane = new StackPane(box, text);
-        pane.setLayoutX(x-textWight/2);
-        pane.setLayoutY(y-textHeight-10);
-        return pane;
-    }
-
-    public boolean isEnlarges() {
-        return isEnlarges;
-    }
-
-    public void setEnlarges(boolean enlarges) {
-        isEnlarges = enlarges;
-    }
-
-    private final Circle circle = new Circle(5);
-    private final Text text = new Text();
-    private Pane paneForText;
-    private final CoordinateManager coordinateManager;
-    private final DrawManager drawManager;
     private final FunctionManager functionManager;
-    private boolean isEnlarges = false;
 }

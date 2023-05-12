@@ -32,7 +32,8 @@ public class RootSearcher {
         Function opG = new Difference(g);
         double x = a, y = b;
         double prevX = x+1, prevY = y+1;
-        while(Math.sqrt(Math.pow(x-prevX, 2) + Math.pow(y-prevY, 2)) >= e) {
+        int index = 0;
+        while(index++ < maxIteration && Math.sqrt(Math.pow(x-prevX, 2) + Math.pow(y-prevY, 2)) >= e) {
             Matrix J = J(f, g).getMatC(x, y);
             Vector H = new Vector(opF, opG).getVecC(x, y);
             double[] dXY = J.rev().mul(H).getVec(0, 0);
@@ -41,7 +42,8 @@ public class RootSearcher {
             x += dXY[0];
             y += dXY[1];
         }
-        return new Point(x, y);
+        if(index < maxIteration) return new Point(x, y);
+        else return null;
     }
     public Matrix J(Function f, Function g) {
         return new Matrix(

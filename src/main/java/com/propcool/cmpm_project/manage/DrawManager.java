@@ -1,5 +1,8 @@
 package com.propcool.cmpm_project.manage;
 
+import com.propcool.cmpm_project.components.AbstractGroupLines;
+import com.propcool.cmpm_project.components.DifGroupLines;
+import com.propcool.cmpm_project.components.ImpGroupLines;
 import com.propcool.cmpm_project.util.Inclines;
 import com.propcool.cmpm_project.util.Point;
 import com.propcool.cmpm_project.util.Quadtree;
@@ -91,7 +94,8 @@ public class DrawManager {
             groupXY.getChildren().add(lineY);
 
         Text counter = createCounterX(coordinateManager.getCenterX());
-        if(pixelSize < 0.02 && centerX >= 20 && centerX <= wight-20 && centerY >= 20 && centerY <= height-20) groupText.getChildren().add(counter);
+        if(pixelSize < 0.02 && centerX >= 20 && centerX <= wight-20 && centerY >= 20 && centerY <= height-20)
+            groupText.getChildren().add(counter);
 
         graphics.put("1xy", groupXY);
 
@@ -164,7 +168,8 @@ public class DrawManager {
                 lines.addAll(quadtree.gridSearch());
             }
         }
-        Group group = new Group(lines.toArray(Line[]::new));
+        Group group = new ImpGroupLines(function, color, coordinateManager, this, controlManager, functionManager);
+        group.getChildren().addAll(lines);
         graphics.put(functionName, group);
     }
     /**
@@ -200,7 +205,8 @@ public class DrawManager {
         if(controlManager.isDirectionsShowed()) lines.addAll(inclines.tangentField());
 
         lines.addAll(inclines.integralCurve(functionManager.getCauchyPoint()));
-        Group group = new Group(lines.toArray(Line[]::new));
+        Group group = new DifGroupLines(color, coordinateManager, this, controlManager);
+        group.getChildren().addAll(lines);
 
         graphics.put(functionName, group);
     }
@@ -259,11 +265,11 @@ public class DrawManager {
         points.clear();
     }
 
-    public GroupLines getLastGroupLines() {
+    public AbstractGroupLines getLastGroupLines() {
         return lastGroupLines;
     }
 
-    public void setLastGroupLines(GroupLines lastGroupLines) {
+    public void setLastGroupLines(AbstractGroupLines lastGroupLines) {
         this.lastGroupLines = lastGroupLines;
     }
 
@@ -274,6 +280,6 @@ public class DrawManager {
     private final FunctionManager functionManager;
     private final ControlManager controlManager;
     private final Set<Circle> points = new HashSet<>();
-    private GroupLines lastGroupLines;
+    private AbstractGroupLines lastGroupLines;
     private final DecimalFormat format = new DecimalFormat("#.#");
 }
