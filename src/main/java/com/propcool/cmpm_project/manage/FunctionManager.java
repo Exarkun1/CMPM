@@ -205,6 +205,13 @@ public class FunctionManager {
             return null;
         }
     }
+    public Point searchExtremeXY(Function f, double x, double y) {
+        try {
+            return rootSearcher.extremeXY(f, x, y);
+        } catch (RuntimeException ignored) {
+            return null;
+        }
+    }
 
     public Point getCauchyPoint() {
         return cauchyPoint;

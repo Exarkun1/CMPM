@@ -6,7 +6,7 @@ import com.propcool.cmpm_project.functions.combination.*;
 
 public class Matrix extends Combination {
     public Matrix(Function f1, Function f2, Function f3, Function f4) {
-        super(new Vector(f1, f2), new Vector(f3, f4));
+        this(new Vector(f1, f2), new Vector(f3, f4));
     }
     public Matrix(Vector v1, Vector v2) {
         super(v1, v2);

@@ -33,6 +33,7 @@ public class ImpGroupLines extends AbstractGroupLines {
                     intersect(function, mouseEvent.getX(), mouseEvent.getY());
                     solveY(function, mouseEvent.getX(), mouseEvent.getY());
                     solveX(function, mouseEvent.getX(), mouseEvent.getY());
+                    extreme(function, mouseEvent.getX(), mouseEvent.getY());
 
                     drawManager.addNodes(circle, paneForText);
                 } catch (IllegalArgumentException ignored) {}
@@ -72,6 +73,12 @@ public class ImpGroupLines extends AbstractGroupLines {
         double x = coordinateManager.getX(pixelX, pixelY);
         double y = coordinateManager.getY(pixelX, pixelY);
         Point point = functionManager.searchIntersectsXY(function, new VariableX(), x, y);
+        addPoint(point);
+    }
+    private void extreme(Function function, double pixelX, double pixelY) {
+        double x = coordinateManager.getX(pixelX, pixelY);
+        double y = coordinateManager.getY(pixelX, pixelY);
+        Point point = functionManager.searchExtremeXY(function, x, y);
         addPoint(point);
     }
     private final FunctionManager functionManager;
