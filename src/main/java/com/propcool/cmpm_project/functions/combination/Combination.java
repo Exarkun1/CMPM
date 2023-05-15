@@ -17,11 +17,11 @@ public abstract class Combination implements Function {
         return Math.min(func1.getLeftBorder(), func2.getLeftBorder());
     }
 
-    public Function getFunc1() {
+    public Function getFirst() {
         return func1;
     }
 
-    public Function getFunc2() {
+    public Function getSecond() {
         return func2;
     }
 

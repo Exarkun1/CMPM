@@ -64,7 +64,7 @@ public abstract class AbstractGroupLines extends Group {
         if(point == null) return;
         double x = coordinateManager.getPixelX(point.getX(), point.getY());
         double y = coordinateManager.getPixelY(point.getX(), point.getY());
-        if(!Double.isNaN(x) && !Double.isNaN(y)) {
+        if(!Double.isNaN(x) && !Double.isNaN(y) && coordinateManager.onScreen(x, y)) {
             Circle circle = new Circle(x, y, 5);
             circle.setFill(Color.LIGHTGRAY);
             StackPane pane = getTextPane(x, y);

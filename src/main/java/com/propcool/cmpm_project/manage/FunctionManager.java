@@ -112,8 +112,8 @@ public class FunctionManager {
         } else if(function instanceof Mono mono){
             getFuncDecorators(mono.getFunction(), decorators);
         } else if(function instanceof Combination combination){
-            getFuncDecorators(combination.getFunc1(), decorators);
-            getFuncDecorators(combination.getFunc2(), decorators);
+            getFuncDecorators(combination.getFirst(), decorators);
+            getFuncDecorators(combination.getSecond(), decorators);
         }
     }
     /**
@@ -191,7 +191,7 @@ public class FunctionManager {
         Set<Point> points = new HashSet<>();
         for(double step = start; step < end; step += 0.1) {
             try {
-                Point point = rootSearcher.extreme(f, step, step + 0.1);
+                Point point = rootSearcher.extremeX(f, step, step + 0.1);
                 points.add(point);
             } catch (RuntimeException ignored) {}
         }
@@ -199,7 +199,11 @@ public class FunctionManager {
     }
 
     public Point searchIntersectsXY(Function f, Function g, double x, double y) {
-        return rootSearcher.intersectionXY(f, g, x, y);
+        try {
+            return rootSearcher.intersectionXY(f, g, x, y);
+        } catch (RuntimeException ignored) {
+            return null;
+        }
     }
 
     public Point getCauchyPoint() {

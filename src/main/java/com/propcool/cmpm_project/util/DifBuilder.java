@@ -81,49 +81,49 @@ public class DifBuilder {
         return new Constant(0);
     }
     private Function difSum(Sum f, Dif d){
-        return new Sum(d.dif(f.getFunc1()), d.dif(f.getFunc2()));
+        return new Sum(d.dif(f.getFirst()), d.dif(f.getSecond()));
     }
     private Function difDifference(Difference f, Dif d){
-        return new Difference(d.dif(f.getFunc1()), d.dif(f.getFunc2()));
+        return new Difference(d.dif(f.getFirst()), d.dif(f.getSecond()));
     }
     private Function difMultiply(Multiply f, Dif d){
-        return new Sum(new Multiply(d.dif(f.getFunc1()), f.getFunc2().clone()),
-                new Multiply(f.getFunc1().clone(), d.dif(f.getFunc2()))
+        return new Sum(new Multiply(d.dif(f.getFirst()), f.getSecond().clone()),
+                new Multiply(f.getFirst().clone(), d.dif(f.getSecond()))
         ); // (uv)' = u'v+uv'
     }
     private Function difDivision(Division f, Dif d){
         return new Division(new Difference(
-                new Multiply(d.dif(f.getFunc1()), f.getFunc2().clone()),
-                new Multiply(f.getFunc1().clone(), d.dif(f.getFunc2()))
+                new Multiply(d.dif(f.getFirst()), f.getSecond().clone()),
+                new Multiply(f.getFirst().clone(), d.dif(f.getSecond()))
         ),
-                new Pow(f.getFunc2().clone(), 2)
+                new Pow(f.getSecond().clone(), 2)
         ); // (u/v)' = (u'v-uv')/v^2
     }
     private Function difPow(Pow f, Dif d){
         return new Multiply(
                 new Multiply(
-                        f.getFunc2().clone(),
+                        f.getSecond().clone(),
                         new Pow(
-                                f.getFunc1().clone(),
-                                new ConstantSum(f.getFunc2().clone(), -1)
+                                f.getFirst().clone(),
+                                new ConstantSum(f.getSecond().clone(), -1)
                         )
                 ),
-                d.dif(f.getFunc1())
+                d.dif(f.getFirst())
         ); // (u^n)' = n*u^(n-1)*u'
     }
     private Function difExp(Exp f, Dif d){
         return new Multiply(
                 new Multiply(
                         f.clone(),
-                        new Log(f.getFunc1().clone())
+                        new Log(f.getFirst().clone())
                 ),
-                d.dif(f.getFunc2())
+                d.dif(f.getSecond())
         ); // (a^u)' = a^u*ln(a)*u'
     }
     private Function difLog(Log f, Dif d){
         return new Division(
-                d.dif(f.getFunc2()),
-                new Multiply(f.getFunc2().clone(), new Log(f.getFunc1().clone())
+                d.dif(f.getSecond()),
+                new Multiply(f.getSecond().clone(), new Log(f.getFirst().clone())
                 )
         ); // (log(a, u))' = u'/(u*ln(a))
     }
@@ -131,19 +131,19 @@ public class DifBuilder {
         return new Sum(
                 new Multiply(
                         new Multiply(
-                                f.getFunc2().clone(),
-                                new Exponential(f.getFunc1().clone(),
-                                        new Difference(f.getFunc2().clone(), new Constant(1))
-                                )), d.dif(f.getFunc1())
+                                f.getSecond().clone(),
+                                new Exponential(f.getFirst().clone(),
+                                        new Difference(f.getSecond().clone(), new Constant(1))
+                                )), d.dif(f.getFirst())
 
                 ),
                 new Multiply(
                         new Multiply(
-                                new Exponential(f.getFunc1().clone(),
-                                        f.getFunc2().clone()),
-                                new Log(f.getFunc1().clone())
+                                new Exponential(f.getFirst().clone(),
+                                        f.getSecond().clone()),
+                                new Log(f.getFirst().clone())
                         ),
-                        d.dif(f.getFunc2())
+                        d.dif(f.getSecond())
                 )
         ); // (u^v)' = v*u^(v-1)*u'+u^v*ln(u)*v'
     }

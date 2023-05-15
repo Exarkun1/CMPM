@@ -14,8 +14,8 @@ public class Log extends Logarithm {
         this(new VariableX());
     }
     @Override
-    public Constant getFunc1(){
-        return (Constant) super.getFunc1();
+    public Constant getFirst(){
+        return (Constant) super.getFirst();
     }
     @Override
     public double getLeftBorder() {
