@@ -249,16 +249,28 @@ public class DrawManager {
         rebuildAllFunctions();
         redrawAll();
     }
+    /**
+     * Добавление какого элемента на изображение
+     * */
     public void addNodes(Node... nodes){
         paneForGraphs.getChildren().addAll(nodes);
     }
+    /**
+     * Удаление какого элемента с изображения
+     * */
     public void removeNodes(Node... nodes){
         paneForGraphs.getChildren().removeAll(nodes);
     }
+    /**
+     * Добавление точки на изображение
+     * */
     public void addPoint(Circle point) {
         points.add(point);
         addNodes(point);
     }
+    /**
+     * Очистка точек
+     * */
     public void clearPoints() {
         if(points.isEmpty()) return;
         removeNodes(points.toArray(Node[]::new));

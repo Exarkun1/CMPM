@@ -1,12 +1,14 @@
 package com.propcool.cmpm_project.util;
 
 import com.propcool.cmpm_project.functions.Function;
-import com.propcool.cmpm_project.functions.basic.VariableY;
 import com.propcool.cmpm_project.functions.combination.Difference;
 import com.propcool.cmpm_project.functions.combination.Division;
 import com.propcool.cmpm_project.functions.vector.Matrix;
 import com.propcool.cmpm_project.functions.vector.Vector;
 
+/**
+ * Поиск корней уравнений, их пересечений и экстремумов
+ * */
 public class RootSearcher {
     public RootSearcher(double e, int maxIteration) {
         this.e = e;

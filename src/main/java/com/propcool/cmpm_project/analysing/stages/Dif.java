@@ -1,7 +1,7 @@
 package com.propcool.cmpm_project.analysing.stages;
 
 public enum Dif implements State {
-    A(0);
+    A(0), B(1), C(2);
     Dif(int index){
         this.index = index;
     }
@@ -23,7 +23,9 @@ public enum Dif implements State {
     }
     private static final State[][] matrix = {
             // ' ( e f
-            {A, Base.B, End.E, End.E}
+            {B, Base.B, End.E, End.E},
+            {C, Base.B, End.E, End.E},
+            {End.E, Base.B, End.E, End.E}
     };
     private final int index;
 }

@@ -164,9 +164,15 @@ public class FunctionManager {
         }
         return refs;
     }
+    /**
+     * Построение производной
+     * */
     public Function buildDif(Function function){
         return difBuilder.difX(function);
     }
+    /**
+     * Поиск корней функций
+     * */
     public Set<Point> searchRoots(Function function, double start, double end) {
         Set<Point> points = new HashSet<>();
         for(double step = start; step < end; step += 0.1) {
@@ -177,6 +183,9 @@ public class FunctionManager {
         }
         return points;
     }
+    /**
+     * Поиск пересечений функций
+     * */
     public Set<Point> searchIntersects(Function f, Function g, double start, double end) {
         Set<Point> points = new HashSet<>();
         for(double step = start; step < end; step += 0.1) {
@@ -187,6 +196,9 @@ public class FunctionManager {
         }
         return points;
     }
+    /**
+     * Поиск экстремумов функции
+     * */
     public Set<Point> searchExtremes(Function f, double start, double end) {
         Set<Point> points = new HashSet<>();
         for(double step = start; step < end; step += 0.1) {
@@ -197,7 +209,9 @@ public class FunctionManager {
         }
         return points;
     }
-
+    /**
+     * Поиск пересечений неявных функций
+     * */
     public Point searchIntersectsXY(Function f, Function g, double x, double y) {
         try {
             return rootSearcher.intersectionXY(f, g, x, y);
@@ -205,6 +219,9 @@ public class FunctionManager {
             return null;
         }
     }
+    /**
+     * Поиск экстремумов неявных функций
+     * */
     public Point searchExtremeXY(Function f, double x, double y) {
         try {
             return rootSearcher.extremeXY(f, x, y);
@@ -216,6 +233,9 @@ public class FunctionManager {
     public Point getCauchyPoint() {
         return cauchyPoint;
     }
+    /**
+     * Сохранение точки для задачи Коши
+     * */
     public void setCauchyPoint(double x, double y) {
         cauchyPoint.setX(x);
         cauchyPoint.setY(y);

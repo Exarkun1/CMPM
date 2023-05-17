@@ -34,6 +34,9 @@ public class TextFieldOnPage extends CustomTextField {
     public FProcess getProcess() {
         return process;
     }
+    /**
+     * Обработка изменения текста в поле с функциями
+     * */
     private final FProcess process = new FProcess() {
         @Override
         public void processing() {

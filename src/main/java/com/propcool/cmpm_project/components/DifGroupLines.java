@@ -5,10 +5,13 @@ import com.propcool.cmpm_project.manage.CoordinateManager;
 import com.propcool.cmpm_project.manage.DrawManager;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
-
+/**
+ * Класс группы линий дифференциального уравнения
+ * */
 public class DifGroupLines extends AbstractGroupLines{
     public DifGroupLines(Color color, CoordinateManager coordinateManager, DrawManager drawManager, ControlManager controlManager) {
         super(coordinateManager, drawManager, color);
+        // Появление кружка
         setOnMousePressed(mouseEvent -> {
             Platform.runLater(() -> {
                 try {
@@ -23,6 +26,7 @@ public class DifGroupLines extends AbstractGroupLines{
                 } catch (IllegalArgumentException ignored) {}
             });
         });
+        // Удаление кружка
         setOnMouseReleased(mouseEvent -> {
             Platform.runLater(() -> {
                 drawManager.removeNodes(circle, paneForText);

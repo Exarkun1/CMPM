@@ -12,7 +12,9 @@ import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
 import com.propcool.cmpm_project.util.Point;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
-
+/**
+ * Класс группы линий неявной функции
+ * */
 public class ImpGroupLines extends AbstractGroupLines {
     public ImpGroupLines(Function function, Color color,
                          CoordinateManager coordinateManager, DrawManager drawManager,
@@ -20,7 +22,7 @@ public class ImpGroupLines extends AbstractGroupLines {
     ){
         super(coordinateManager, drawManager, color);
         this.functionManager = functionManager;
-
+        // Появление кружка и других точек
         setOnMousePressed(mouseEvent -> {
             Platform.runLater(() -> {
                 try {
@@ -39,6 +41,7 @@ public class ImpGroupLines extends AbstractGroupLines {
                 } catch (IllegalArgumentException ignored) {}
             });
         });
+        // Удаление кружка
         setOnMouseReleased(mouseEvent -> {
             Platform.runLater(() -> {
                 drawManager.removeNodes(circle, paneForText);

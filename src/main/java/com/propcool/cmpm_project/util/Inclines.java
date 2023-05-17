@@ -7,7 +7,9 @@ import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Класс для отрисовки дифференциальных уравнений
+ * */
 public class Inclines {
     public Inclines(Function function,
                     CoordinateManager coordinateManager,
@@ -18,6 +20,9 @@ public class Inclines {
         this.color = color;
         this.strokeWidth = strokeWidth;
     }
+    /**
+     * Отрисовка поля направлений
+     * */
     public List<Line> tangentField() {
         List<Line> lines = new ArrayList<>();
         //Кол-во векторов по оси Х
@@ -41,7 +46,7 @@ public class Inclines {
 
                 if(coordinateManager.onScreen(x0, y0) && coordinateManager.onScreen(x1, y1)) {
                     Line line = new Line(x0, y0, x1, y1);
-                    line.setStroke(mix(color, 0.65));
+                    line.setStroke(mix.mix(color, 0.65));
                     line.setStrokeWidth(strokeWidth);
                     lines.add(line);
                 }
@@ -49,6 +54,9 @@ public class Inclines {
         }
         return lines;
     }
+    /**
+     * Отрисовка задачи Коши
+     * */
     public List<Line> integralCurve(Point point) {
         List<Line> lines = new ArrayList<>();
         Point p = coordinateManager.getPixelXY(point);
@@ -83,17 +91,10 @@ public class Inclines {
     private double getY(double j, double yc) {
         return coordinateManager.getHeight() - j * (coordinateManager.getHeight()/yc);
     }
-    private Color mix(Color color, double a) {
-        return new Color(
-                Math.min(color.getRed()+a, 1),
-                Math.min(color.getGreen()+a, 1),
-                Math.min(color.getBlue()+a, 1),
-                1
-        );
-    }
 
     private final Function function;
     private final CoordinateManager coordinateManager;
     private final Color color;
     private final int strokeWidth;
+    private final Mixer mix = new Mixer();
 }

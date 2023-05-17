@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="827.0" prefWidth="1099.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.propcool.cmpm_project.controllers.MainController">
    <top>
@@ -173,6 +174,48 @@
                                        </font>
                                     </Button>
                                  </children></AnchorPane>
+                           </content>
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </TitledPane>
+                        <TitledPane animated="false" layoutX="10.0" layoutY="80.0" prefHeight="492.0" prefWidth="350.0" text="Авторы">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="674.0" prefWidth="341.0">
+                                 <children>
+                                    <ImageView fitHeight="216.0" fitWidth="210.0" layoutX="102.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@author1.jpg" />
+                                       </image>
+                                    </ImageView>
+                                    <ImageView fitHeight="214.0" fitWidth="220.0" layoutX="100.0" layoutY="320.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@author2.jpg" />
+                                       </image>
+                                    </ImageView>
+                                    <Text layoutX="119.0" layoutY="263.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Казаков Павел 6201" wrappingWidth="188.13671875">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Казаков Павел 6201" wrappingWidth="119.13671875" />
+                                    <Text layoutX="96.0" layoutY="287.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Роль: Главный разработчик" wrappingWidth="233.13671875">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <Text layoutX="97.0" layoutY="553.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Абельдинов Рафаэль 6201" wrappingWidth="219.13671875">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <Text layoutX="79.0" layoutY="577.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Роль: Разработчик алгоритмов" wrappingWidth="255.13671875">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </AnchorPane>
                            </content>
                            <font>
                               <Font size="16.0" />

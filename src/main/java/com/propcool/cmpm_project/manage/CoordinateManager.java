@@ -24,11 +24,26 @@ public abstract class CoordinateManager {
      * Преобразование пиксельных Y координат в обычные
      * */
     public abstract double getY(double pixelX, double pixelY);
+    /**
+     * Минимум по x в пиксельных координатах
+     * */
     public abstract double getMin();
+    /**
+     * Максимум по x в пиксельных координатах
+     * */
     public abstract double getMax();
+    /**
+     * Шаг для отрисовки
+     * */
     public abstract double getStep();
     public abstract Point getCircleCoordinate(Function function, double x, double y);
+    /**
+     * Преобразование X координат в пиксельные
+     * */
     public abstract double getPixelX(double x, double y);
+    /**
+     * Преобразование Y координат в пиксельные
+     * */
     public abstract double getPixelY(double x, double y);
     public double getX(Point p) {
         return getX(p.getX(), p.getY());

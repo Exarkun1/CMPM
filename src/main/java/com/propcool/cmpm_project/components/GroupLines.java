@@ -20,7 +20,7 @@ import java.text.DecimalFormat;
 import java.util.Set;
 
 /**
- * Класс для группы линий
+ * Класс группы линий обычной функции
  * */
 public class GroupLines extends AbstractGroupLines {
     public GroupLines(Function function, Color color,
@@ -29,7 +29,7 @@ public class GroupLines extends AbstractGroupLines {
     ){
         super(coordinateManager, drawManager, color);
         this.functionManager = functionManager;
-        // Вызывается кружок с координатами при нажатии
+        // Вызывается кружок с координатами при нажатии, а также все возможные точки
         setOnMousePressed(mouseEvent -> {
             Platform.runLater(() -> {
                 try {

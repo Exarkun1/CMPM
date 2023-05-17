@@ -1,6 +1,5 @@
 package com.propcool.cmpm_project.controllers;
 
-import com.propcool.cmpm_project.components.TextFieldBox;
 import com.propcool.cmpm_project.manage.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,7 +15,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.*;
 /**
@@ -123,18 +121,30 @@ public class MainController implements Initializable {
     void keyTyped(KeyEvent event) {
         mainManager.keyPressed(event.getCode());
     }
+    /**
+     * Приближение по нажатию на иконку
+     * */
     @FXML
     void zoomInPressed(MouseEvent event) {
         mainManager.scale(1);
     }
+    /**
+     * Отдаление по нажатию на иконку
+     * */
     @FXML
     void zoomOutPressed(MouseEvent event) {
         mainManager.scale(-1);
     }
+    /**
+     * Включение/выключение поля направлений
+     * */
     @FXML
     void showDirectionsField(ActionEvent event) {
         mainManager.showDirectionsField();
     }
+    /**
+     * Сохранение точки для задачи Коши
+     * */
     @FXML
     void saveCauchy(ActionEvent event) {
         try {
@@ -146,6 +156,9 @@ public class MainController implements Initializable {
             mainManager.cauchyAlert();
         }
     }
+    /**
+     * Сохранение границ полярных координат
+     * */
     @FXML
     void savePolar(ActionEvent event) {
         try {
