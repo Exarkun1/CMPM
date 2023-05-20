@@ -85,7 +85,7 @@ public class TextFieldsManager {
         sliders.clear();
     }
     /**
-     * Добавление всех полей с тетеради
+     * Добавление всех полей с тетради
      * */
     public void addNotebookFields(Notebook notebook){
         for(var data : notebook.getFunctionDataSet()){
@@ -100,7 +100,7 @@ public class TextFieldsManager {
         }
     }
     /**
-     * настройка ползунков на тетради
+     * Настройка ползунков на тетради
      * */
     public void setNotebookSliders(Notebook notebook){
         for(var data : notebook.getParameterDataSet()){

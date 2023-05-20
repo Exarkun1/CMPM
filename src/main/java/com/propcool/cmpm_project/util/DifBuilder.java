@@ -3,7 +3,9 @@ package com.propcool.cmpm_project.util;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.*;
+import com.propcool.cmpm_project.functions.interpolate.Polynomial;
 import com.propcool.cmpm_project.functions.mono.*;
+
 /**
  * Класс для поиска производных
  * */
@@ -64,6 +66,14 @@ public class DifBuilder {
             return difATan(f, d);
         } else if(function instanceof Abs f) {
             return difAbs(f, d);
+        } else if(function instanceof Sh f) {
+            return difSh(f, d);
+        } else if(function instanceof Ch f) {
+            return difCh(f, d);
+        } else if(function instanceof Th f) {
+            return difTh(f, d);
+        } else if(function instanceof Polynomial f) {
+            return difPolynomial(f, d);
         } else throw new RuntimeException("Не получилось найти производную");
     }
     private Function difVariableX(Dif d){
@@ -193,6 +203,23 @@ public class DifBuilder {
                 new Multiply(f.getFunction().clone(), d.dif(f.getFunction())),
                 new Abs(f.getFunction().clone())
         );
+    }
+    private Function difSh(Sh f, Dif d) {
+        return new Multiply(new Ch(f.getFunction().clone()), d.dif(f.getFunction()));
+    }
+    private Function difCh(Ch f, Dif d) {
+        return new Multiply(new Sh(f.getFunction().clone()), d.dif(f.getFunction()));
+    }
+    private Function difTh(Th f, Dif d){
+        return new Division(d.dif(f.getFunction()), new Pow(new Ch(f.getFunction().clone()), 2));
+    }
+    private Function difPolynomial(Polynomial f, Dif d) {
+        int n = f.dim()-1;
+        double[] A = new double[n];
+        for(int i = 0; i < n; i++) {
+            A[i] = f.getA(i+1) * (i+1);
+        }
+        return new Multiply(new Polynomial(f.getFunction().clone(), A), d.dif(f.getFunction()));
     }
     private interface Dif{
         Function dif(Function f);

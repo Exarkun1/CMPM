@@ -39,6 +39,11 @@
                   <Image url="@minus.png" />
                </image>
             </ImageView>
+            <ImageView fitHeight="46.0" fitWidth="45.0" layoutX="192.0" layoutY="2.0" onMousePressed="#openTables" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@minus.png" />
+               </image>
+            </ImageView>
          </children></AnchorPane>
    </top>
    <center>
@@ -67,6 +72,7 @@
                      <panes>
                         <TitledPane animated="false" prefHeight="460.0" prefWidth="350.0" text="Дифференциальные уравнения">
                            <content>
+                              <ScrollPane>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="469.0" prefWidth="348.0">
                                  <children>
                                     <Label layoutX="21.0" layoutY="46.0" text="Задача Коши:">
@@ -105,6 +111,7 @@
                                        </font>
                                     </Label>
                                  </children></AnchorPane>
+                              </ScrollPane>
                            </content>
                            <font>
                               <Font size="16.0" />
@@ -112,6 +119,7 @@
                         </TitledPane>
                         <TitledPane animated="false" text="Координаты">
                            <content>
+                              <ScrollPane>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
                                     <ChoiceBox fx:id="systemChoice" layoutX="152.0" layoutY="23.0" prefHeight="27.0" prefWidth="187.0" />
@@ -141,6 +149,7 @@
                                        </font>
                                     </Button>
                                  </children></AnchorPane>
+                              </ScrollPane>
                            </content>
                            <font>
                               <Font size="16.0" />
@@ -148,6 +157,7 @@
                         </TitledPane>
                         <TitledPane animated="false" prefHeight="492.0" prefWidth="350.0" text="Сохранение и загрузка">
                            <content>
+                              <ScrollPane>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="674.0" prefWidth="341.0">
                                  <children>
                                     <Button layoutX="293.0" layoutY="21.0" mnemonicParsing="false" onAction="#recordNotebook" text="Записать">
@@ -174,6 +184,7 @@
                                        </font>
                                     </Button>
                                  </children></AnchorPane>
+                              </ScrollPane>
                            </content>
                            <font>
                               <Font size="16.0" />
@@ -181,6 +192,7 @@
                         </TitledPane>
                         <TitledPane animated="false" layoutX="10.0" layoutY="80.0" prefHeight="492.0" prefWidth="350.0" text="Авторы">
                            <content>
+                              <ScrollPane>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="674.0" prefWidth="341.0">
                                  <children>
                                     <ImageView fitHeight="216.0" fitWidth="210.0" layoutX="102.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true">
@@ -216,6 +228,7 @@
                                     </Text>
                                  </children>
                               </AnchorPane>
+                              </ScrollPane>
                            </content>
                            <font>
                               <Font size="16.0" />
@@ -223,6 +236,23 @@
                         </TitledPane>
                      </panes>
                   </Accordion>
+               </center>
+            </BorderPane>
+            <BorderPane fx:id="outgoingTablePanel" prefHeight="781.0" prefWidth="400.0" style="-fx-background-color: #c1c1c1;">
+               <center>
+                  <ScrollPane prefHeight="777.0" prefWidth="341.0" BorderPane.alignment="CENTER">
+                     <content>
+                        <VBox fx:id="paneForTable" prefHeight="777.0" prefWidth="400.0">
+                           <children>
+                              <Button fx:id="creatTableButton" mnemonicParsing="false" onAction="#addTable" prefHeight="53.0" prefWidth="400.0" text="Создать новую таблицу">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
                </center>
             </BorderPane>
          </children></AnchorPane>

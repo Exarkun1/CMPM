@@ -4,6 +4,7 @@ import com.propcool.cmpm_project.util.DifBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionFactory;
 import com.propcool.cmpm_project.analysing.build.NamedFunction;
+import com.propcool.cmpm_project.util.TabulateBuilder;
 import com.propcool.cmpm_project.util.Point;
 import com.propcool.cmpm_project.util.RootSearcher;
 import com.propcool.cmpm_project.functions.Function;
@@ -117,7 +118,7 @@ public class FunctionManager {
         }
     }
     /**
-     * Преодразование функций, ссылающих на параметр с таким же именен, что и у передаваемой
+     * Преобразование функций, ссылающих на параметр с таким же именем, что и у передаваемой
      * */
     public List<String> rebuildRefsWithParam(String functionName){
         List<String> refs = new ArrayList<>();
@@ -266,5 +267,13 @@ public class FunctionManager {
         keyWords.put("arcsin", (b, e, s, p) -> new ASin(functionBuilder.buildingNotNamed(e, p)));
         keyWords.put("arccos", (b, e, s, p) -> new ACos(functionBuilder.buildingNotNamed(e, p)));
         keyWords.put("arctan", (b, e, s, p) -> new ATan(functionBuilder.buildingNotNamed(e, p)));
+        keyWords.put("sh", (b, e, s, p) -> new Sh(functionBuilder.buildingNotNamed(e, p)));
+        keyWords.put("ch", (b, e, s, p) -> new Ch(functionBuilder.buildingNotNamed(e, p)));
+        keyWords.put("th", (b, e, s, p) -> new Th(functionBuilder.buildingNotNamed(e, p)));
+        keyWords.put("pol", (b, e, s, p) ->
+                new TabulateBuilder().approximation(
+                        functionBuilder.buildingNotNamed(e, p), new double[]{0, 1, 2, 3, 4, 5}, new double[] {-2, -1, 1, 3, -2, 4}, 5
+                )
+        );
     }
 }

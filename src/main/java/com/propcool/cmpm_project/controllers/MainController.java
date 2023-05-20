@@ -51,6 +51,12 @@ public class MainController implements Initializable {
     private TextField startPolar;
     @FXML
     private TextField endPolar;
+    @FXML
+    private BorderPane outgoingTablePanel;
+    @FXML
+    private VBox paneForTable;
+    @FXML
+    private Button creatTableButton;
     /**
      * Сдвиг координат
      * */
@@ -147,36 +153,34 @@ public class MainController implements Initializable {
      * */
     @FXML
     void saveCauchy(ActionEvent event) {
-        try {
-            mainManager.setCauchyPoint(
-                    Double.parseDouble(xCauchyField.getText()),
-                    Double.parseDouble(yCauchyField.getText())
-            );
-        } catch (NumberFormatException e) {
-            mainManager.cauchyAlert();
-        }
+        mainManager.saveCauchy(xCauchyField.getText(), yCauchyField.getText());
     }
     /**
      * Сохранение границ полярных координат
      * */
     @FXML
     void savePolar(ActionEvent event) {
-        try {
-            mainManager.setPolarBorders(
-                    Double.parseDouble(startPolar.getText()),
-                    Double.parseDouble(endPolar.getText())
-            );
-        } catch (NumberFormatException e) {
-            mainManager.polarAlert();
-        }
+        mainManager.savePolar(startPolar.getText(), endPolar.getText());
+    }
+    @FXML
+    void openTables(MouseEvent event) {
+        mainManager.openTables();
+    }
+    @FXML
+    void addTable(ActionEvent event) {
+        mainManager.addTable();
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         mainManager = new MainManager(
                 mainPanel, paneForGraphs, outgoingPanel,
                 paneForText, creatFieldButton,
-                outgoingPanelSettings, paneForNotebooks
+                outgoingPanelSettings, paneForNotebooks,
+                outgoingTablePanel, paneForTable, creatTableButton
         );
+        outgoingTablePanel.setPrefHeight(mainManager.getHeight());
+        outgoingTablePanel.setPrefWidth(400);
+        outgoingTablePanel.setLayoutX(-400);
 
         outgoingPanel.setPrefHeight(mainManager.getHeight());
         outgoingPanel.setPrefWidth(400);

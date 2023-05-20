@@ -18,12 +18,14 @@ public class RootSearcher {
         if(f.get(a) * f.get(b) > 0) throw new RuntimeException("Границы значений функции одного знака");
         Function df = db.difX(f);
         Function ddf = db.difX(df);
+        int index = 0;
         double x = f.get(a)*ddf.get(a) >= 0 ? a : b, prevX;
          do{
             prevX = x;
             x -= f.get(x) / df.get(x);
-        } while(Math.abs(x-prevX) >= e);
-        return x;
+        } while(++index < maxIteration && Math.abs(x-prevX) >= e);
+        if(index < maxIteration) return x;
+        else throw new RuntimeException("Не найден корень за " + maxIteration + " итераций");
     }
     public Point intersectionX(Function f, Function g, double a, double b) {
         double x = rootX(new Difference(f, g), a, b);

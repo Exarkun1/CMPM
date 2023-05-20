@@ -1,6 +1,7 @@
 package com.propcool.cmpm_project.manage;
 
 import com.propcool.cmpm_project.components.TextFieldBox;
+import com.propcool.cmpm_project.util.Point;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
@@ -10,19 +11,23 @@ import javafx.scene.layout.VBox;
 
 import java.util.HashMap;
 import java.util.Map;
+
 /**
  * Менеджер управления другими менеджерами
  * */
 public class MainManager {
     public MainManager(AnchorPane mainPanel, AnchorPane paneForGraphs, BorderPane outgoingPanel,
                        VBox paneForText, Button creatFieldButton,
-                       BorderPane outgoingPanelSettings, VBox paneForNotebooks
+                       BorderPane outgoingPanelSettings, VBox paneForNotebooks,
+                       BorderPane outgoingTablePanel, VBox paneForTable, Button createTableButton
     ){
         this.mainPanel = mainPanel;
-        openManager = new OpenManager(outgoingPanel, outgoingPanelSettings, controlManager);
+        openManager = new OpenManager(outgoingPanel, outgoingPanelSettings, outgoingTablePanel, controlManager);
         drawManager = new DrawManager(paneForGraphs, functionManager, coordinateManager, controlManager);
         textFieldsManager = new TextFieldsManager(paneForText, creatFieldButton, functionManager, drawManager);
+        tablesManager = new TablesManager(paneForTable, createTableButton, functionManager, drawManager);
         notebookManager = new NotebookManager(paneForNotebooks, functionManager, textFieldsManager, this);
+        tableStageManager = new TableStageManager(tablesManager, functionManager, drawManager);
 
         coordinateManagers.put("cartesian", coordinateManager);
         coordinateManagers.put("polar", new PolarManager());
@@ -84,9 +89,13 @@ public class MainManager {
     public void openSettings(){
         openManager.openSettings();
     }
+    public void openTables() { openManager.openTables(); }
     public void addTextField(){
         // делаем ползунки и кнопку добавления полей для параметров ниже текстовых полей
         Platform.runLater(() -> textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager)));
+    }
+    public void addTable() {
+        tableStageManager.load();
     }
     public void recordNotebook(String name){
         notebookManager.record(name, coordinateManager);
@@ -140,12 +149,6 @@ public class MainManager {
             case F1 -> openSettings();
         }
     }
-    public void setCauchyPoint(double x, double y) {
-        Platform.runLater(() -> {
-            functionManager.setCauchyPoint(x, y);
-            drawManager.makeNewFrame();
-        });
-    }
     public void cauchyAlert() {
         functionManager.cauchyAlert();
     }
@@ -155,7 +158,35 @@ public class MainManager {
             drawManager.makeNewFrame();
         });
     }
-    public void setPolarBorders(double start, double end) {
+    public void saveCauchy(String x, String y) {
+        try {
+            setPoint(x, y, new Point(0, 0), this::setCauchyPoint);
+        } catch (NumberFormatException e) {
+            cauchyAlert();
+        }
+    }
+    public void savePolar(String x, String y) {
+        try {
+            setPoint(x, y, new Point(0, 4*Math.PI), this::setPolarBorders);
+        } catch (NumberFormatException e) {
+            polarAlert();
+        }
+    }
+    private void setPoint(String x, String y, Point def, PointSetter ps) {
+        double X, Y;
+        if(x.equals("") || x.matches(" +")) X = def.getX();
+        else X = Double.parseDouble(x);
+        if(y.equals("") || y.matches(" +")) Y = def.getY();
+        else Y = Double.parseDouble(y);
+        ps.set(X, Y);
+    }
+    private void setCauchyPoint(double x, double y) {
+        Platform.runLater(() -> {
+            functionManager.setCauchyPoint(x, y);
+            drawManager.makeNewFrame();
+        });
+    }
+    private void setPolarBorders(double start, double end) {
         Platform.runLater(() ->{
             ((PolarManager)coordinateManagers.get("polar")).setBorders(start, end);
             if(coordinateManager instanceof PolarManager) drawManager.makeNewFrame();
@@ -170,7 +201,12 @@ public class MainManager {
     private final OpenManager openManager;
     private final DrawManager drawManager;
     private final TextFieldsManager textFieldsManager;
+    private final TablesManager tablesManager;
     private final NotebookManager notebookManager;
+    private final TableStageManager tableStageManager;
     private final AnchorPane mainPanel;
     private final Map<String, CoordinateManager> coordinateManagers = new HashMap<>();
+    private interface PointSetter {
+        void set(double x, double y);
+    }
 }

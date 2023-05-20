@@ -62,7 +62,7 @@ public class ImpGroupLines extends AbstractGroupLines {
                 } else {
                     point = functionManager.searchIntersectsXY(function, cf.getFunction(), x, y);
                 }
-                addPoint(point);
+                addPoint(point, new Color(0.7, 1, 0.7, 1));
             }
         }
     }
@@ -70,19 +70,19 @@ public class ImpGroupLines extends AbstractGroupLines {
         double x = coordinateManager.getX(pixelX, pixelY);
         double y = coordinateManager.getY(pixelX, pixelY);
         Point point = functionManager.searchIntersectsXY(function, new VariableY(), x, y);
-        addPoint(point);
+        addPoint(point, new Color(0.7, 0.7, 1, 1));
     }
     private void solveX(Function function, double pixelX, double pixelY) {
         double x = coordinateManager.getX(pixelX, pixelY);
         double y = coordinateManager.getY(pixelX, pixelY);
         Point point = functionManager.searchIntersectsXY(function, new VariableX(), x, y);
-        addPoint(point);
+        addPoint(point, new Color(0.7, 0.7, 1, 1));
     }
     private void extreme(Function function, double pixelX, double pixelY) {
         double x = coordinateManager.getX(pixelX, pixelY);
         double y = coordinateManager.getY(pixelX, pixelY);
         Point point = functionManager.searchExtremeXY(function, x, y);
-        addPoint(point);
+        addPoint(point, new Color(1, 0.7, 0.7, 1));
     }
     private final FunctionManager functionManager;
 }

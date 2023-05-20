@@ -76,7 +76,7 @@ public class GroupLines extends AbstractGroupLines {
         double x0 = coordinateManager.getX(coordinateManager.getMin(), 0);
         double x1 = coordinateManager.getX(coordinateManager.getMax(), 0);
         Set<Point> points = functionManager.searchRoots(function, x0, x1);
-        addPoints(points);
+        addPoints(points, new Color(0.7, 0.7, 1, 1));
     }
     private void intersect(Function function) {
         for(var entry : functionManager.getFunctions().entrySet()) {
@@ -87,7 +87,7 @@ public class GroupLines extends AbstractGroupLines {
                 double x0 = coordinateManager.getX(coordinateManager.getMin(), 0);
                 double x1 = coordinateManager.getX(coordinateManager.getMax(), 0);
                 Set<Point> points = functionManager.searchIntersects(function, other, x0, x1);
-                addPoints(points);
+                addPoints(points, new Color(0.7, 1, 0.7, 1));
             }
         }
     }
@@ -95,11 +95,11 @@ public class GroupLines extends AbstractGroupLines {
         double x0 = coordinateManager.getX(coordinateManager.getMin(), 0);
         double x1 = coordinateManager.getX(coordinateManager.getMax(), 0);
         Set<Point> points = functionManager.searchExtremes(function, x0, x1);
-        addPoints(points);
+        addPoints(points, new Color(1, 0.7, 0.7, 1));
     }
-    private void addPoints(Set<Point> points) {
+    private void addPoints(Set<Point> points, Color color) {
         for(var point : points) {
-            addPoint(point);
+            addPoint(point, color);
         }
     }
     private final FunctionManager functionManager;

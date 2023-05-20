@@ -60,13 +60,13 @@ public abstract class AbstractGroupLines extends Group {
         pane.setLayoutY(y-textHeight-10);
         return pane;
     }
-    protected void addPoint(Point point) {
+    protected void addPoint(Point point, Color color) {
         if(point == null) return;
         double x = coordinateManager.getPixelX(point.getX(), point.getY());
         double y = coordinateManager.getPixelY(point.getX(), point.getY());
         if(!Double.isNaN(x) && !Double.isNaN(y) && coordinateManager.onScreen(x, y)) {
             Circle circle = new Circle(x, y, 5);
-            circle.setFill(Color.LIGHTGRAY);
+            circle.setFill(color);
             StackPane pane = getTextPane(x, y);
             circle.setOnMouseEntered(mouseEvent -> Platform.runLater(() -> drawManager.addNodes(pane)));
             circle.setOnMouseExited(mouseEvent -> Platform.runLater(() -> drawManager.removeNodes(pane)));

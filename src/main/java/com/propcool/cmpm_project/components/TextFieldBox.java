@@ -33,11 +33,11 @@ public class TextFieldBox extends HBox {
             textField.getProcess().processing();
         });
         URL urlX = CmpmApplication.class.getResource("x.png");
-        ImageView xView = new ImageView(String.valueOf(urlX));
-        xView.setFitWidth(50);
-        xView.setFitHeight(50);
+        ImageView closeView = new ImageView(String.valueOf(urlX));
+        closeView.setFitWidth(50);
+        closeView.setFitHeight(50);
 
-        xView.setOnMousePressed(mouseEvent -> {
+        closeView.setOnMousePressed(mouseEvent -> {
             Platform.runLater(() -> {
                 functionManager.removeParamRefs(textField.getFunctionName());
                 CustomizableFunction cf = functionManager.removeFunction(textField.getFunctionName());
@@ -55,7 +55,7 @@ public class TextFieldBox extends HBox {
                 drawManager.clearPoints();
             });
         });
-        getChildren().addAll(colorPicker, textField, xView);
+        getChildren().addAll(colorPicker, textField, closeView);
     }
     public TextFieldOnPage getTextField() {
         return textField;
