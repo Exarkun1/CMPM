@@ -19,12 +19,10 @@ public class SliderOnPage extends Slider {
         setShowTickLabels(true);
         setShowTickMarks(true);
         setOnMouseDragged(mouseEvent -> {
-            Platform.runLater(() -> {
-                CustomizableParameter cp = functionManager.getParam(parameterName);
-                cp.setValue(getValue());
-                cp.getParam().set(getValue());
-                drawManager.makeNewFrame();
-            });
+            CustomizableParameter cp = functionManager.getParam(parameterName);
+            cp.setValue(getValue());
+            cp.getParam().set(getValue());
+            drawManager.makeNewFrame();
         });
     }
     public SliderOnPage(String parameterName, FunctionManager functionManager, DrawManager drawManager){

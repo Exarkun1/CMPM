@@ -1,8 +1,9 @@
 package com.propcool.cmpm_project.util;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Point {
+public class Point implements Serializable {
     public Point(double x, double y) {
         this.x = x;
         this.y = y;

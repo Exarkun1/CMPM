@@ -13,25 +13,21 @@ public class DifGroupLines extends AbstractGroupLines{
         super(coordinateManager, drawManager, color);
         // Появление кружка
         setOnMousePressed(mouseEvent -> {
-            Platform.runLater(() -> {
-                try {
-                    controlManager.setLineDragged();
-                    newPosition(mouseEvent.getX(), mouseEvent.getY());
+            try {
+                controlManager.setLineDragged();
+                newPosition(mouseEvent.getX(), mouseEvent.getY());
 
-                    drawManager.clearPoints();
-                    reduceLines();
-                    enlargeLines();
+                drawManager.clearPoints();
+                reduceLines();
+                enlargeLines();
 
-                    drawManager.addNodes(circle, paneForText);
-                } catch (IllegalArgumentException ignored) {}
-            });
+                drawManager.addNodes(circle, paneForText);
+            } catch (IllegalArgumentException ignored) {}
         });
         // Удаление кружка
         setOnMouseReleased(mouseEvent -> {
-            Platform.runLater(() -> {
-                drawManager.removeNodes(circle, paneForText);
-                controlManager.setLineDragged();
-            });
+            drawManager.removeNodes(circle, paneForText);
+            controlManager.setLineDragged();
         });
     }
 }

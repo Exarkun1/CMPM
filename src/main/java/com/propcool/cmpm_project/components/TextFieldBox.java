@@ -30,7 +30,8 @@ public class TextFieldBox extends HBox {
 
         colorPicker.setOnAction(actionEvent -> {
             textField.setDefaultColor(colorPicker.getValue());
-            textField.getProcess().processing();
+            textField.processing();
+            drawManager.makeNewFrame();
         });
         URL urlX = CmpmApplication.class.getResource("x.png");
         ImageView closeView = new ImageView(String.valueOf(urlX));
@@ -38,22 +39,20 @@ public class TextFieldBox extends HBox {
         closeView.setFitHeight(50);
 
         closeView.setOnMousePressed(mouseEvent -> {
-            Platform.runLater(() -> {
-                functionManager.removeParamRefs(textField.getFunctionName());
-                CustomizableFunction cf = functionManager.removeFunction(textField.getFunctionName());
-                textFieldsManager.removeTextField(this);
+            functionManager.removeParamRefs(textField.getFunctionName());
+            CustomizableFunction cf = functionManager.removeFunction(textField.getFunctionName());
+            textFieldsManager.removeTextField(this);
 
-                List<String> functionRefs = functionManager.rebuildRefsWithFunction(cf);
-                for (var name : functionRefs) {
-                    drawManager.remove(name);
-                    drawManager.rebuildFunction(name);
-                    drawManager.redraw(name);
-                }
+            List<String> functionRefs = functionManager.rebuildRefsWithFunction(cf);
+            for (var name : functionRefs) {
+                drawManager.remove(name);
+                drawManager.rebuildFunction(name);
+                drawManager.redraw(name);
+            }
 
-                textFieldsManager.addSliders();
-                textFieldsManager.removeSliders();
-                drawManager.clearPoints();
-            });
+            textFieldsManager.addSliders();
+            textFieldsManager.removeSliders();
+            drawManager.clearPoints();
         });
         getChildren().addAll(colorPicker, textField, closeView);
     }

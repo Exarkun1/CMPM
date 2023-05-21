@@ -1,5 +1,6 @@
 package com.propcool.cmpm_project.manage;
 
+import com.propcool.cmpm_project.notebooks.data.CustomizableTable;
 import com.propcool.cmpm_project.util.DifBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionFactory;
@@ -41,6 +42,13 @@ public class FunctionManager {
     public CustomizableParameter getParam(String name){
         return parameters.get(name);
     }
+    public void putTable(String name, CustomizableTable table) {
+        tables.put(name, table);
+    }
+    public CustomizableTable removeTable(String name) { return tables.remove(name); }
+    public CustomizableTable getTable(String name) {
+        return tables.get(name);
+    }
     public String buildFunction(String text, int defaultName){
         return functionBuilder.building(text, defaultName);
     }
@@ -50,11 +58,15 @@ public class FunctionManager {
     public void clearParams(){
         parameters.clear();
     }
+    public void clearTables() { tables.clear(); }
     public Map<String, CustomizableFunction> getFunctions(){
         return Collections.unmodifiableMap(functions);
     }
     public Map<String, CustomizableParameter> getParameters(){
         return Collections.unmodifiableMap(parameters);
+    }
+    public Map<String, CustomizableTable> getTables(){
+        return Collections.unmodifiableMap(tables);
     }
     public Map<String, FunctionFactory> getKeyWords(){
         return Collections.unmodifiableMap(keyWords);
@@ -230,6 +242,16 @@ public class FunctionManager {
             return null;
         }
     }
+    public Function approximation(Set<Point> points, int k) {
+        double[] X = new double[points.size()], Y = new double[points.size()];
+        int i = 0;
+        for(var point : points) {
+            X[i] = point.getX();
+            Y[i] = point.getY();
+            i++;
+        }
+        return tabulateBuilder.approximation(new FunctionDecoratorX(), X, Y, k);
+    }
 
     public Point getCauchyPoint() {
         return cauchyPoint;
@@ -248,9 +270,11 @@ public class FunctionManager {
     private final List<String> constants = List.of("pi", "e");
     private final  Map<String, CustomizableFunction> functions = new LinkedHashMap<>();
     private final  Map<String, CustomizableParameter> parameters = new LinkedHashMap<>();
+    private final Map<String, CustomizableTable> tables = new LinkedHashMap<>();
     private final FunctionBuilder functionBuilder = new FunctionBuilder(this);
     private final DifBuilder difBuilder = new DifBuilder();
     private final RootSearcher rootSearcher = new RootSearcher(1e-6, 100);
+    private final TabulateBuilder tabulateBuilder = new TabulateBuilder();
     private final Point cauchyPoint = new Point(0, 0);
     private final Alert cauchyAlert = new Alert(Alert.AlertType.ERROR,"Не верные данные в задаче Коши");
 
@@ -272,7 +296,7 @@ public class FunctionManager {
         keyWords.put("th", (b, e, s, p) -> new Th(functionBuilder.buildingNotNamed(e, p)));
         keyWords.put("pol", (b, e, s, p) ->
                 new TabulateBuilder().approximation(
-                        functionBuilder.buildingNotNamed(e, p), new double[]{0, 1, 2, 3, 4, 5}, new double[] {-2, -1, 1, 3, -2, 4}, 5
+                        functionBuilder.buildingNotNamed(e, p), new double[]{1, 2}, new double[] {3, 4}, 1
                 )
         );
     }

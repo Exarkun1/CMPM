@@ -1,5 +1,6 @@
 package com.propcool.cmpm_project.components;
 
+import com.propcool.cmpm_project.notebooks.data.CustomizableTable;
 import com.propcool.cmpm_project.util.Point;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.manage.ControlManager;
@@ -31,45 +32,39 @@ public class GroupLines extends AbstractGroupLines {
         this.functionManager = functionManager;
         // Вызывается кружок с координатами при нажатии, а также все возможные точки
         setOnMousePressed(mouseEvent -> {
-            Platform.runLater(() -> {
-                try {
-                    controlManager.setLineDragged();
-                    Point point = coordinateManager.getCircleCoordinate(function, mouseEvent.getX(), mouseEvent.getY());
-                    double x = point.getX();
-                    double y = point.getY();
-                    newPosition(x, y);
-
-                    drawManager.clearPoints();
-                    reduceLines();
-                    enlargeLines();
-                    solve(function);
-                    intersect(function);
-                    extremes(function);
-
-                    drawManager.addNodes(circle, paneForText);
-                } catch (IllegalArgumentException ignored) {}
-            });
-        });
-        // Смещение кружка
-        setOnMouseDragged(mouseEvent -> {
-            Platform.runLater(() -> {
+            try {
+                controlManager.setLineDragged();
                 Point point = coordinateManager.getCircleCoordinate(function, mouseEvent.getX(), mouseEvent.getY());
                 double x = point.getX();
                 double y = point.getY();
-                if (coordinateManager.onScreen(x, y)) {
-                    visibleCircle();
-                    newPosition(x, y);
-                } else {
-                    noVisibleCircle();
-                }
-            });
+                newPosition(x, y);
+
+                drawManager.clearPoints();
+                reduceLines();
+                enlargeLines();
+                solve(function);
+                intersect(function);
+                extremes(function);
+
+                drawManager.addNodes(circle, paneForText);
+            } catch (IllegalArgumentException ignored) {}
+        });
+        // Смещение кружка
+        setOnMouseDragged(mouseEvent -> {
+            Point point = coordinateManager.getCircleCoordinate(function, mouseEvent.getX(), mouseEvent.getY());
+            double x = point.getX();
+            double y = point.getY();
+            if (coordinateManager.onScreen(x, y)) {
+                visibleCircle();
+                newPosition(x, y);
+            } else {
+                noVisibleCircle();
+            }
         });
         // Удаление кружка
         setOnMouseReleased(mouseEvent -> {
-            Platform.runLater(() -> {
-                drawManager.removeNodes(circle, paneForText);
-                controlManager.setLineDragged();
-            });
+            drawManager.removeNodes(circle, paneForText);
+            controlManager.setLineDragged();
         });
     }
     private void solve(Function function) {
@@ -89,6 +84,14 @@ public class GroupLines extends AbstractGroupLines {
                 Set<Point> points = functionManager.searchIntersects(function, other, x0, x1);
                 addPoints(points, new Color(0.7, 1, 0.7, 1));
             }
+        }
+        for(var entry : functionManager.getTables().entrySet()) {
+            CustomizableTable ct = entry.getValue();
+            Function other = ct.getApproximate();
+            double x0 = coordinateManager.getX(coordinateManager.getMin(), 0);
+            double x1 = coordinateManager.getX(coordinateManager.getMax(), 0);
+            Set<Point> points = functionManager.searchIntersects(function, other, x0, x1);
+            addPoints(points, new Color(0.7, 1, 0.7, 1));
         }
     }
     private void extremes(Function function) {

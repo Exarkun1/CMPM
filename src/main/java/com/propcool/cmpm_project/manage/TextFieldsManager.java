@@ -44,6 +44,7 @@ public class TextFieldsManager {
         functionManager.removeFunction(functionName);
 
         removeSliders();
+        drawManager.makeNewFrame();
     }
     /**
      * Добавление ползунка для параметра
@@ -77,6 +78,7 @@ public class TextFieldsManager {
      * Очистка панели с текстовыми полями
      * */
     public void clear(){
+        //drawManager.removeAll(functionManager.getFunctions().keySet());
         paneForText.getChildren().removeAll(textFields);
         paneForText.getChildren().removeAll(sliders.values());
         functionManager.clearFunctions();
@@ -94,7 +96,7 @@ public class TextFieldsManager {
             box.getColorPicker().setValue(Color.valueOf(data.getColor()));
             box.getTextField().setDefaultColor(Color.valueOf(data.getColor()));
             box.getTextField().setDefaultVisible(data.isVisible());
-            box.getTextField().getProcess().processing();
+            box.getTextField().processing();
             textFields.add(box);
             addTextField(box);
         }

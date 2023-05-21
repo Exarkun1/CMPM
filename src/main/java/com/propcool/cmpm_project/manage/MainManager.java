@@ -26,15 +26,12 @@ public class MainManager {
         drawManager = new DrawManager(paneForGraphs, functionManager, coordinateManager, controlManager);
         textFieldsManager = new TextFieldsManager(paneForText, creatFieldButton, functionManager, drawManager);
         tablesManager = new TablesManager(paneForTable, createTableButton, functionManager, drawManager);
-        notebookManager = new NotebookManager(paneForNotebooks, functionManager, textFieldsManager, this);
-        tableStageManager = new TableStageManager(tablesManager, functionManager, drawManager);
+        notebookManager = new NotebookManager(paneForNotebooks, functionManager, textFieldsManager, tablesManager, this);
 
         coordinateManagers.put("cartesian", coordinateManager);
         coordinateManagers.put("polar", new PolarManager());
-        Platform.runLater(() -> {
-            textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager));
-            drawManager.makeNewFrame();
-        });
+        textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager));
+        drawManager.makeNewFrame();
     }
     public int getWidth(){
         return coordinateManager.getWidth();
@@ -92,10 +89,10 @@ public class MainManager {
     public void openTables() { openManager.openTables(); }
     public void addTextField(){
         // делаем ползунки и кнопку добавления полей для параметров ниже текстовых полей
-        Platform.runLater(() -> textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager)));
+        textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager));
     }
     public void addTable() {
-        tableStageManager.load();
+        tablesManager.loadNew();
     }
     public void recordNotebook(String name){
         notebookManager.record(name, coordinateManager);
@@ -104,14 +101,12 @@ public class MainManager {
         notebookManager.save(mainPanel.getScene().getWindow(), coordinateManager);
     }
     public void loadNotebook(){
-        Platform.runLater(() -> notebookManager.load(mainPanel.getScene().getWindow()));
+        notebookManager.load(mainPanel.getScene().getWindow());
     }
     public void changingCoordinateSystem(String name){
-        Platform.runLater(() -> {
-            coordinateManager = coordinateManagers.get(name);
-            drawManager.setCoordinateManager(coordinateManager);
-            drawManager.makeNewFrame();
-        });
+        coordinateManager = coordinateManagers.get(name);
+        drawManager.setCoordinateManager(coordinateManager);
+        drawManager.makeNewFrame();
     }
     public void keyPressed(KeyCode code) {
         switch (code) {
@@ -153,10 +148,8 @@ public class MainManager {
         functionManager.cauchyAlert();
     }
     public void showDirectionsField() {
-        Platform.runLater(() -> {
-            controlManager.setDirectionsShowed();
-            drawManager.makeNewFrame();
-        });
+        controlManager.setDirectionsShowed();
+        drawManager.makeNewFrame();
     }
     public void saveCauchy(String x, String y) {
         try {
@@ -181,19 +174,18 @@ public class MainManager {
         ps.set(X, Y);
     }
     private void setCauchyPoint(double x, double y) {
-        Platform.runLater(() -> {
-            functionManager.setCauchyPoint(x, y);
-            drawManager.makeNewFrame();
-        });
+        functionManager.setCauchyPoint(x, y);
+        drawManager.makeNewFrame();
     }
     private void setPolarBorders(double start, double end) {
-        Platform.runLater(() ->{
-            ((PolarManager)coordinateManagers.get("polar")).setBorders(start, end);
-            if(coordinateManager instanceof PolarManager) drawManager.makeNewFrame();
-        });
+        ((PolarManager)coordinateManagers.get("polar")).setBorders(start, end);
+        if(coordinateManager instanceof PolarManager) drawManager.makeNewFrame();
     }
     public void polarAlert() {
         ((PolarManager)coordinateManagers.get("polar")).polarAlert();
+    }
+    public DrawManager getDrawManager() {
+        return drawManager;
     }
     private final FunctionManager functionManager = new FunctionManager();
     private CoordinateManager coordinateManager = new CartesianManager();
@@ -203,7 +195,6 @@ public class MainManager {
     private final TextFieldsManager textFieldsManager;
     private final TablesManager tablesManager;
     private final NotebookManager notebookManager;
-    private final TableStageManager tableStageManager;
     private final AnchorPane mainPanel;
     private final Map<String, CoordinateManager> coordinateManagers = new HashMap<>();
     private interface PointSetter {

@@ -24,29 +24,25 @@ public class ImpGroupLines extends AbstractGroupLines {
         this.functionManager = functionManager;
         // Появление кружка и других точек
         setOnMousePressed(mouseEvent -> {
-            Platform.runLater(() -> {
-                try {
-                    controlManager.setLineDragged();
-                    newPosition(mouseEvent.getX(), mouseEvent.getY());
+            try {
+                controlManager.setLineDragged();
+                newPosition(mouseEvent.getX(), mouseEvent.getY());
 
-                    drawManager.clearPoints();
-                    reduceLines();
-                    enlargeLines();
-                    intersect(function, mouseEvent.getX(), mouseEvent.getY());
-                    solveY(function, mouseEvent.getX(), mouseEvent.getY());
-                    solveX(function, mouseEvent.getX(), mouseEvent.getY());
-                    extreme(function, mouseEvent.getX(), mouseEvent.getY());
+                drawManager.clearPoints();
+                reduceLines();
+                enlargeLines();
+                intersect(function, mouseEvent.getX(), mouseEvent.getY());
+                solveY(function, mouseEvent.getX(), mouseEvent.getY());
+                solveX(function, mouseEvent.getX(), mouseEvent.getY());
+                extreme(function, mouseEvent.getX(), mouseEvent.getY());
 
-                    drawManager.addNodes(circle, paneForText);
-                } catch (IllegalArgumentException ignored) {}
-            });
+                drawManager.addNodes(circle, paneForText);
+            } catch (IllegalArgumentException ignored) {}
         });
         // Удаление кружка
         setOnMouseReleased(mouseEvent -> {
-            Platform.runLater(() -> {
-                drawManager.removeNodes(circle, paneForText);
-                controlManager.setLineDragged();
-            });
+            drawManager.removeNodes(circle, paneForText);
+            controlManager.setLineDragged();
         });
     }
     private void intersect(Function function, double pixelX, double pixelY) {

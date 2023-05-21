@@ -30,11 +30,10 @@ public class NotebookBox extends HBox {
         setAlignment(Pos.CENTER);
         setSpacing(10);
         openButton.setOnAction(actionEvent -> {
-            Platform.runLater(() -> {
-                Notebook notebook = notebookManager.getNotebook(notebookName);
-                notebookManager.openNotebook(notebook);
-                mainManager.changingCoordinateSystem(notebook.getSystemName());
-            });
+            Notebook notebook = notebookManager.getNotebook(notebookName);
+            notebookManager.openNotebook(notebook);
+            mainManager.changingCoordinateSystem(notebook.getSystemName());
+            mainManager.getDrawManager().makeNewFrame();
         });
         deleteButton.setOnAction(actionEvent -> Platform.runLater(() -> notebookManager.deleteNotebook(notebookName))
         );

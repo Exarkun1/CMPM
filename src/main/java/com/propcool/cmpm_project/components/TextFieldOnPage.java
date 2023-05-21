@@ -25,57 +25,51 @@ public class TextFieldOnPage extends CustomTextField {
         setFont(new Font(25));
         setPrefWidth(285);
 
-        setOnKeyReleased(keyEvent -> process.processing());
+        setOnKeyReleased(keyEvent -> {
+            processing();
+            drawManager.makeNewFrame();
+        });
     }
     public TextFieldOnPage(FunctionManager functionManager, DrawManager drawManager, TextFieldsManager textFieldsManager){
         this("", functionManager, drawManager, textFieldsManager);
     }
-
-    public FProcess getProcess() {
-        return process;
-    }
     /**
      * Обработка изменения текста в поле с функциями
      * */
-    private final FProcess process = new FProcess() {
-        @Override
-        public void processing() {
-            Platform.runLater(() -> {
-                functionManager.removeParamRefs(functionName);
-                CustomizableFunction cf = functionManager.removeFunction(functionName);
-                drawManager.remove(functionName);
+    public void processing() {
+        functionManager.removeParamRefs(functionName);
+        CustomizableFunction cf = functionManager.removeFunction(functionName);
+        drawManager.remove(functionName);
 
-                functionName = functionManager.buildFunction(getText(), index);
-                functionData = functionManager.getFunction(functionName).getData();
-                functionData.setColor(defaultColor.toString());
-                functionData.setVisible(defaultVisible);
-                functionData.setWidth(defaultWidth);
+        functionName = functionManager.buildFunction(getText(), index);
+        functionData = functionManager.getFunction(functionName).getData();
+        functionData.setColor(defaultColor.toString());
+        functionData.setVisible(defaultVisible);
+        functionData.setWidth(defaultWidth);
 
-                drawManager.rebuildFunction(functionName);
-                drawManager.redraw(functionName);
+        drawManager.rebuildFunction(functionName);
+        //drawManager.redraw(functionName);
 
-                // Обновление функций ссылающихся на данную
-                List<String> functionRefs = functionManager.rebuildRefsWithFunction(cf);
-                for (var name : functionRefs) {
-                    drawManager.remove(name);
-                    drawManager.rebuildFunction(name);
-                    drawManager.redraw(name);
-                }
-
-                // Обновление функций ссылающихся на параметр с именем данной
-                functionRefs = functionManager.rebuildRefsWithParam(functionName);
-                for (var name : functionRefs) {
-                    drawManager.remove(name);
-                    drawManager.rebuildFunction(name);
-                    drawManager.redraw(name);
-                }
-
-                textFieldsManager.addSliders();
-                textFieldsManager.removeSliders();
-                drawManager.clearPoints();
-            });
+        // Обновление функций ссылающихся на данную
+        List<String> functionRefs = functionManager.rebuildRefsWithFunction(cf);
+        for (var name : functionRefs) {
+            drawManager.remove(name);
+            drawManager.rebuildFunction(name);
+            //drawManager.redraw(name);
         }
-    };
+
+        // Обновление функций ссылающихся на параметр с именем данной
+        functionRefs = functionManager.rebuildRefsWithParam(functionName);
+        for (var name : functionRefs) {
+            drawManager.remove(name);
+            drawManager.rebuildFunction(name);
+            //drawManager.redraw(name);
+        }
+
+        textFieldsManager.addSliders();
+        textFieldsManager.removeSliders();
+        drawManager.clearPoints();
+    }
     public void setDefaultColor(Color color){
         this.defaultColor = color;
     }

@@ -4,6 +4,7 @@ import com.propcool.cmpm_project.manage.CoordinateManager;
 import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.notebooks.data.FunctionData;
 import com.propcool.cmpm_project.notebooks.data.ParameterData;
+import com.propcool.cmpm_project.notebooks.data.TableData;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -23,9 +24,14 @@ public class NotebookBuilder {
         for(var param : functionManager.getParameters().values()){
             parameterDataSet.add(param.getData());
         }
+        Set<TableData> tableDataSet = new LinkedHashSet<>();
+        for(var table : functionManager.getTables().values()){
+            tableDataSet.add(table.getData());
+        }
         Notebook notebook = new Notebook();
         notebook.setFunctionDataSet(functionDataSet);
         notebook.setParameterDataSet(parameterDataSet);
+        notebook.setTableDataSet(tableDataSet);
         notebook.setSystemName(coordinateManager.getName());
 
         return notebook;

@@ -9,7 +9,6 @@ public class PolynomialWithX extends Mono {
         this.A = A;
         this.X = X;
     }
-
     public PolynomialWithX(double[] A, double[] X) {
         this.A = A;
         this.X = X;

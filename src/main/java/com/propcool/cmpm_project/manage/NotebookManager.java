@@ -21,10 +21,11 @@ import java.util.Map;
  * */
 public class NotebookManager {
     public NotebookManager(VBox paneForNotebooks, FunctionManager functionManager,
-                           TextFieldsManager textFieldsManager, MainManager mainManager) {
+                           TextFieldsManager textFieldsManager, TablesManager tablesManager,
+                           MainManager mainManager) {
         this.paneForNotebooks = paneForNotebooks;
-
         this.textFieldsManager = textFieldsManager;
+        this.tablesManager = tablesManager;
         this.notebookBuilder = new NotebookBuilder(functionManager);
         this.mainManager = mainManager;
     }
@@ -65,6 +66,7 @@ public class NotebookManager {
                 Notebook notebook = notebookLoader.load(file);
                 openNotebook(notebook);
                 mainManager.changingCoordinateSystem(notebook.getSystemName());
+                mainManager.getDrawManager().makeNewFrame();
             }
         } catch (IOException e) {
             loadAlert.show();
@@ -79,6 +81,8 @@ public class NotebookManager {
         textFieldsManager.clear();
         textFieldsManager.addNotebookFields(notebook);
         textFieldsManager.setNotebookSliders(notebook);
+        tablesManager.clear();
+        tablesManager.addNotebookTables(notebook);
     }
     /**
      * Удаление тетради
@@ -97,6 +101,7 @@ public class NotebookManager {
     private final VBox paneForNotebooks;
     private final MainManager mainManager;
     private final TextFieldsManager textFieldsManager;
+    private final TablesManager tablesManager;
     private final NotebookBuilder notebookBuilder;
     private final NotebookSaver notebookSaver = new NotebookSaver();
     private final NotebookLoader notebookLoader = new NotebookLoader();

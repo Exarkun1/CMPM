@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="827.0" prefWidth="1099.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.propcool.cmpm_project.controllers.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="827.0" prefWidth="1099.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.propcool.cmpm_project.controllers.MainController">
    <top>
       <AnchorPane prefHeight="50.0" prefWidth="817.0" style="-fx-background-color: #002d40;" BorderPane.alignment="CENTER">
          <children>
@@ -24,24 +24,24 @@
                   <Image url="@menu.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="47.0" fitWidth="44.0" layoutX="58.0" layoutY="3.0" onMousePressed="#openSettings" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="43.0" fitWidth="47.0" layoutX="102.0" layoutY="2.0" onMousePressed="#openSettings" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@parameters.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="46.0" fitWidth="45.0" layoutX="102.0" layoutY="2.0" onMousePressed="#zoomInPressed" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="46.0" fitWidth="45.0" layoutX="145.0" layoutY="2.0" onMousePressed="#zoomInPressed" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@plus.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="46.0" fitWidth="45.0" layoutX="147.0" layoutY="2.0" onMousePressed="#zoomOutPressed" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="46.0" fitWidth="45.0" layoutX="190.0" layoutY="1.0" onMousePressed="#zoomOutPressed" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@minus.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="46.0" fitWidth="45.0" layoutX="192.0" layoutY="2.0" onMousePressed="#openTables" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="43.0" fitWidth="41.0" layoutX="61.0" layoutY="4.0" onMousePressed="#openTables" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@minus.png" />
+                  <Image url="@table.png" />
                </image>
             </ImageView>
          </children></AnchorPane>

@@ -3,6 +3,7 @@ package com.propcool.cmpm_project.manage;
 import com.propcool.cmpm_project.components.AbstractGroupLines;
 import com.propcool.cmpm_project.components.DifGroupLines;
 import com.propcool.cmpm_project.components.ImpGroupLines;
+import com.propcool.cmpm_project.notebooks.data.CustomizableTable;
 import com.propcool.cmpm_project.util.Inclines;
 import com.propcool.cmpm_project.util.Point;
 import com.propcool.cmpm_project.util.Quadtree;
@@ -101,6 +102,9 @@ public class DrawManager {
 
         for (var functionName : functionManager.getFunctions().keySet()){
             rebuildFunction(functionName);
+        }
+        for (var tableName : functionManager.getTables().keySet()) {
+            rebuildTable(tableName);
         }
         graphics.put("1t", groupText);
     }
@@ -210,6 +214,16 @@ public class DrawManager {
 
         graphics.put(functionName, group);
     }
+    public void rebuildTable(String tableName) {
+        CustomizableTable ct = functionManager.getTable(tableName);
+        if(ct == null || ct.getApproximate() == null || !ct.isVisible()) return;
+
+        Function function = ct.getApproximate();
+        Color color = ct.getColor();
+        int strokeWidth = ct.getWidth();
+
+        rebuildExplicitFunction(tableName, function, color, strokeWidth);
+    }
     /**
      * Отображение всех элементов
      * */
@@ -237,8 +251,13 @@ public class DrawManager {
     public void remove(String functionName){
         Group group = graphics.get(functionName);
         if(group == null) return;
-        paneForGraphs.getChildren().removeAll(group);
+        //paneForGraphs.getChildren().removeAll(group);
         graphics.remove(functionName);
+    }
+    public void removeAll(Set<String> names) {
+        for(var name : names) {
+            remove(name);
+        }
     }
     /**
      * Создание полностью нового кадра

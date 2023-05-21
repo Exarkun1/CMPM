@@ -215,6 +215,7 @@ public class DifBuilder {
     }
     private Function difPolynomial(Polynomial f, Dif d) {
         int n = f.dim()-1;
+        if(n <= 0) return new Constant(0);
         double[] A = new double[n];
         for(int i = 0; i < n; i++) {
             A[i] = f.getA(i+1) * (i+1);

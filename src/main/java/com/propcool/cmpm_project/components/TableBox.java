@@ -12,6 +12,13 @@ public class TableBox extends HBox {
         setTableName("First");
         Button openButton = new Button("Открыть");
         Button deleteButton = new Button("Удалить");
+
+        openButton.setOnAction(actionEvent -> {
+            tablesManager.load(getTableName());
+        });
+        deleteButton.setOnAction(actionEvent -> {
+            tablesManager.remove(this);
+        });
         getChildren().addAll(tableName, openButton, deleteButton);
     }
     public String getTableName() {
