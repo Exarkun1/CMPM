@@ -112,14 +112,15 @@ public class FunctionManager {
      * */
     public FunctionFactory getFunctionFactory(){
         return (begin, end, symbol, nf) -> {
-            getFunction(begin).getRefFunctions().add(nf.getName());
-            Function function = getFunction(begin).getFunction().clone();
+            CustomizableFunction function = getFunction(begin);
+            function.getRefFunctions().add(nf.getName());
+            Function newFunction = function.getFunction().clone();
             List<FunctionDecoratorX> decors = new ArrayList<>();
-            getFuncDecorators(function, decors);
-            for(var decor : decors){
+            getFuncDecorators(newFunction, decors);
+            for (var decor : decors) {
                 decor.setFunction(functionBuilder.buildingNotNamed(end, nf));
             }
-            return function;
+            return newFunction;
         };
     }
     /**
@@ -141,10 +142,10 @@ public class FunctionManager {
     /**
      * Преобразование функций, ссылающих на параметр с таким же именем, что и у передаваемой
      * */
-    public List<String> rebuildRefsWithParam(String functionName){
+    public void rebuildRefsWithParam(String functionName){
         List<String> refs = new ArrayList<>();
         CustomizableParameter cp = getParam(functionName);
-        if(cp == null) return refs;
+        if(cp == null) return;
         for(var name : cp.getRefFunctions()){
             if(name.equals(functionName)) continue;
             CustomizableFunction oldCf = removeFunction(name);
@@ -159,14 +160,13 @@ public class FunctionManager {
         for(var name : refs){
             cp.getRefFunctions().remove(name);
         }
-        return refs;
     }
     /**
      * Преобразование функций ссылающихся на данную
      * */
-    public List<String> rebuildRefsWithFunction(CustomizableFunction cf){
+    public void rebuildRefsWithFunction(CustomizableFunction cf){
         List<String> refs = new ArrayList<>();
-        if(cf == null) return refs;
+        if(cf == null) return;
         for(var name : cf.getRefFunctions()){
             CustomizableFunction oldCf = removeFunction(name);
             if(oldCf == null) {
@@ -184,7 +184,6 @@ public class FunctionManager {
         for(var name : refs){
             cf.getRefFunctions().remove(name);
         }
-        return refs;
     }
     /**
      * Построение производной
@@ -303,10 +302,5 @@ public class FunctionManager {
         keyWords.put("sh", (b, e, s, p) -> new Sh(functionBuilder.buildingNotNamed(e, p)));
         keyWords.put("ch", (b, e, s, p) -> new Ch(functionBuilder.buildingNotNamed(e, p)));
         keyWords.put("th", (b, e, s, p) -> new Th(functionBuilder.buildingNotNamed(e, p)));
-        keyWords.put("pol", (b, e, s, p) ->
-                new TabulateBuilder().approximation(
-                        functionBuilder.buildingNotNamed(e, p), new double[]{1, 2}, new double[] {3, 4}, 1
-                )
-        );
     }
 }

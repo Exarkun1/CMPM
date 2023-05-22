@@ -68,14 +68,14 @@ public class TablesManager {
     }
     public void addNotebookTables(Notebook notebook) {
         for(var data : notebook.getTableDataSet()) {
-            TableBox box = new TableBox(functionManager, drawManager, this);
-            box.setTableName(data.getName());
-            box.setTableBody(getTableBody(data.getName()));
-            addTable(box);
             controller.approximatePoints(
                     data.getName(), data.getRows(), data.getK(),
                     Color.valueOf(data.getColor()), data.isVisible(), data.isPointsVisible()
             );
+            TableBox box = new TableBox(functionManager, drawManager, this);
+            box.setTableName(data.getName());
+            box.setTableBody(getTableBody(data.getName()));
+            addTable(box);
         }
     }
     public String getTableBody(String name) {

@@ -102,8 +102,8 @@ public class TableController {
         openScene();
     }
     public void saveTable(int k) {
+        String name = nameTableField.getText();
         if(currentTable == null) {
-            String name = nameTableField.getText();
             if(functionManager.getObject(name) != null || !name.matches("[a-z]+\\d+|[a-z]+"))
                 throw new RuntimeException("Такое имя не подходит или оно уже занято");
             approximateRows(name, k);
@@ -113,13 +113,14 @@ public class TableController {
             tablesManager.addTable(tableBox);
             currentTable = name;
         } else {
-            String name = nameTableField.getText();
-            if(functionManager.getObject(name) != null || !name.matches("[a-z]+\\d+|[a-z]+"))
+            if(functionManager.getObject(name) != null && !name.equals(currentTable) || !name.matches("[a-z]+\\d+|[a-z]+"))
                 throw new RuntimeException("Такое имя уже есть");
-            approximateRows(currentTable, k);
             currentTableBox.setTableBody(tablesManager.getTableBody(currentTable));
             currentTableBox.setTableName(name);
+            functionManager.removeTable(currentTable);
+            approximateRows(name, k);
         }
+
         drawManager.clearPoints();
         drawManager.makeNewRebuildFrame();
         stage.hide();

@@ -48,7 +48,7 @@ public class TextFieldBox extends HBox {
             CustomizableFunction cf = functionManager.removeFunction(textField.getFunctionName());
             textFieldsManager.removeTextField(this);
 
-            List<String> functionRefs = functionManager.rebuildRefsWithFunction(cf);
+            functionManager.rebuildRefsWithFunction(cf);
 
             textFieldsManager.addSliders();
             textFieldsManager.removeSliders();

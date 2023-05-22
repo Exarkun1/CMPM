@@ -45,10 +45,10 @@ public class TextFieldOnPage extends CustomTextField {
         functionData.setWidth(defaultWidth);
 
         // Обновление функций ссылающихся на данную
-        List<String> functionRefs = functionManager.rebuildRefsWithFunction(cf);
+        functionManager.rebuildRefsWithFunction(cf);
 
         // Обновление функций ссылающихся на параметр с именем данной
-        functionRefs = functionManager.rebuildRefsWithParam(functionName);
+        functionManager.rebuildRefsWithParam(functionName);
 
         textFieldsManager.addSliders();
         textFieldsManager.removeSliders();

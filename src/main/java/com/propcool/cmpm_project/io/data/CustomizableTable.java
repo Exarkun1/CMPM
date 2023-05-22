@@ -6,6 +6,7 @@ import com.propcool.cmpm_project.util.Point;
 import javafx.scene.paint.Color;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 public class CustomizableTable implements Serializable {
