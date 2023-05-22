@@ -1,19 +1,14 @@
 package com.propcool.cmpm_project.components;
 
-import com.propcool.cmpm_project.CmpmApplication;
 import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.manage.TextFieldsManager;
-import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
-import javafx.application.Platform;
+import com.propcool.cmpm_project.io.data.CustomizableFunction;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -31,12 +26,22 @@ public class TextFieldBox extends HBox {
         colorPicker.setOnAction(actionEvent -> {
             textField.setDefaultColor(colorPicker.getValue());
             textField.processing();
-            drawManager.makeNewFrame();
+            drawManager.makeNewRebuildFrame();
         });
-        URL urlX = CmpmApplication.class.getResource("x.png");
-        ImageView closeView = new ImageView(String.valueOf(urlX));
-        closeView.setFitWidth(50);
-        closeView.setFitHeight(50);
+        colorPicker.setOnMousePressed(mouseEvent -> {
+            CustomizableFunction cf = functionManager.getFunction(textField.getFunctionName());
+            if(mouseEvent.isSecondaryButtonDown() && cf != null) {
+                cf.setVisible(!cf.isVisible());
+                textField.setDefaultVisible(cf.isVisible());
+                visibleFlag = true;
+                drawManager.makeNewRebuildFrame();
+            }
+        });
+        colorPicker.setOnMouseReleased(mouseEvent -> {
+            if(visibleFlag) colorPicker.hide();
+            visibleFlag = false;
+        });
+        IconButton closeView = new IconButton("x.png", 44);
 
         closeView.setOnMousePressed(mouseEvent -> {
             functionManager.removeParamRefs(textField.getFunctionName());
@@ -44,15 +49,11 @@ public class TextFieldBox extends HBox {
             textFieldsManager.removeTextField(this);
 
             List<String> functionRefs = functionManager.rebuildRefsWithFunction(cf);
-            for (var name : functionRefs) {
-                drawManager.remove(name);
-                drawManager.rebuildFunction(name);
-                drawManager.redraw(name);
-            }
 
             textFieldsManager.addSliders();
             textFieldsManager.removeSliders();
             drawManager.clearPoints();
+            drawManager.makeNewRebuildFrame();
         });
         getChildren().addAll(colorPicker, textField, closeView);
     }
@@ -64,4 +65,5 @@ public class TextFieldBox extends HBox {
     }
     private final TextFieldOnPage textField;
     private final ColorPicker colorPicker = new ColorPicker();
+    private boolean visibleFlag = false;
 }

@@ -1,23 +1,15 @@
 package com.propcool.cmpm_project.components;
 
-import com.propcool.cmpm_project.notebooks.data.CustomizableTable;
+import com.propcool.cmpm_project.io.data.CustomizableTable;
 import com.propcool.cmpm_project.util.Point;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.manage.ControlManager;
 import com.propcool.cmpm_project.manage.CoordinateManager;
 import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.manage.FunctionManager;
-import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
-import javafx.application.Platform;
-import javafx.scene.Group;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import com.propcool.cmpm_project.io.data.CustomizableFunction;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
-import java.text.DecimalFormat;
 import java.util.Set;
 
 /**

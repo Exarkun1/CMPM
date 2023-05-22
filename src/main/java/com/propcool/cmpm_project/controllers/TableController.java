@@ -3,22 +3,25 @@ package com.propcool.cmpm_project.controllers;
 import com.propcool.cmpm_project.components.RowBox;
 import com.propcool.cmpm_project.components.TableBox;
 import com.propcool.cmpm_project.functions.Function;
+import com.propcool.cmpm_project.functions.interpolate.Polynomial;
+import com.propcool.cmpm_project.io.tables.TableLoader;
 import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.manage.TablesManager;
-import com.propcool.cmpm_project.notebooks.data.CustomizableTable;
+import com.propcool.cmpm_project.io.data.CustomizableTable;
 import com.propcool.cmpm_project.util.Point;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.InputMismatchException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -38,6 +41,10 @@ public class TableController {
     private ColorPicker colorPicker;
     @FXML
     private Button addPointButton;
+    @FXML
+    private ToggleButton pointsButton;
+    @FXML
+    private ToggleButton visibleButton;
 
     @FXML
     void approximateTable(ActionEvent event) {
@@ -69,7 +76,18 @@ public class TableController {
     }
     @FXML
     void loadTable(MouseEvent event) {
-
+        File file = fileChooser.showOpenDialog(approximateField.getScene().getWindow());
+        try{
+            if(file != null) {
+                Set<Point> points = tableLoader.load(file);
+                clearRows();
+                addPoints(points);
+            }
+        } catch (FileNotFoundException e) {
+            loadAlert.show();
+        } catch (InputMismatchException e) {
+            classAlert.show();
+        }
     }
     public void init(Stage stage, TablesManager tablesManager, FunctionManager functionManager, DrawManager drawManager) {
         this.stage = stage;
@@ -77,28 +95,33 @@ public class TableController {
         this.functionManager = functionManager;
         this.drawManager = drawManager;
     }
-    public void setCurrentTable(String currentTable) {
+    public void setCurrentTable(String currentTable, TableBox currentTableBox) {
         clearScene();
         this.currentTable = currentTable;
+        this.currentTableBox = currentTableBox;
         openScene();
     }
     public void saveTable(int k) {
-        drawManager.remove(currentTable);
-        drawManager.clearPoints();
         if(currentTable == null) {
-            String name = counter + "tab";
+            String name = nameTableField.getText();
+            if(functionManager.getObject(name) != null || !name.matches("[a-z]+\\d+|[a-z]+"))
+                throw new RuntimeException("Такое имя не подходит или оно уже занято");
             approximateRows(name, k);
             TableBox tableBox = new TableBox(functionManager, drawManager, tablesManager);
             tableBox.setTableName(name);
+            tableBox.setTableBody(tablesManager.getTableBody(name));
             tablesManager.addTable(tableBox);
             currentTable = name;
-            counter++;
         } else {
+            String name = nameTableField.getText();
+            if(functionManager.getObject(name) != null || !name.matches("[a-z]+\\d+|[a-z]+"))
+                throw new RuntimeException("Такое имя уже есть");
             approximateRows(currentTable, k);
+            currentTableBox.setTableBody(tablesManager.getTableBody(currentTable));
+            currentTableBox.setTableName(name);
         }
-        drawManager.rebuildTable(currentTable);
-        //drawManager.redraw(currentTable);
-        drawManager.makeNewFrame();
+        drawManager.clearPoints();
+        drawManager.makeNewRebuildFrame();
         stage.hide();
     }
     public void addPoint(Point point) {
@@ -107,6 +130,11 @@ public class TableController {
         rowBoxes.add(rowBox);
         rowPane.getChildren().add(rowBox);
         rowPane.getChildren().add(addPointButton);
+    }
+    public void addPoints(Set<Point> points) {
+        for(var point : points) {
+            addPoint(point);
+        }
     }
     public void removePoint(RowBox rowBox) {
         rowBoxes.remove(rowBox);
@@ -117,10 +145,10 @@ public class TableController {
         for(var row : rowBoxes) {
             points.add(row.getRow());
         }
-        approximatePoints(name, points, k, colorPicker.getValue(), true);
+        approximatePoints(name, points, k, colorPicker.getValue(), !visibleButton.isSelected(), pointsButton.isSelected());
     }
-    public void approximatePoints(String name, Set<Point> points, int k, Color color, boolean visible) {
-        Function f = functionManager.approximation(points, k);
+    public void approximatePoints(String name, Set<Point> points, int k, Color color, boolean visible, boolean pointsVisible) {
+        Polynomial f = functionManager.approximation(points, k);
         functionManager.putTable(name, new CustomizableTable(f));
         CustomizableTable ct = functionManager.getTable(name);
         ct.setRows(points);
@@ -129,11 +157,15 @@ public class TableController {
         ct.setWidth(2);
         ct.setK(k);
         ct.setName(name);
+        ct.setPointsVisible(pointsVisible);
     }
-    public void clearScene() {
+    public void clearRows() {
         rowBoxes.clear();
         rowPane.getChildren().clear();
         rowPane.getChildren().add(addPointButton);
+    }
+    public void clearScene() {
+        clearRows();
         approximateField.setText("");
         colorPicker.setValue(Color.GREEN);
         nameTableField.setText("");
@@ -144,15 +176,22 @@ public class TableController {
         approximateField.setText(String.valueOf(ct.getK()));
         colorPicker.setValue(ct.getColor());
         nameTableField.setText(ct.getName());
+        visibleButton.setSelected(!ct.isVisible());
+        pointsButton.setSelected(ct.isPointsVisible());
         for(var rows : ct.getRows()) {
             addPoint(rows);
         }
     }
+
     private final Set<RowBox> rowBoxes = new LinkedHashSet<>();
     private Stage stage;
     private TablesManager tablesManager;
     private FunctionManager functionManager;
     private DrawManager drawManager;
     private String currentTable;
-    private static int counter = 0;
+    private TableBox currentTableBox;
+    private final FileChooser fileChooser = new FileChooser();
+    private final TableLoader tableLoader = new TableLoader();
+    private final Alert loadAlert = new Alert(Alert.AlertType.ERROR,"Не удалось открыть файл");
+    private final Alert classAlert = new Alert(Alert.AlertType.ERROR, "Не удалось получить тетрадь из файла");
 }

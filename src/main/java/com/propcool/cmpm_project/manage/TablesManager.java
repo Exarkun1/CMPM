@@ -3,7 +3,7 @@ package com.propcool.cmpm_project.manage;
 import com.propcool.cmpm_project.CmpmApplication;
 import com.propcool.cmpm_project.components.TableBox;
 import com.propcool.cmpm_project.controllers.TableController;
-import com.propcool.cmpm_project.notebooks.Notebook;
+import com.propcool.cmpm_project.io.notebooks.Notebook;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,8 +14,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class TablesManager {
     public TablesManager(VBox paneForTable, Button creatTableButton, FunctionManager functionManager, DrawManager drawManager){
@@ -52,30 +54,44 @@ public class TablesManager {
         drawManager.clearPoints();
     }
     public void loadNew() {
-        load(null);
+        load(null, null);
     }
-    public void load(String name) {
-        controller.setCurrentTable(name);
+    public void load(String name, TableBox tableBox) {
+        controller.setCurrentTable(name, tableBox);
         tableStage.showAndWait();
     }
     public void clear() {
-        //drawManager.removeAll(functionManager.getTables().keySet());
         paneForTable.getChildren().removeAll(tableBoxes);
         functionManager.clearTables();
         tableBoxes.clear();
-        drawManager.makeNewFrame();
+        drawManager.makeNewRebuildFrame();
     }
     public void addNotebookTables(Notebook notebook) {
         for(var data : notebook.getTableDataSet()) {
             TableBox box = new TableBox(functionManager, drawManager, this);
             box.setTableName(data.getName());
+            box.setTableBody(getTableBody(data.getName()));
             addTable(box);
             controller.approximatePoints(
-                    data.getName(), data.getRows(), data.getK(), Color.valueOf(data.getColor()), data.isVisible()
+                    data.getName(), data.getRows(), data.getK(),
+                    Color.valueOf(data.getColor()), data.isVisible(), data.isPointsVisible()
             );
-            drawManager.rebuildTable(data.getName());
-            //drawManager.redraw(data.getName());
         }
+    }
+    public String getTableBody(String name) {
+        double[] A = functionManager.getTable(name).getApproximate().getA();
+        StringBuilder sb = new StringBuilder();
+        int n = A.length-1;
+        for(int i = n; i >= 0; i--) {
+            String d = format.format(A[i]);
+            if(i > 1) sb.append(d).append("*x^").append(i).append(" + ");
+            else if(i == 1) sb.append(d).append("*x").append(" + ");
+            else sb.append(d);
+        }
+        return sb.toString();
+    }
+    public Set<TableBox> getTableBoxes() {
+        return tableBoxes;
     }
     private final Stage tableStage;
     private final TableController controller;
@@ -84,4 +100,5 @@ public class TablesManager {
     private final LinkedHashSet<TableBox> tableBoxes = new LinkedHashSet<>();
     private final DrawManager drawManager;
     private final FunctionManager functionManager;
+    private final DecimalFormat format = new DecimalFormat("#.#####");
 }

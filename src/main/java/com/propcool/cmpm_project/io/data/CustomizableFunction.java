@@ -1,4 +1,4 @@
-package com.propcool.cmpm_project.notebooks.data;
+package com.propcool.cmpm_project.io.data;
 
 import com.propcool.cmpm_project.functions.Function;
 import javafx.scene.paint.Color;

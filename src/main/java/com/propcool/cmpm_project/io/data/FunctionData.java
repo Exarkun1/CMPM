@@ -1,4 +1,4 @@
-package com.propcool.cmpm_project.notebooks.data;
+package com.propcool.cmpm_project.io.data;
 
 import java.io.Serializable;
 /**

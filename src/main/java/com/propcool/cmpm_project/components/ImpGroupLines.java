@@ -8,9 +8,8 @@ import com.propcool.cmpm_project.manage.ControlManager;
 import com.propcool.cmpm_project.manage.CoordinateManager;
 import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.manage.FunctionManager;
-import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
+import com.propcool.cmpm_project.io.data.CustomizableFunction;
 import com.propcool.cmpm_project.util.Point;
-import javafx.application.Platform;
 import javafx.scene.paint.Color;
 /**
  * Класс группы линий неявной функции

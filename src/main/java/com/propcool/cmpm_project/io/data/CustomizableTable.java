@@ -1,6 +1,7 @@
-package com.propcool.cmpm_project.notebooks.data;
+package com.propcool.cmpm_project.io.data;
 
 import com.propcool.cmpm_project.functions.Function;
+import com.propcool.cmpm_project.functions.interpolate.Polynomial;
 import com.propcool.cmpm_project.util.Point;
 import javafx.scene.paint.Color;
 
@@ -8,11 +9,11 @@ import java.io.Serializable;
 import java.util.Set;
 
 public class CustomizableTable implements Serializable {
-    public CustomizableTable(Function approximate) {
+    public CustomizableTable(Polynomial approximate) {
         this.approximate = approximate;
     }
 
-    public Function getApproximate() {
+    public Polynomial getApproximate() {
         return approximate;
     }
     public String getName() {
@@ -49,7 +50,13 @@ public class CustomizableTable implements Serializable {
     public void setK(int k) {
         tableData.setK(k);
     }
+    public boolean isPointsVisible() {
+        return tableData.isPointsVisible();
+    }
+    public void setPointsVisible(boolean visible) {
+        tableData.setPointsVisible(visible);
+    }
     public TableData getData() { return tableData;}
-    private final Function approximate;
+    private final Polynomial approximate;
     private final TableData tableData = new TableData();
 }

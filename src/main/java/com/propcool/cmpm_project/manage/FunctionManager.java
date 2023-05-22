@@ -1,6 +1,7 @@
 package com.propcool.cmpm_project.manage;
 
-import com.propcool.cmpm_project.notebooks.data.CustomizableTable;
+import com.propcool.cmpm_project.functions.interpolate.Polynomial;
+import com.propcool.cmpm_project.io.data.CustomizableTable;
 import com.propcool.cmpm_project.util.DifBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionBuilder;
 import com.propcool.cmpm_project.analysing.build.FunctionFactory;
@@ -12,8 +13,8 @@ import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.Combination;
 import com.propcool.cmpm_project.functions.mono.*;
-import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
-import com.propcool.cmpm_project.notebooks.data.CustomizableParameter;
+import com.propcool.cmpm_project.io.data.CustomizableFunction;
+import com.propcool.cmpm_project.io.data.CustomizableParameter;
 import javafx.scene.control.Alert;
 
 import java.util.*;
@@ -48,6 +49,14 @@ public class FunctionManager {
     public CustomizableTable removeTable(String name) { return tables.remove(name); }
     public CustomizableTable getTable(String name) {
         return tables.get(name);
+    }
+    public Object getObject(String name) {
+        Object o1 = getFunction(name);
+        Object o2 = getKeyWord(name);
+        Object o3 = getTable(name);
+        if(o1 != null) return o1;
+        else if(o2 != null) return o2;
+        else return o3;
     }
     public String buildFunction(String text, int defaultName){
         return functionBuilder.building(text, defaultName);
@@ -242,7 +251,7 @@ public class FunctionManager {
             return null;
         }
     }
-    public Function approximation(Set<Point> points, int k) {
+    public Polynomial approximation(Set<Point> points, int k) {
         double[] X = new double[points.size()], Y = new double[points.size()];
         int i = 0;
         for(var point : points) {

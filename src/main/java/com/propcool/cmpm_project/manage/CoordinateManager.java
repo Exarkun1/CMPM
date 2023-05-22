@@ -108,7 +108,7 @@ public abstract class CoordinateManager {
         pixelSize *= zoomCoef;
     }
     public boolean onScreen(double x, double y){
-        return 2 <= x && x <= width -2 && 2 <= y && y <= height-2;
+        return 5 <= x && x <= width -5 && 5 <= y && y <= height-5;
     }
     public boolean onScreen(Point p){
         return onScreen(p.getX(), p.getY());

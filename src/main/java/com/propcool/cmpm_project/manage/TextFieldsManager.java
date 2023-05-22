@@ -2,8 +2,7 @@ package com.propcool.cmpm_project.manage;
 
 import com.propcool.cmpm_project.components.SliderBox;
 import com.propcool.cmpm_project.components.TextFieldBox;
-import com.propcool.cmpm_project.notebooks.Notebook;
-import javafx.application.Platform;
+import com.propcool.cmpm_project.io.notebooks.Notebook;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -44,7 +43,7 @@ public class TextFieldsManager {
         functionManager.removeFunction(functionName);
 
         removeSliders();
-        drawManager.makeNewFrame();
+        drawManager.makeNewRebuildFrame();
     }
     /**
      * Добавление ползунка для параметра

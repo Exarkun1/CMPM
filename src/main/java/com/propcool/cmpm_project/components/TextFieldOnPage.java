@@ -1,12 +1,10 @@
 package com.propcool.cmpm_project.components;
 
 import com.propcool.cmpm_project.manage.DrawManager;
-import com.propcool.cmpm_project.manage.FProcess;
 import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.manage.TextFieldsManager;
-import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
-import com.propcool.cmpm_project.notebooks.data.FunctionData;
-import javafx.application.Platform;
+import com.propcool.cmpm_project.io.data.CustomizableFunction;
+import com.propcool.cmpm_project.io.data.FunctionData;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.controlsfx.control.textfield.CustomTextField;
@@ -27,7 +25,7 @@ public class TextFieldOnPage extends CustomTextField {
 
         setOnKeyReleased(keyEvent -> {
             processing();
-            drawManager.makeNewFrame();
+            drawManager.makeNewRebuildFrame();
         });
     }
     public TextFieldOnPage(FunctionManager functionManager, DrawManager drawManager, TextFieldsManager textFieldsManager){
@@ -39,7 +37,6 @@ public class TextFieldOnPage extends CustomTextField {
     public void processing() {
         functionManager.removeParamRefs(functionName);
         CustomizableFunction cf = functionManager.removeFunction(functionName);
-        drawManager.remove(functionName);
 
         functionName = functionManager.buildFunction(getText(), index);
         functionData = functionManager.getFunction(functionName).getData();
@@ -47,24 +44,11 @@ public class TextFieldOnPage extends CustomTextField {
         functionData.setVisible(defaultVisible);
         functionData.setWidth(defaultWidth);
 
-        drawManager.rebuildFunction(functionName);
-        //drawManager.redraw(functionName);
-
         // Обновление функций ссылающихся на данную
         List<String> functionRefs = functionManager.rebuildRefsWithFunction(cf);
-        for (var name : functionRefs) {
-            drawManager.remove(name);
-            drawManager.rebuildFunction(name);
-            //drawManager.redraw(name);
-        }
 
         // Обновление функций ссылающихся на параметр с именем данной
         functionRefs = functionManager.rebuildRefsWithParam(functionName);
-        for (var name : functionRefs) {
-            drawManager.remove(name);
-            drawManager.rebuildFunction(name);
-            //drawManager.redraw(name);
-        }
 
         textFieldsManager.addSliders();
         textFieldsManager.removeSliders();

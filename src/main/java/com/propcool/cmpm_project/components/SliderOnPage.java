@@ -2,8 +2,7 @@ package com.propcool.cmpm_project.components;
 
 import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.manage.FunctionManager;
-import com.propcool.cmpm_project.notebooks.data.CustomizableParameter;
-import javafx.application.Platform;
+import com.propcool.cmpm_project.io.data.CustomizableParameter;
 import javafx.scene.control.Slider;
 /**
  * Класс ползунка для параметра
@@ -22,7 +21,7 @@ public class SliderOnPage extends Slider {
             CustomizableParameter cp = functionManager.getParam(parameterName);
             cp.setValue(getValue());
             cp.getParam().set(getValue());
-            drawManager.makeNewFrame();
+            drawManager.makeNewRebuildFrame();
         });
     }
     public SliderOnPage(String parameterName, FunctionManager functionManager, DrawManager drawManager){

@@ -18,7 +18,7 @@ public class Analyser {
      * 3)добавление 0 перед свободным минусом,
      * 4)вставка # в тех местах, где подразумевается умножение(2x -> 2#x),
      * 5)вставка ! в тех местах, где подразумевается функция(ln(x) -> ln!(x)),
-     * 6)проверка на то, что в функции не имннованна ключевым словом
+     * 6)проверка на то, что в функции не именованна ключевым словом
      * */
     public String processing(String text, FunctionManager functionManager){
         if(checkingString(text)){
@@ -51,7 +51,7 @@ public class Analyser {
             text = text.replaceAll("=.+", "=" + functionBase);
 
             String functionName = text.replaceAll("\\(.+|=.+", ""); // 6
-            if(functionManager.getKeyWords().containsKey(functionName)) return null;
+            if(functionManager.getObject(functionName) != null) return null;
 
             return text;
         }

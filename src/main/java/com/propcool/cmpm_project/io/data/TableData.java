@@ -1,4 +1,4 @@
-package com.propcool.cmpm_project.notebooks.data;
+package com.propcool.cmpm_project.io.data;
 
 import com.propcool.cmpm_project.util.Point;
 
@@ -53,10 +53,20 @@ public class TableData implements Serializable {
     public void setK(int k) {
         this.k = k;
     }
+
+    public boolean isPointsVisible() {
+        return pointsVisible;
+    }
+
+    public void setPointsVisible(boolean pointsVisible) {
+        this.pointsVisible = pointsVisible;
+    }
+
     private String name;
     private Set<Point> rows;
     private String color;
     private int width;
     private boolean visible;
     private int k;
+    private boolean pointsVisible;
 }

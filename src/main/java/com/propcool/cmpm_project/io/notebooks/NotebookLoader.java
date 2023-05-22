@@ -1,4 +1,4 @@
-package com.propcool.cmpm_project.notebooks;
+package com.propcool.cmpm_project.io.notebooks;
 
 import java.io.File;
 import java.io.FileInputStream;

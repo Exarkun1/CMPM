@@ -3,13 +3,14 @@ package com.propcool.cmpm_project.manage;
 import com.propcool.cmpm_project.components.AbstractGroupLines;
 import com.propcool.cmpm_project.components.DifGroupLines;
 import com.propcool.cmpm_project.components.ImpGroupLines;
-import com.propcool.cmpm_project.notebooks.data.CustomizableTable;
+import com.propcool.cmpm_project.io.data.CustomizableTable;
 import com.propcool.cmpm_project.util.Inclines;
+import com.propcool.cmpm_project.util.Mixer;
 import com.propcool.cmpm_project.util.Point;
 import com.propcool.cmpm_project.util.Quadtree;
 import com.propcool.cmpm_project.components.GroupLines;
 import com.propcool.cmpm_project.functions.Function;
-import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
+import com.propcool.cmpm_project.io.data.CustomizableFunction;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
@@ -35,10 +36,7 @@ public class DrawManager {
     public void setCoordinateManager(CoordinateManager coordinateManager){
         this.coordinateManager = coordinateManager;
     }
-    /**
-     * Пересоздание линий всех функций
-     * */
-    public void rebuildAllFunctions(){
+    public Group rebuildFrame() {
         double height = coordinateManager.getHeight();
         double wight = coordinateManager.getWidth();
         double centerX = coordinateManager.getCenterX();
@@ -99,7 +97,12 @@ public class DrawManager {
             groupText.getChildren().add(counter);
 
         graphics.put("1xy", groupXY);
-
+        return groupText;
+    }
+    /**
+     * Пересоздание линий всех функций
+     * */
+    public void rebuildAllFunctions(Group groupText){
         for (var functionName : functionManager.getFunctions().keySet()){
             rebuildFunction(functionName);
         }
@@ -223,6 +226,19 @@ public class DrawManager {
         int strokeWidth = ct.getWidth();
 
         rebuildExplicitFunction(tableName, function, color, strokeWidth);
+
+        if(ct.isPointsVisible()) {
+            Group points = new Group();
+            for(var point : ct.getRows()) {
+                Point pixelPoint = coordinateManager.getPixelXY(point);
+                if(coordinateManager.onScreen(pixelPoint)) {
+                    Circle circle = new Circle(pixelPoint.getX(), pixelPoint.getY(), 5);
+                    circle.setFill(mix.mix(color, 0.65));
+                    points.getChildren().add(circle);
+                }
+            }
+            graphics.put("#"+tableName, points);
+        }
     }
     /**
      * Отображение всех элементов
@@ -262,10 +278,11 @@ public class DrawManager {
     /**
      * Создание полностью нового кадра
      * */
-    public void makeNewFrame() {
+    public void makeNewRebuildFrame() {
         setLastGroupLines(null);
         clear();
-        rebuildAllFunctions();
+        Group groupText = rebuildFrame();
+        rebuildAllFunctions(groupText);
         redrawAll();
     }
     /**
@@ -313,4 +330,5 @@ public class DrawManager {
     private final Set<Circle> points = new HashSet<>();
     private AbstractGroupLines lastGroupLines;
     private final DecimalFormat format = new DecimalFormat("#.#");
+    private final Mixer mix = new Mixer();
 }

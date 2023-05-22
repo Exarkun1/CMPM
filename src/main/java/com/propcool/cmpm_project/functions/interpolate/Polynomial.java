@@ -11,4 +11,5 @@ public class Polynomial extends PolynomialWithX {
     }
     public int dim() { return A.length; }
     public double getA(int index) { return A[index]; }
+    public double[] getA() { return A; }
 }

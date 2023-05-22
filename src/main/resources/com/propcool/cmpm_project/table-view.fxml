@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -11,7 +12,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.propcool.cmpm_project.controllers.TableController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.propcool.cmpm_project.controllers.TableController">
    <children>
       <Button layoutX="337.0" layoutY="301.0" mnemonicParsing="false" onAction="#approximateTable" text="Аппроксимировать">
          <font>
@@ -25,9 +26,9 @@
       </Button>
       <ScrollPane layoutX="121.0" layoutY="79.0" prefHeight="207.0" prefWidth="358.0">
          <content>
-            <VBox fx:id="rowPane" prefHeight="205.0" prefWidth="341.0">
+            <VBox fx:id="rowPane" prefHeight="205.0" prefWidth="356.0">
                <children>
-                  <Button fx:id="addPointButton" mnemonicParsing="false" onAction="#addPoint" prefHeight="25.0" prefWidth="363.0" text="Добавить точку" />
+                  <Button fx:id="addPointButton" mnemonicParsing="false" onAction="#addPoint" prefHeight="25.0" prefWidth="359.0" text="Добавить точку" />
                </children></VBox>
          </content>
       </ScrollPane>
@@ -37,11 +38,13 @@
             <Color red="0.049707602709531784" green="0.8947368264198303" blue="0.373635470867157" />
          </value>
       </ColorPicker>
-      <ImageView fitHeight="29.0" fitWidth="30.0" layoutX="345.0" layoutY="49.0" onMousePressed="#loadTable" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="30.0" fitWidth="39.0" layoutX="345.0" layoutY="49.0" onMousePressed="#loadTable" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../cmpm_project/src/main/resources/com/propcool/cmpm_project/file.png" />
+            <Image url="@file.png" />
          </image>
       </ImageView>
       <TextField fx:id="nameTableField" layoutX="121.0" layoutY="49.0" prefHeight="29.0" prefWidth="103.0" promptText="имя таблицы" />
+      <ToggleButton fx:id="pointsButton" layoutX="50.0" layoutY="102.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Вкл точки" />
+      <ToggleButton fx:id="visibleButton" layoutX="50.0" layoutY="127.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Скрыть" />
    </children>
 </AnchorPane>

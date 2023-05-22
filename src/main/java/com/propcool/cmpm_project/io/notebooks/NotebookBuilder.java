@@ -1,10 +1,10 @@
-package com.propcool.cmpm_project.notebooks;
+package com.propcool.cmpm_project.io.notebooks;
 
 import com.propcool.cmpm_project.manage.CoordinateManager;
 import com.propcool.cmpm_project.manage.FunctionManager;
-import com.propcool.cmpm_project.notebooks.data.FunctionData;
-import com.propcool.cmpm_project.notebooks.data.ParameterData;
-import com.propcool.cmpm_project.notebooks.data.TableData;
+import com.propcool.cmpm_project.io.data.FunctionData;
+import com.propcool.cmpm_project.io.data.ParameterData;
+import com.propcool.cmpm_project.io.data.TableData;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

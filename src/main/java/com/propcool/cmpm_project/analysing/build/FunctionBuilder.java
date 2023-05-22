@@ -2,11 +2,11 @@ package com.propcool.cmpm_project.analysing.build;
 
 import com.propcool.cmpm_project.analysing.Analyser;
 import com.propcool.cmpm_project.manage.FunctionManager;
-import com.propcool.cmpm_project.notebooks.data.CustomizableFunction;
+import com.propcool.cmpm_project.io.data.CustomizableFunction;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.*;
 import com.propcool.cmpm_project.functions.combination.*;
-import com.propcool.cmpm_project.notebooks.data.FunctionData;
+import com.propcool.cmpm_project.io.data.FunctionData;
 
 import java.util.ArrayList;
 import java.util.List;

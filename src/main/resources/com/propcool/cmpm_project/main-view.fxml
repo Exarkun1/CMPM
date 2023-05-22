@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="827.0" prefWidth="1099.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.propcool.cmpm_project.controllers.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="827.0" prefWidth="1099.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.propcool.cmpm_project.controllers.MainController">
    <top>
       <AnchorPane prefHeight="50.0" prefWidth="817.0" style="-fx-background-color: #002d40;" BorderPane.alignment="CENTER">
          <children>
@@ -170,7 +170,7 @@
                                        </font></TextField>
                                     <ScrollPane layoutX="27.0" layoutY="74.0" prefHeight="305.0" prefWidth="350.0">
                                        <content>
-                                          <VBox fx:id="paneForNotebooks" prefHeight="301.0" prefWidth="329.0" />
+                                          <VBox fx:id="paneForNotebooks" prefHeight="301.0" prefWidth="349.0" />
                                        </content>
                                     </ScrollPane>
                                     <Button layoutX="90.0" layoutY="415.0" mnemonicParsing="false" onAction="#saveNotebook" prefHeight="35.0" prefWidth="225.0" text=" Сохранить на устройстве">

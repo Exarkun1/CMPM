@@ -18,10 +18,7 @@ public class RowBox extends HBox {
         yTextField.setPromptText("y");
         yTextField.setPrefWidth(200);
 
-        URL urlX = CmpmApplication.class.getResource("x.png");
-        ImageView closeView = new ImageView(String.valueOf(urlX));
-        closeView.setFitWidth(20);
-        closeView.setFitHeight(20);
+        IconButton closeView = new IconButton("x.png", 14);
 
         closeView.setOnMousePressed(mouseEvent -> {
             controller.removePoint(this);

@@ -1,10 +1,10 @@
 package com.propcool.cmpm_project.manage;
 
 import com.propcool.cmpm_project.components.NotebookBox;
-import com.propcool.cmpm_project.notebooks.Notebook;
-import com.propcool.cmpm_project.notebooks.NotebookBuilder;
-import com.propcool.cmpm_project.notebooks.NotebookLoader;
-import com.propcool.cmpm_project.notebooks.NotebookSaver;
+import com.propcool.cmpm_project.io.notebooks.Notebook;
+import com.propcool.cmpm_project.io.notebooks.NotebookBuilder;
+import com.propcool.cmpm_project.io.notebooks.NotebookLoader;
+import com.propcool.cmpm_project.io.notebooks.NotebookSaver;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -66,7 +66,7 @@ public class NotebookManager {
                 Notebook notebook = notebookLoader.load(file);
                 openNotebook(notebook);
                 mainManager.changingCoordinateSystem(notebook.getSystemName());
-                mainManager.getDrawManager().makeNewFrame();
+                mainManager.getDrawManager().makeNewRebuildFrame();
             }
         } catch (IOException e) {
             loadAlert.show();
@@ -106,7 +106,7 @@ public class NotebookManager {
     private final NotebookSaver notebookSaver = new NotebookSaver();
     private final NotebookLoader notebookLoader = new NotebookLoader();
     private final FileChooser fileChooser = new FileChooser();
-    private final Alert saveAlert = new Alert(Alert.AlertType.ERROR, "Не удалось сохранить тетрадь в файл");
+    private final Alert saveAlert = new Alert(Alert.AlertType.ERROR, "Не удалось сохранить графики в файл");
     private final Alert loadAlert = new Alert(Alert.AlertType.ERROR,"Не удалось открыть файл");
-    private final Alert classAlert = new Alert(Alert.AlertType.ERROR, "Не удалось получить тетрадь из файла");
+    private final Alert classAlert = new Alert(Alert.AlertType.ERROR, "Не удалось получить графики из файла");
 }
