@@ -1,9 +1,9 @@
 package com.propcool.cmpm_project.components;
 
+import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.manage.CoordinateManager;
 import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.util.Point;
-import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -13,15 +13,16 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Pair;
 
 import java.text.DecimalFormat;
 
 public abstract class AbstractGroupLines extends Group {
-    public AbstractGroupLines(CoordinateManager coordinateManager, DrawManager drawManager, Color color) {
+    public AbstractGroupLines(CoordinateManager coordinateManager, DrawManager drawManager, Function function, Color color) {
         this.coordinateManager = coordinateManager;
         this.drawManager = drawManager;
-        text.setFont(new Font(16));
-        circle.setFill(color);
+        this.function = function;
+        this.color = color;
     }
     protected void enlargeLines() {
         if(isEnlarges) return;
@@ -68,26 +69,36 @@ public abstract class AbstractGroupLines extends Group {
             Circle circle = new Circle(x, y, 5);
             circle.setFill(color);
             StackPane pane = getTextPane(x, y);
-            circle.setOnMouseEntered(mouseEvent -> Platform.runLater(() -> drawManager.addNodes(pane)));
-            circle.setOnMouseExited(mouseEvent -> Platform.runLater(() -> drawManager.removeNodes(pane)));
+            circle.setOnMouseEntered(mouseEvent -> drawManager.addNodes(pane));
+            circle.setOnMouseExited(mouseEvent -> drawManager.removeNodes(pane));
             drawManager.addPoint(circle);
         }
     }
-    protected void visibleCircle(){
-        circle.setVisible(true);
-        paneForText.setVisible(true);
+    protected Pair<Circle, Pane> addDraggedPoint(Point point, Color color) {
+        if(point == null) return null;
+        double x = coordinateManager.getPixelX(point.getX(), point.getY());
+        double y = coordinateManager.getPixelY(point.getX(), point.getY());
+        if(!Double.isNaN(x) && !Double.isNaN(y) && coordinateManager.onScreen(x, y)) {
+            Circle circle = new Circle(x, y, 5);
+            circle.setFill(color);
+            StackPane pane = getTextPane(x, y);
+            drawManager.addNodes(circle, pane);
+            return new Pair<>(circle, pane);
+        }
+        return null;
     }
-    protected void noVisibleCircle(){
-        circle.setVisible(false);
-        paneForText.setVisible(false);
+    public void setCircle(double pixelX, double pixelY) {
+        drawManager.removeNodes(draggedCircle, draggedPane);
+        double x = coordinateManager.getX(pixelX, pixelY);
+        double y = function.get(x);
+        var pair = addDraggedPoint(new Point(x, y), color);
+        if(pair != null) {
+            draggedCircle = pair.getKey();
+            draggedPane = pair.getValue();
+        }
     }
-    protected void newPosition(double x, double y) {
-        circle.setCenterX(x);
-        circle.setCenterY(y);
-        text.setText(getText(x, y, "#.###"));
-        if(paneForText == null) paneForText = getPane(text, x, y);
-        paneForText.setLayoutX(x-text.getBoundsInLocal().getWidth()/2);
-        paneForText.setLayoutY(y-text.getBoundsInLocal().getHeight()-10);
+    public void clearCircle() {
+        drawManager.removeNodes(draggedCircle, draggedPane);
     }
     public boolean isEnlarges() {
         return isEnlarges;
@@ -98,7 +109,8 @@ public abstract class AbstractGroupLines extends Group {
     protected final CoordinateManager coordinateManager;
     protected final DrawManager drawManager;
     protected boolean isEnlarges = false;
-    protected final Circle circle = new Circle(5);
-    protected final Text text = new Text();
-    protected Pane paneForText;
+    protected Function function;
+    protected Color color;
+    protected Circle draggedCircle;
+    protected Pane draggedPane;
 }

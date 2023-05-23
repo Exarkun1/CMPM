@@ -21,7 +21,7 @@ public class SliderOnPage extends Slider {
             CustomizableParameter cp = functionManager.getParam(parameterName);
             cp.setValue(getValue());
             cp.getParam().set(getValue());
-            drawManager.makeNewRebuildFrame();
+            drawManager.makeNewFrame();
         });
     }
     public SliderOnPage(String parameterName, FunctionManager functionManager, DrawManager drawManager){

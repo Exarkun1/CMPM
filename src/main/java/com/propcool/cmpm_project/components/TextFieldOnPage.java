@@ -9,8 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.controlsfx.control.textfield.CustomTextField;
 
-import java.util.List;
-
 /**
  * Класс текстового поля для функции
  * */
@@ -25,7 +23,7 @@ public class TextFieldOnPage extends CustomTextField {
 
         setOnKeyReleased(keyEvent -> {
             processing();
-            drawManager.makeNewRebuildFrame();
+            drawManager.makeNewFrame();
         });
     }
     public TextFieldOnPage(FunctionManager functionManager, DrawManager drawManager, TextFieldsManager textFieldsManager){
@@ -52,7 +50,6 @@ public class TextFieldOnPage extends CustomTextField {
 
         textFieldsManager.addSliders();
         textFieldsManager.removeSliders();
-        drawManager.clearPoints();
     }
     public void setDefaultColor(Color color){
         this.defaultColor = color;

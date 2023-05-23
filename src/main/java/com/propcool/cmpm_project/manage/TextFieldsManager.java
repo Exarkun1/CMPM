@@ -39,11 +39,10 @@ public class TextFieldsManager {
         textFields.remove(box);
 
         String functionName = box.getTextField().getFunctionName();
-        drawManager.remove(functionName);
         functionManager.removeFunction(functionName);
 
         removeSliders();
-        drawManager.makeNewRebuildFrame();
+        drawManager.makeNewFrame();
     }
     /**
      * Добавление ползунка для параметра
@@ -77,7 +76,6 @@ public class TextFieldsManager {
      * Очистка панели с текстовыми полями
      * */
     public void clear(){
-        //drawManager.removeAll(functionManager.getFunctions().keySet());
         paneForText.getChildren().removeAll(textFields);
         paneForText.getChildren().removeAll(sliders.values());
         functionManager.clearFunctions();

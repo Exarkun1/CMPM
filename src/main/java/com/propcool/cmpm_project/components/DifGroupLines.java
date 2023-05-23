@@ -1,33 +1,25 @@
 package com.propcool.cmpm_project.components;
 
+import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.manage.ControlManager;
 import com.propcool.cmpm_project.manage.CoordinateManager;
 import com.propcool.cmpm_project.manage.DrawManager;
-import javafx.application.Platform;
+import com.propcool.cmpm_project.util.Point;
 import javafx.scene.paint.Color;
 /**
  * Класс группы линий дифференциального уравнения
  * */
 public class DifGroupLines extends AbstractGroupLines{
-    public DifGroupLines(Color color, CoordinateManager coordinateManager, DrawManager drawManager, ControlManager controlManager) {
-        super(coordinateManager, drawManager, color);
-        // Появление кружка
+    public DifGroupLines(Function function, Color color, CoordinateManager coordinateManager, DrawManager drawManager, ControlManager controlManager) {
+        super(coordinateManager, drawManager, function, color);
+        // Увеличение линий
         setOnMousePressed(mouseEvent -> {
             try {
-                controlManager.setLineDragged();
-                newPosition(mouseEvent.getX(), mouseEvent.getY());
-
                 drawManager.clearPoints();
                 reduceLines();
                 enlargeLines();
-
-                drawManager.addNodes(circle, paneForText);
+                addPoint(coordinateManager.getXY(mouseEvent.getX(), mouseEvent.getY()), color);
             } catch (IllegalArgumentException ignored) {}
-        });
-        // Удаление кружка
-        setOnMouseReleased(mouseEvent -> {
-            drawManager.removeNodes(circle, paneForText);
-            controlManager.setLineDragged();
         });
     }
 }

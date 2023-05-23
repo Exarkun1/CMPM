@@ -9,6 +9,7 @@ import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.io.data.CustomizableFunction;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import java.util.Set;
 
@@ -20,43 +21,23 @@ public class GroupLines extends AbstractGroupLines {
                       CoordinateManager coordinateManager, DrawManager drawManager,
                       ControlManager controlManager, FunctionManager functionManager
     ){
-        super(coordinateManager, drawManager, color);
+        super(coordinateManager, drawManager, function, color);
         this.functionManager = functionManager;
-        // Вызывается кружок с координатами при нажатии, а также все возможные точки
+        this.function = function;
+        this.color = color;
+        // Вызывается все возможные точки
         setOnMousePressed(mouseEvent -> {
-            try {
-                controlManager.setLineDragged();
-                Point point = coordinateManager.getCircleCoordinate(function, mouseEvent.getX(), mouseEvent.getY());
-                double x = point.getX();
-                double y = point.getY();
-                newPosition(x, y);
+            controlManager.setLineDragged(true);
+            drawManager.clearPoints();
+            reduceLines();
+            enlargeLines();
+            solve(function);
+            intersect(function);
+            extremes(function);
 
-                drawManager.clearPoints();
-                reduceLines();
-                enlargeLines();
-                solve(function);
-                intersect(function);
-                extremes(function);
-
-                drawManager.addNodes(circle, paneForText);
-            } catch (IllegalArgumentException ignored) {}
-        });
-        // Смещение кружка
-        setOnMouseDragged(mouseEvent -> {
-            Point point = coordinateManager.getCircleCoordinate(function, mouseEvent.getX(), mouseEvent.getY());
-            double x = point.getX();
-            double y = point.getY();
-            if (coordinateManager.onScreen(x, y)) {
-                visibleCircle();
-                newPosition(x, y);
-            } else {
-                noVisibleCircle();
-            }
-        });
-        // Удаление кружка
-        setOnMouseReleased(mouseEvent -> {
-            drawManager.removeNodes(circle, paneForText);
-            controlManager.setLineDragged();
+            draggedCircle = null;
+            draggedPane = null;
+            setCircle(mouseEvent.getX(), mouseEvent.getY());
         });
     }
     private void solve(Function function) {
@@ -69,7 +50,9 @@ public class GroupLines extends AbstractGroupLines {
         for(var entry : functionManager.getFunctions().entrySet()) {
             String name = entry.getKey();
             CustomizableFunction cf = entry.getValue();
-            if(function != cf.getFunction() && !name.matches("\\d+imp") && !name.matches("\\d+dif") && !name.matches("\\d+bad")) {
+            if(function != cf.getFunction() && cf.isVisible() &&
+                    !name.matches("\\d+imp") && !name.matches("\\d+dif") && !name.matches("\\d+bad")
+            ) {
                 Function other = cf.getFunction();
                 double x0 = coordinateManager.getX(coordinateManager.getMin(), 0);
                 double x1 = coordinateManager.getX(coordinateManager.getMax(), 0);
@@ -79,11 +62,13 @@ public class GroupLines extends AbstractGroupLines {
         }
         for(var entry : functionManager.getTables().entrySet()) {
             CustomizableTable ct = entry.getValue();
-            Function other = ct.getApproximate();
-            double x0 = coordinateManager.getX(coordinateManager.getMin(), 0);
-            double x1 = coordinateManager.getX(coordinateManager.getMax(), 0);
-            Set<Point> points = functionManager.searchIntersects(function, other, x0, x1);
-            addPoints(points, new Color(0.7, 1, 0.7, 1));
+            if(ct.isVisible()) {
+                Function other = ct.getApproximate();
+                double x0 = coordinateManager.getX(coordinateManager.getMin(), 0);
+                double x1 = coordinateManager.getX(coordinateManager.getMax(), 0);
+                Set<Point> points = functionManager.searchIntersects(function, other, x0, x1);
+                addPoints(points, new Color(0.7, 1, 0.7, 1));
+            }
         }
     }
     private void extremes(Function function) {

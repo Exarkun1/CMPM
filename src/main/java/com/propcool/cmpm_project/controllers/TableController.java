@@ -2,7 +2,6 @@ package com.propcool.cmpm_project.controllers;
 
 import com.propcool.cmpm_project.components.RowBox;
 import com.propcool.cmpm_project.components.TableBox;
-import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.interpolate.Polynomial;
 import com.propcool.cmpm_project.io.tables.TableLoader;
 import com.propcool.cmpm_project.manage.DrawManager;
@@ -51,6 +50,7 @@ public class TableController {
         try {
             int k = Integer.parseInt(approximateField.getText());
             saveTable(k);
+            drawManager.makeNewFrame();
         } catch (RuntimeException e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
             alert.show();
@@ -61,6 +61,7 @@ public class TableController {
     void interpolateTable(ActionEvent event) {
         try {
             saveTable(rowBoxes.size()-1);
+            drawManager.makeNewFrame();
         } catch (RuntimeException e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
             alert.show();
@@ -103,26 +104,23 @@ public class TableController {
     }
     public void saveTable(int k) {
         String name = nameTableField.getText();
-        if(currentTable == null) {
-            if(functionManager.getObject(name) != null || !name.matches("[a-z]+\\d+|[a-z]+"))
-                throw new RuntimeException("Такое имя не подходит или оно уже занято");
-            approximateRows(name, k);
-            TableBox tableBox = new TableBox(functionManager, drawManager, tablesManager);
-            tableBox.setTableName(name);
-            tableBox.setTableBody(tablesManager.getTableBody(name));
-            tablesManager.addTable(tableBox);
-            currentTable = name;
-        } else {
-            if(functionManager.getObject(name) != null && !name.equals(currentTable) || !name.matches("[a-z]+\\d+|[a-z]+"))
-                throw new RuntimeException("Такое имя уже есть");
-            currentTableBox.setTableBody(tablesManager.getTableBody(currentTable));
-            currentTableBox.setTableName(name);
-            functionManager.removeTable(currentTable);
-            approximateRows(name, k);
-        }
+        CustomizableTable ct = approximateRows(name, k);
 
-        drawManager.clearPoints();
-        drawManager.makeNewRebuildFrame();
+        if(currentTable == null) {
+            if(functionManager.getTable(name) != null || !name.matches("[a-z]+\\d+|[a-z]+"))
+                throw new RuntimeException("Такое имя таблицы не подходит или оно уже занято");
+            TableBox box = new TableBox(functionManager, drawManager, tablesManager);
+            box.setTableName(name);
+            box.setTableBody(tablesManager.getTableBody(ct));
+            tablesManager.addTable(box);
+        } else {
+            if(functionManager.getTable(name) != null && !name.equals(currentTable) || !name.matches("[a-z]+\\d+|[a-z]+"))
+                throw new RuntimeException("Такое имя таблицы не подходит или оно уже занято");
+            functionManager.removeTable(currentTable);
+            currentTableBox.setTableBody(tablesManager.getTableBody(ct));
+            currentTableBox.setTableName(name);
+        }
+        functionManager.putTable(name, ct);
         stage.hide();
     }
     public void addPoint(Point point) {
@@ -141,17 +139,16 @@ public class TableController {
         rowBoxes.remove(rowBox);
         rowPane.getChildren().remove(rowBox);
     }
-    public void approximateRows(String name, int k) {
+    public CustomizableTable approximateRows(String name, int k) {
         Set<Point> points = new LinkedHashSet<>();
         for(var row : rowBoxes) {
             points.add(row.getRow());
         }
-        approximatePoints(name, points, k, colorPicker.getValue(), !visibleButton.isSelected(), pointsButton.isSelected());
+        return approximatePoints(name, points, k, colorPicker.getValue(), !visibleButton.isSelected(), pointsButton.isSelected());
     }
-    public void approximatePoints(String name, Set<Point> points, int k, Color color, boolean visible, boolean pointsVisible) {
+    public CustomizableTable approximatePoints(String name, Set<Point> points, int k, Color color, boolean visible, boolean pointsVisible) {
         Polynomial f = functionManager.approximation(points, k);
-        functionManager.putTable(name, new CustomizableTable(f));
-        CustomizableTable ct = functionManager.getTable(name);
+        CustomizableTable ct = new CustomizableTable(f);
         ct.setRows(points);
         ct.setColor(color.toString());
         ct.setVisible(visible);
@@ -159,6 +156,7 @@ public class TableController {
         ct.setK(k);
         ct.setName(name);
         ct.setPointsVisible(pointsVisible);
+        return ct;
     }
     public void clearRows() {
         rowBoxes.clear();
@@ -169,6 +167,8 @@ public class TableController {
         clearRows();
         approximateField.setText("");
         colorPicker.setValue(Color.GREEN);
+        visibleButton.setSelected(false);
+        pointsButton.setSelected(false);
         nameTableField.setText("");
     }
     public void openScene() {

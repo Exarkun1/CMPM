@@ -65,6 +65,13 @@ public class MainController implements Initializable {
         mainManager.shift(event.getX(), event.getY());
     }
     /**
+     * Конец сдвига
+     * */
+    @FXML
+    void mouseReleased(MouseEvent event) {
+        mainManager.stopDragged();
+    }
+    /**
      * Клик по экрану
      * */
     @FXML
@@ -195,8 +202,6 @@ public class MainController implements Initializable {
 
         paneForGraphs.setPrefHeight(mainManager.getHeight());
         paneForGraphs.setPrefWidth(mainManager.getHeight());
-
-        paneForNotebooks.setSpacing(10);
 
         creatFieldButton.setPrefWidth(400);
 

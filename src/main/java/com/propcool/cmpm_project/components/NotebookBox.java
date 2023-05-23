@@ -3,7 +3,6 @@ package com.propcool.cmpm_project.components;
 import com.propcool.cmpm_project.manage.MainManager;
 import com.propcool.cmpm_project.manage.NotebookManager;
 import com.propcool.cmpm_project.io.notebooks.Notebook;
-import javafx.application.Platform;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -23,10 +22,9 @@ public class NotebookBox extends HBox {
             Notebook notebook = notebookManager.getNotebook(notebookName);
             notebookManager.openNotebook(notebook);
             mainManager.changingCoordinateSystem(notebook.getSystemName());
-            mainManager.getDrawManager().makeNewRebuildFrame();
+            mainManager.getDrawManager().makeNewFrame();
         });
-        closeView.setOnAction(actionEvent -> Platform.runLater(() -> notebookManager.deleteNotebook(notebookName))
-        );
+        closeView.setOnAction(actionEvent -> notebookManager.deleteNotebook(notebookName));
         getChildren().addAll(openView, name, closeView);
     }
 }

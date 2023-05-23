@@ -32,8 +32,8 @@ public class ControlManager {
     }
     public void setTableOpen() { tablesOpen = !tablesOpen; }
 
-    public void setLineDragged() {
-        lineDragged = !lineDragged;
+    public void setLineDragged(boolean lineDragged) {
+        this.lineDragged = lineDragged;
     }
     public void setDirectionsShowed() { directionsShowed = !directionsShowed; }
     private boolean menuOpen = false;

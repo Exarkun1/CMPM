@@ -1,9 +1,6 @@
 package com.propcool.cmpm_project;
 
-import com.propcool.cmpm_project.functions.interpolate.PolynomialWithX;
-import com.propcool.cmpm_project.util.TabulateBuilder;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -27,8 +24,5 @@ public class CmpmApplication extends Application {
 
     public static void main(String[] args) {
         launch(args);
-        /*PolynomialWithX p = new TabulateBuilder().approximation(new double[]{0, 1, 2, 3, 4, 5}, new double[] {-2, -1, 1, 3, 2, 4}, 2);
-        System.out.println(p.get(1));
-        Platform.exit();*/
     }
 }

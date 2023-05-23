@@ -14,7 +14,7 @@ public enum Number implements State{
         else if(c == '+' || c == '-' || c == '*' || c == '/' || c == '^') return 2;
         else if(c == '(') return 3;
         else if(c == ')') return 4;
-        else if(c == ',') return 5;
+        else if(c == '.') return 5;
         else if(c == ' ' || c == '\t' || c == '\n') return 6;
         else return 7;
     }
@@ -29,7 +29,7 @@ public enum Number implements State{
         return index;
     }
     private static final State[][] matrix = {
-            //1 a + ( ) , \t e f
+            //1 a + ( ) . \t e f
             {End.E, Word.A, Base.A, Base.B, Base.C, C, Space.Y, End.E, End.F},
             {B, Word.A, Base.A, Base.B, Base.C, C, Space.Y, End.E, End.F},
             {D, End.E, End.E, End.E, End.E, End.E, End.E, End.E, End.E},

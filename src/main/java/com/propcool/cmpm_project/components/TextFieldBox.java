@@ -9,8 +9,6 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
-import java.util.List;
-
 /**
  * Панель для элементов, связанных с текстовыми полями, и самим полем
  * */
@@ -26,7 +24,7 @@ public class TextFieldBox extends HBox {
         colorPicker.setOnAction(actionEvent -> {
             textField.setDefaultColor(colorPicker.getValue());
             textField.processing();
-            drawManager.makeNewRebuildFrame();
+            drawManager.makeNewFrame();
         });
         colorPicker.setOnMousePressed(mouseEvent -> {
             CustomizableFunction cf = functionManager.getFunction(textField.getFunctionName());
@@ -34,7 +32,7 @@ public class TextFieldBox extends HBox {
                 cf.setVisible(!cf.isVisible());
                 textField.setDefaultVisible(cf.isVisible());
                 visibleFlag = true;
-                drawManager.makeNewRebuildFrame();
+                drawManager.makeNewFrame();
             }
         });
         colorPicker.setOnMouseReleased(mouseEvent -> {
@@ -52,8 +50,7 @@ public class TextFieldBox extends HBox {
 
             textFieldsManager.addSliders();
             textFieldsManager.removeSliders();
-            drawManager.clearPoints();
-            drawManager.makeNewRebuildFrame();
+            drawManager.makeNewFrame();
         });
         getChildren().addAll(colorPicker, textField, closeView);
     }

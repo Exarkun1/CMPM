@@ -1,5 +1,6 @@
 package com.propcool.cmpm_project.manage;
 
+import com.propcool.cmpm_project.components.GroupLines;
 import com.propcool.cmpm_project.components.TextFieldBox;
 import com.propcool.cmpm_project.util.Point;
 import javafx.scene.control.Button;
@@ -30,7 +31,7 @@ public class MainManager {
         coordinateManagers.put("cartesian", coordinateManager);
         coordinateManagers.put("polar", new PolarManager());
         textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager));
-        drawManager.makeNewRebuildFrame();
+        drawManager.makeNewFrame();
     }
     public int getWidth(){
         return coordinateManager.getWidth();
@@ -48,10 +49,19 @@ public class MainManager {
         return coordinateManager.getPixelSize();
     }
     public void shift(double x, double y){
-        if(controlManager.isLineDragged()) return;
-        coordinateManagers.get("cartesian").shift(x, y);
-        coordinateManagers.get("polar").shift(x, y);
-        drawManager.makeNewRebuildFrame();
+        if(controlManager.isLineDragged()) {
+            drawManager.getLastGroupLines().setCircle(x, y);
+        } else {
+            coordinateManagers.get("cartesian").shift(x, y);
+            coordinateManagers.get("polar").shift(x, y);
+            drawManager.makeNewFrame();
+        }
+    }
+    public void stopDragged() {
+        if(controlManager.isLineDragged()) {
+            drawManager.getLastGroupLines().clearCircle();
+            controlManager.setLineDragged(false);
+        }
     }
     public void setMouse(double x, double y){
         coordinateManagers.get("cartesian").setMouse(x, y);
@@ -66,7 +76,7 @@ public class MainManager {
             coordinateManagers.get("cartesian").zoomIn(x, y);
             coordinateManagers.get("polar").zoomIn(x, y);
         }
-        drawManager.makeNewRebuildFrame();
+        drawManager.makeNewFrame();
     }
     public void scale(double delta){
         if(delta < 0){
@@ -77,7 +87,7 @@ public class MainManager {
             coordinateManagers.get("cartesian").zoomCenter(1/1.3);
             coordinateManagers.get("polar").zoomCenter(1/1.3);
         }
-        drawManager.makeNewRebuildFrame();
+        drawManager.makeNewFrame();
     }
     public void openTextFields(){
         openManager.openTextFields();
@@ -105,42 +115,43 @@ public class MainManager {
     public void changingCoordinateSystem(String name){
         coordinateManager = coordinateManagers.get(name);
         drawManager.setCoordinateManager(coordinateManager);
-        drawManager.makeNewRebuildFrame();
+        drawManager.makeNewFrame();
     }
     public void keyPressed(KeyCode code) {
         switch (code) {
             case RIGHT -> {
                 coordinateManagers.get("cartesian").shiftCenter(-20, 0);
                 coordinateManagers.get("polar").shiftCenter(-20, 0);
-                drawManager.makeNewRebuildFrame();
+                drawManager.makeNewFrame();
             }
             case LEFT -> {
                 coordinateManagers.get("cartesian").shiftCenter(20, 0);
                 coordinateManagers.get("polar").shiftCenter(20, 0);
-                drawManager.makeNewRebuildFrame();
+                drawManager.makeNewFrame();
             }
             case UP -> {
                 coordinateManagers.get("cartesian").shiftCenter(0, 20);
                 coordinateManagers.get("polar").shiftCenter(0, 20);
-                drawManager.makeNewRebuildFrame();
+                drawManager.makeNewFrame();
             }
             case DOWN -> {
                 coordinateManagers.get("cartesian").shiftCenter(0, -20);
                 coordinateManagers.get("polar").shiftCenter(0, -20);
-                drawManager.makeNewRebuildFrame();
+                drawManager.makeNewFrame();
             }
             case EQUALS -> {
                 coordinateManagers.get("cartesian").zoomCenter(1/1.3);
                 coordinateManagers.get("polar").zoomCenter(1/1.3);
-                drawManager.makeNewRebuildFrame();
+                drawManager.makeNewFrame();
             }
             case MINUS -> {
                 coordinateManagers.get("cartesian").zoomCenter(1.3);
                 coordinateManagers.get("polar").zoomCenter(1.3);
-                drawManager.makeNewRebuildFrame();
+                drawManager.makeNewFrame();
             }
             case ESCAPE -> openTextFields();
-            case F1 -> openSettings();
+            case F1 -> openTables();
+            case F2 -> openSettings();
         }
     }
     public void cauchyAlert() {
@@ -148,7 +159,7 @@ public class MainManager {
     }
     public void showDirectionsField() {
         controlManager.setDirectionsShowed();
-        drawManager.makeNewRebuildFrame();
+        drawManager.makeNewFrame();
     }
     public void saveCauchy(String x, String y) {
         try {
@@ -174,11 +185,11 @@ public class MainManager {
     }
     private void setCauchyPoint(double x, double y) {
         functionManager.setCauchyPoint(x, y);
-        drawManager.makeNewRebuildFrame();
+        drawManager.makeNewFrame();
     }
     private void setPolarBorders(double start, double end) {
         ((PolarManager)coordinateManagers.get("polar")).setBorders(start, end);
-        if(coordinateManager instanceof PolarManager) drawManager.makeNewRebuildFrame();
+        if(coordinateManager instanceof PolarManager) drawManager.makeNewFrame();
     }
     public void polarAlert() {
         ((PolarManager)coordinateManagers.get("polar")).polarAlert();

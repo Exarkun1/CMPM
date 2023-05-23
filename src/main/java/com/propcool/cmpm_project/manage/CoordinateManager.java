@@ -36,7 +36,6 @@ public abstract class CoordinateManager {
      * Шаг для отрисовки
      * */
     public abstract double getStep();
-    public abstract Point getCircleCoordinate(Function function, double x, double y);
     /**
      * Преобразование X координат в пиксельные
      * */
@@ -54,6 +53,9 @@ public abstract class CoordinateManager {
     public Point getXY(Point p) {
         return new Point(getX(p), getY(p));
     }
+    public Point getXY(double x, double y) {
+        return getXY(new Point(x, y));
+    }
     public double getPixelX(Point p) {
         return getPixelX(p.getX(), p.getY());
     }
@@ -62,6 +64,9 @@ public abstract class CoordinateManager {
     }
     public Point getPixelXY(Point p) {
         return new Point(getPixelX(p), getPixelY(p));
+    }
+    public Point getPixelXY(double x, double y) {
+        return getPixelXY(new Point(x, y));
     }
     /**
      * Изменение положения мышки

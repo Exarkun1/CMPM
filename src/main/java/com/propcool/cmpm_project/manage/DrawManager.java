@@ -96,7 +96,7 @@ public class DrawManager {
         if(pixelSize < 0.02 && centerX >= 20 && centerX <= wight-20 && centerY >= 20 && centerY <= height-20)
             groupText.getChildren().add(counter);
 
-        graphics.put("1xy", groupXY);
+        graphics.add(groupXY);
         return groupText;
     }
     /**
@@ -109,7 +109,7 @@ public class DrawManager {
         for (var tableName : functionManager.getTables().keySet()) {
             rebuildTable(tableName);
         }
-        graphics.put("1t", groupText);
+        graphics.add(groupText);
     }
 
     private Line createLine(double x0, double y0, double x1, double y1, Color color, int strokeWidth){
@@ -146,17 +146,17 @@ public class DrawManager {
         int strokeWidth = cf.getWidth();
 
         if(functionName.matches("\\d+imp") && coordinateManager instanceof CartesianManager){
-            rebuildImplicitFunction(functionName, function, color, strokeWidth);
+            rebuildImplicitFunction(function, color, strokeWidth);
         } else if(functionName.matches("\\d+dif") && coordinateManager instanceof CartesianManager){
-            rebuildDifferentialEquation(functionName, function, color, strokeWidth);
+            rebuildDifferentialEquation(function, color, strokeWidth);
         } else if(!functionName.matches("\\d+imp") && !functionName.matches("\\d+dif")) {
-            rebuildExplicitFunction(functionName, function, color, strokeWidth);
+            rebuildExplicitFunction(function, color, strokeWidth);
         }
     }
     /**
      * Построение неявной функции
      * */
-    public void rebuildImplicitFunction(String functionName, Function function, Color color, int strokeWidth){
+    public void rebuildImplicitFunction(Function function, Color color, int strokeWidth){
         int x0 = (int)(-coordinateManager.getCenterX()*coordinateManager.getPixelSize())-1;
         int x1 = (int)((coordinateManager.getWidth()-coordinateManager.getCenterX())*coordinateManager.getPixelSize())+1;
 
@@ -177,12 +177,12 @@ public class DrawManager {
         }
         Group group = new ImpGroupLines(function, color, coordinateManager, this, controlManager, functionManager);
         group.getChildren().addAll(lines);
-        graphics.put(functionName, group);
+        graphics.add(group);
     }
     /**
      * Построение явной функции
      * */
-    public void rebuildExplicitFunction(String functionName, Function function, Color color, int strokeWidth){
+    public void rebuildExplicitFunction(Function function, Color color, int strokeWidth){
         Group groupLines = new GroupLines(function, color, coordinateManager, this, controlManager, functionManager);
         Point point = coordinateManager.getCoordinate(function, coordinateManager.getMin());
         double x0 = point.getX(), y0 = point.getY();
@@ -201,31 +201,31 @@ public class DrawManager {
             x0 = x1;
             y0 = y1;
         }
-        graphics.put(functionName, groupLines);
+        graphics.add(groupLines);
     }
     /**
      * Отображение дифференциального уравнения
      * */
-    public void rebuildDifferentialEquation(String functionName, Function function, Color color, int strokeWidth){
+    public void rebuildDifferentialEquation(Function function, Color color, int strokeWidth){
         Inclines inclines = new Inclines(function, coordinateManager, color, strokeWidth);
         List<Line> lines = new ArrayList<>();
         if(controlManager.isDirectionsShowed()) lines.addAll(inclines.tangentField());
 
         lines.addAll(inclines.integralCurve(functionManager.getCauchyPoint()));
-        Group group = new DifGroupLines(color, coordinateManager, this, controlManager);
+        Group group = new DifGroupLines(function, color, coordinateManager, this, controlManager);
         group.getChildren().addAll(lines);
 
-        graphics.put(functionName, group);
+        graphics.add(group);
     }
     public void rebuildTable(String tableName) {
         CustomizableTable ct = functionManager.getTable(tableName);
-        if(ct == null || ct.getApproximate() == null || !ct.isVisible()) return;
+        if(ct == null || ct.getApproximate() == null) return;
 
         Function function = ct.getApproximate();
         Color color = ct.getColor();
         int strokeWidth = ct.getWidth();
 
-        rebuildExplicitFunction(tableName, function, color, strokeWidth);
+        if(ct.isVisible()) rebuildExplicitFunction(function, color, strokeWidth);
 
         if(ct.isPointsVisible()) {
             Group points = new Group();
@@ -237,22 +237,14 @@ public class DrawManager {
                     points.getChildren().add(circle);
                 }
             }
-            graphics.put("#"+tableName, points);
+            graphics.add(points);
         }
     }
     /**
      * Отображение всех элементов
      * */
     public void redrawAll(){
-        paneForGraphs.getChildren().addAll(graphics.values());
-    }
-    /**
-     * Отображение одной функции
-     * */
-    public void redraw(String functionName){
-        Group group = graphics.get(functionName);
-        if(group == null) return;
-        paneForGraphs.getChildren().addAll(group);
+        paneForGraphs.getChildren().addAll(graphics);
     }
     /**
      * Очистка экрана
@@ -260,25 +252,12 @@ public class DrawManager {
     public void clear(){
         paneForGraphs.getChildren().clear();
         graphics.clear();
-    }
-    /**
-     * Удаление одной функции с экрана
-     * */
-    public void remove(String functionName){
-        Group group = graphics.get(functionName);
-        if(group == null) return;
-        //paneForGraphs.getChildren().removeAll(group);
-        graphics.remove(functionName);
-    }
-    public void removeAll(Set<String> names) {
-        for(var name : names) {
-            remove(name);
-        }
+        clearPoints();
     }
     /**
      * Создание полностью нового кадра
      * */
-    public void makeNewRebuildFrame() {
+    public void makeNewFrame() {
         setLastGroupLines(null);
         clear();
         Group groupText = rebuildFrame();
@@ -289,7 +268,11 @@ public class DrawManager {
      * Добавление какого элемента на изображение
      * */
     public void addNodes(Node... nodes){
-        paneForGraphs.getChildren().addAll(nodes);
+        for(var node : nodes) {
+            if(!paneForGraphs.getChildren().contains(node)) {
+                paneForGraphs.getChildren().add(node);
+            }
+        }
     }
     /**
      * Удаление какого элемента с изображения
@@ -323,7 +306,7 @@ public class DrawManager {
 
     private final int step = 2;
     private final AnchorPane paneForGraphs;
-    private final Map<String, Group> graphics = new LinkedHashMap<>();
+    private final Set<Group> graphics = new LinkedHashSet<>();
     private CoordinateManager coordinateManager;
     private final FunctionManager functionManager;
     private final ControlManager controlManager;

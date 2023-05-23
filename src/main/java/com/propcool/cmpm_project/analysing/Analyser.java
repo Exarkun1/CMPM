@@ -51,7 +51,7 @@ public class Analyser {
             text = text.replaceAll("=.+", "=" + functionBase);
 
             String functionName = text.replaceAll("\\(.+|=.+", ""); // 6
-            if(functionManager.getObject(functionName) != null) return null;
+            if(functionManager.getKeyWord(functionName) != null) return null;
 
             return text;
         }

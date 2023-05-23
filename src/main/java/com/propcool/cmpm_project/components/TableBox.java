@@ -23,7 +23,7 @@ public class TableBox extends HBox {
         });
         closeView.setOnMousePressed(mouseEvent -> {
             tablesManager.remove(this);
-            drawManager.makeNewRebuildFrame();
+            drawManager.makeNewFrame();
         });
         getChildren().addAll(openView, tableName, tableBody, closeView);
     }

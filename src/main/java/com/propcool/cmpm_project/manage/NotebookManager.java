@@ -66,7 +66,7 @@ public class NotebookManager {
                 Notebook notebook = notebookLoader.load(file);
                 openNotebook(notebook);
                 mainManager.changingCoordinateSystem(notebook.getSystemName());
-                mainManager.getDrawManager().makeNewRebuildFrame();
+                mainManager.getDrawManager().makeNewFrame();
             }
         } catch (IOException e) {
             loadAlert.show();

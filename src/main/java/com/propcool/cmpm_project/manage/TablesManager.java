@@ -3,6 +3,7 @@ package com.propcool.cmpm_project.manage;
 import com.propcool.cmpm_project.CmpmApplication;
 import com.propcool.cmpm_project.components.TableBox;
 import com.propcool.cmpm_project.controllers.TableController;
+import com.propcool.cmpm_project.io.data.CustomizableTable;
 import com.propcool.cmpm_project.io.notebooks.Notebook;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -50,8 +51,6 @@ public class TablesManager {
         tableBoxes.remove(box);
         paneForTable.getChildren().remove(box);
         functionManager.removeTable(box.getTableName());
-        drawManager.remove(box.getTableName());
-        drawManager.clearPoints();
     }
     public void loadNew() {
         load(null, null);
@@ -64,22 +63,22 @@ public class TablesManager {
         paneForTable.getChildren().removeAll(tableBoxes);
         functionManager.clearTables();
         tableBoxes.clear();
-        drawManager.makeNewRebuildFrame();
     }
     public void addNotebookTables(Notebook notebook) {
         for(var data : notebook.getTableDataSet()) {
-            controller.approximatePoints(
+            CustomizableTable ct = controller.approximatePoints(
                     data.getName(), data.getRows(), data.getK(),
                     Color.valueOf(data.getColor()), data.isVisible(), data.isPointsVisible()
             );
+            functionManager.putTable(data.getName(), ct);
             TableBox box = new TableBox(functionManager, drawManager, this);
             box.setTableName(data.getName());
-            box.setTableBody(getTableBody(data.getName()));
+            box.setTableBody(getTableBody(ct));
             addTable(box);
         }
     }
-    public String getTableBody(String name) {
-        double[] A = functionManager.getTable(name).getApproximate().getA();
+    public String getTableBody(CustomizableTable ct) {
+        double[] A = ct.getApproximate().getA();
         StringBuilder sb = new StringBuilder();
         int n = A.length-1;
         for(int i = n; i >= 0; i--) {

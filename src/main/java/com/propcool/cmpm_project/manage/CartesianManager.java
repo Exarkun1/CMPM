@@ -40,13 +40,6 @@ public class CartesianManager extends CoordinateManager {
     }
 
     @Override
-    public Point getCircleCoordinate(Function function, double x, double y) {
-        Point point = getCoordinate(function, x);
-        double new_y = point.getY();
-        return new Point(x, new_y);
-    }
-
-    @Override
     public double getPixelX(double x, double y) {
         return x / getPixelSize() + getCenterX();
     }

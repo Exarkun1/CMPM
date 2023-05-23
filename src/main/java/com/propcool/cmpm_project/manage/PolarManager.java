@@ -50,20 +50,6 @@ public class PolarManager extends CoordinateManager {
     }
 
     @Override
-    public Point getCircleCoordinate(Function function, double x, double y) {
-        double new_x = (x - getCenterX()) * getPixelSize();
-        double new_y = -(y - getCenterY()) * getPixelSize();
-        double fi = Math.atan(new_y / new_x);
-        if(new_x < 0) fi = Math.PI + fi;
-        if(new_x > 0 && new_y < 0) fi = 2*Math.PI + fi;
-        double r = function.get(fi);
-        double xx = getCenterX() + (r * Math.cos(2*Math.PI + fi) / getPixelSize());
-        double yy = getCenterY() - (r * Math.sin(2*Math.PI + fi) / getPixelSize());
-        return new Point(xx, yy);
-        //y=-sin(x)/(cos(x)^2+sin(x)*cos(x))
-    }
-
-    @Override
     public double getPixelX(double fi, double r) {
         double x = r * Math.cos(fi);
         return x / getPixelSize() + getCenterX();

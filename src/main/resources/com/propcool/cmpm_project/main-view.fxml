@@ -49,7 +49,7 @@
    <center>
       <AnchorPane fx:id="mainPanel" onKeyPressed="#keyTyped" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
          <children>
-            <AnchorPane fx:id="paneForGraphs" layoutX="2.0" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onScroll="#scroll" prefHeight="483.0" prefWidth="760.0" style="-fx-background-color: #ffffff;" />
+            <AnchorPane fx:id="paneForGraphs" layoutX="2.0" onMouseDragged="#mouseDragged" onMousePressed="#mousePressed" onMouseReleased="#mouseReleased" onScroll="#scroll" prefHeight="483.0" prefWidth="760.0" style="-fx-background-color: #ffffff;" />
             <BorderPane fx:id="outgoingPanel" prefHeight="781.0" prefWidth="400.0" style="-fx-background-color: #c1c1c1;">
                <center>
                   <ScrollPane prefHeight="777.0" prefWidth="341.0" BorderPane.alignment="CENTER">

@@ -4,6 +4,7 @@ import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.functions.basic.VariableX;
 import com.propcool.cmpm_project.functions.basic.VariableY;
 import com.propcool.cmpm_project.functions.combination.Difference;
+import com.propcool.cmpm_project.io.data.CustomizableTable;
 import com.propcool.cmpm_project.manage.ControlManager;
 import com.propcool.cmpm_project.manage.CoordinateManager;
 import com.propcool.cmpm_project.manage.DrawManager;
@@ -19,14 +20,11 @@ public class ImpGroupLines extends AbstractGroupLines {
                          CoordinateManager coordinateManager, DrawManager drawManager,
                          ControlManager controlManager, FunctionManager functionManager
     ){
-        super(coordinateManager, drawManager, color);
+        super(coordinateManager, drawManager, function, color);
         this.functionManager = functionManager;
-        // Появление кружка и других точек
+        // Появление точек
         setOnMousePressed(mouseEvent -> {
             try {
-                controlManager.setLineDragged();
-                newPosition(mouseEvent.getX(), mouseEvent.getY());
-
                 drawManager.clearPoints();
                 reduceLines();
                 enlargeLines();
@@ -34,14 +32,8 @@ public class ImpGroupLines extends AbstractGroupLines {
                 solveY(function, mouseEvent.getX(), mouseEvent.getY());
                 solveX(function, mouseEvent.getX(), mouseEvent.getY());
                 extreme(function, mouseEvent.getX(), mouseEvent.getY());
-
-                drawManager.addNodes(circle, paneForText);
+                addPoint(coordinateManager.getXY(mouseEvent.getX(), mouseEvent.getY()), color);
             } catch (IllegalArgumentException ignored) {}
-        });
-        // Удаление кружка
-        setOnMouseReleased(mouseEvent -> {
-            drawManager.removeNodes(circle, paneForText);
-            controlManager.setLineDragged();
         });
     }
     private void intersect(Function function, double pixelX, double pixelY) {
@@ -50,13 +42,22 @@ public class ImpGroupLines extends AbstractGroupLines {
         for(var entry : functionManager.getFunctions().entrySet()) {
             String name = entry.getKey();
             CustomizableFunction cf = entry.getValue();
-            if(function != cf.getFunction() && !name.matches("\\d+dif") && !name.matches("\\d+bad")) {
+            if(function != cf.getFunction() && cf.isVisible()
+                    && !name.matches("\\d+dif") && !name.matches("\\d+bad")
+            ) {
                 Point point;
                 if(!name.matches("\\d+imp")) {
                     point = functionManager.searchIntersectsXY(function, new Difference(cf.getFunction(), new VariableY()), x, y);
                 } else {
                     point = functionManager.searchIntersectsXY(function, cf.getFunction(), x, y);
                 }
+                addPoint(point, new Color(0.7, 1, 0.7, 1));
+            }
+        }
+        for(var entry : functionManager.getTables().entrySet()) {
+            CustomizableTable ct = entry.getValue();
+            if(ct.isVisible()) {
+                Point point = functionManager.searchIntersectsXY(function, new Difference(ct.getApproximate(), new VariableY()), x, y);
                 addPoint(point, new Color(0.7, 1, 0.7, 1));
             }
         }
