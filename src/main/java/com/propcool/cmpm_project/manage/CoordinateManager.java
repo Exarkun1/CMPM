@@ -44,6 +44,21 @@ public abstract class CoordinateManager {
      * Преобразование Y координат в пиксельные
      * */
     public abstract double getPixelY(double x, double y);
+    public double getMinX() {
+        return -(getCenterX()) * getPixelSize();
+    }
+
+    public double getMinY() {
+        return -(getHeight() - getCenterY()) * getPixelSize();
+    }
+
+    public double getMaxX() {
+        return (getWidth() - getCenterX()) * getPixelSize();
+    }
+
+    public double getMaxY() {
+        return (getCenterY()) * getPixelSize();
+    }
     public double getX(Point p) {
         return getX(p.getX(), p.getY());
     }
@@ -113,7 +128,7 @@ public abstract class CoordinateManager {
         pixelSize *= zoomCoef;
     }
     public boolean onScreen(double x, double y){
-        return 5 <= x && x <= width -5 && 5 <= y && y <= height-5;
+        return 2 <= x && x <= width -2 && 2 <= y && y <= height-2;
     }
     public boolean onScreen(Point p){
         return onScreen(p.getX(), p.getY());

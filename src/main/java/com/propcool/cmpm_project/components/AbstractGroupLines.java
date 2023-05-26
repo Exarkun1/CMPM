@@ -51,6 +51,9 @@ public abstract class AbstractGroupLines extends Group {
         text.setFont(new Font(18));
         return getPane(text, x, y);
     }
+    protected StackPane getTextPane(Point p) {
+        return getTextPane(p.getX(), p.getY());
+    }
     protected StackPane getPane(Text text, double x, double y) {
         double textWight = text.getBoundsInLocal().getWidth() + 4;
         double textHeight = text.getBoundsInLocal().getHeight();
@@ -63,18 +66,18 @@ public abstract class AbstractGroupLines extends Group {
     }
     protected void addPoint(Point point, Color color) {
         if(point == null) return;
-        double x = coordinateManager.getPixelX(point.getX(), point.getY());
-        double y = coordinateManager.getPixelY(point.getX(), point.getY());
-        if(!Double.isNaN(x) && !Double.isNaN(y) && coordinateManager.onScreen(x, y)) {
-            Circle circle = new Circle(x, y, 5);
+        Point p = coordinateManager.getPixelXY(point);
+        if(!Double.isNaN(p.getX()) && !Double.isNaN(p.getY()) && coordinateManager.onScreen(p)) {
+            Circle circle = new Circle(p.getX(), p.getY(), 5);
             circle.setFill(color);
-            StackPane pane = getTextPane(x, y);
-            circle.setOnMouseEntered(mouseEvent -> drawManager.addNodes(pane));
-            circle.setOnMouseExited(mouseEvent -> drawManager.removeNodes(pane));
-            drawManager.addPoint(circle);
+            StackPane pane = getTextPane(p);
+            pane.setVisible(false);
+            circle.setOnMouseEntered(mouseEvent -> pane.setVisible(true));
+            circle.setOnMouseExited(mouseEvent -> pane.setVisible(false));
+            drawManager.addPoint(new Group(circle, pane));
         }
     }
-    protected Pair<Circle, Pane> addDraggedPoint(Point point, Color color) {
+    protected Group addDraggedPoint(Point point, Color color) {
         if(point == null) return null;
         double x = coordinateManager.getPixelX(point.getX(), point.getY());
         double y = coordinateManager.getPixelY(point.getX(), point.getY());
@@ -82,23 +85,23 @@ public abstract class AbstractGroupLines extends Group {
             Circle circle = new Circle(x, y, 5);
             circle.setFill(color);
             StackPane pane = getTextPane(x, y);
-            drawManager.addNodes(circle, pane);
-            return new Pair<>(circle, pane);
+            Group pair = new Group(circle, pane);
+            drawManager.addNodes(pair);
+            return pair;
         }
         return null;
     }
-    public void setCircle(double pixelX, double pixelY) {
-        drawManager.removeNodes(draggedCircle, draggedPane);
+    public void setDraggedGroup(double pixelX, double pixelY) {
+        drawManager.removeNodes(draggedGroup);
         double x = coordinateManager.getX(pixelX, pixelY);
         double y = function.get(x);
-        var pair = addDraggedPoint(new Point(x, y), color);
+        Group pair = addDraggedPoint(new Point(x, y), color);
         if(pair != null) {
-            draggedCircle = pair.getKey();
-            draggedPane = pair.getValue();
+            draggedGroup = pair;
         }
     }
-    public void clearCircle() {
-        drawManager.removeNodes(draggedCircle, draggedPane);
+    public void clearDraggedGroup() {
+        drawManager.removeNodes(draggedGroup);
     }
     public boolean isEnlarges() {
         return isEnlarges;
@@ -111,6 +114,5 @@ public abstract class AbstractGroupLines extends Group {
     protected boolean isEnlarges = false;
     protected Function function;
     protected Color color;
-    protected Circle draggedCircle;
-    protected Pane draggedPane;
+    protected Group draggedGroup;
 }

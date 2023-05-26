@@ -73,7 +73,7 @@
                         <TitledPane animated="false" prefHeight="460.0" prefWidth="350.0" text="Дифференциальные уравнения">
                            <content>
                               <ScrollPane>
-                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="469.0" prefWidth="348.0">
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="640.0" prefWidth="378.0">
                                  <children>
                                     <Label layoutX="21.0" layoutY="46.0" text="Задача Коши:">
                                        <font>
@@ -100,16 +100,36 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Button>
-                                    <Label layoutX="78.0" layoutY="297.0" text="Фазовые портреты">
-                                       <font>
-                                          <Font size="28.0" />
-                                       </font>
-                                    </Label>
-                                    <Label layoutX="153.0" layoutY="337.0" text="скоро...">
-                                       <font>
-                                          <Font size="28.0" />
-                                       </font>
-                                    </Label>
+                                       <Text layoutX="59.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x'=">
+                                          <font>
+                                             <Font size="24.0" />
+                                          </font>
+                                       </Text>
+                                       <Text layoutX="59.0" layoutY="281.0" strokeType="OUTSIDE" strokeWidth="0.0" text="y'=">
+                                          <font>
+                                             <Font size="24.0" />
+                                          </font>
+                                       </Text>
+                                       <TextField layoutX="103.0" layoutY="216.0" prefHeight="27.0" prefWidth="237.0" fx:id="xPortraitField">
+                                          <font>
+                                             <Font size="14.0" />
+                                          </font>
+                                       </TextField>
+                                       <TextField fx:id="yPortraitField" layoutX="103.0" layoutY="260.0" prefHeight="27.0" prefWidth="237.0">
+                                          <font>
+                                             <Font size="14.0" />
+                                          </font>
+                                       </TextField>
+                                       <Button layoutX="75.0" layoutY="311.0" mnemonicParsing="false" onAction="#portraitShow" text="Показать фазовый портрет">
+                                          <font>
+                                             <Font size="18.0" />
+                                          </font>
+                                       </Button>
+                                       <Button layoutX="111.0" layoutY="367.0" mnemonicParsing="false" onAction="#functionsShow" text="Показать функции">
+                                          <font>
+                                             <Font size="18.0" />
+                                          </font>
+                                       </Button>
                                  </children></AnchorPane>
                               </ScrollPane>
                            </content>
@@ -120,7 +140,7 @@
                         <TitledPane animated="false" text="Координаты">
                            <content>
                               <ScrollPane>
-                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="625.0" prefWidth="382.0">
                                  <children>
                                     <ChoiceBox fx:id="systemChoice" layoutX="152.0" layoutY="23.0" prefHeight="27.0" prefWidth="187.0" />
                                     <Label layoutX="60.0" layoutY="23.0" text="Система:">
@@ -133,12 +153,12 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="startPolar" layoutX="149.0" layoutY="73.0" prefHeight="27.0" prefWidth="100.0" promptText="start">
+                                    <TextField fx:id="startPolar" layoutX="149.0" layoutY="73.0" prefHeight="27.0" prefWidth="100.0" promptText="начало">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </TextField>
-                                    <TextField fx:id="endPolar" layoutX="149.0" layoutY="112.0" prefHeight="27.0" prefWidth="100.0" promptText="end">
+                                    <TextField fx:id="endPolar" layoutX="149.0" layoutY="112.0" prefHeight="27.0" prefWidth="100.0" promptText="конец">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -238,7 +258,7 @@
                   </Accordion>
                </center>
             </BorderPane>
-            <BorderPane fx:id="outgoingTablePanel" prefHeight="781.0" prefWidth="400.0" style="-fx-background-color: #c1c1c1;">
+            <BorderPane fx:id="outgoingTablePanel" layoutX="685.0" prefHeight="781.0" prefWidth="400.0" style="-fx-background-color: #c1c1c1;">
                <center>
                   <ScrollPane prefHeight="777.0" prefWidth="341.0" BorderPane.alignment="CENTER">
                      <content>

@@ -23,7 +23,7 @@ public class Analyser {
     public String processing(String text, FunctionManager functionManager){
         if(checkingString(text)){
             text = text.replaceAll("\\s+", ""); // 1
-            text = text.replaceAll(",", "."); // 2
+            //text = text.replaceAll(",", "."); // 2
             text = text.replaceAll("=-", "=0-"); // 3
             text = text.replaceAll("\\(-", "(0-");
 

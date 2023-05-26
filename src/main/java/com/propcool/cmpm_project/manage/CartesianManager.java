@@ -48,4 +48,5 @@ public class CartesianManager extends CoordinateManager {
     public double getPixelY(double x, double y) {
         return -y / getPixelSize() + getCenterY();
     }
+
 }

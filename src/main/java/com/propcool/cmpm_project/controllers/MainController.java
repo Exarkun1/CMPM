@@ -29,10 +29,8 @@ public class MainController implements Initializable {
     private BorderPane outgoingPanelSettings;
     @FXML
     private Accordion accordionSettings;
-
     @FXML
     private AnchorPane paneForGraphs;
-
     @FXML
     private VBox paneForText;
     @FXML
@@ -57,6 +55,10 @@ public class MainController implements Initializable {
     private VBox paneForTable;
     @FXML
     private Button creatTableButton;
+    @FXML
+    private TextField xPortraitField;
+    @FXML
+    private TextField yPortraitField;
     /**
      * Сдвиг координат
      * */
@@ -176,6 +178,14 @@ public class MainController implements Initializable {
     @FXML
     void addTable(ActionEvent event) {
         mainManager.addTable();
+    }
+    @FXML
+    void portraitShow(ActionEvent event) {
+        mainManager.showPhasePortrait(xPortraitField.getText(), yPortraitField.getText());
+    }
+    @FXML
+    void functionsShow(ActionEvent event) {
+        mainManager.showFunctions();
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

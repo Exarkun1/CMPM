@@ -60,6 +60,7 @@ public class PolarManager extends CoordinateManager {
         double y = r * Math.sin(fi);
         return -y / getPixelSize() + getCenterY();
     }
+
     public void polarAlert() {
         polarAlert.show();
     }

@@ -1,8 +1,10 @@
 package com.propcool.cmpm_project.manage;
 
-import com.propcool.cmpm_project.components.GroupLines;
 import com.propcool.cmpm_project.components.TextFieldBox;
+import com.propcool.cmpm_project.util.PhasePortrait;
 import com.propcool.cmpm_project.util.Point;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -10,7 +12,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Менеджер управления другими менеджерами
@@ -31,6 +36,18 @@ public class MainManager {
         coordinateManagers.put("cartesian", coordinateManager);
         coordinateManagers.put("polar", new PolarManager());
         textFieldsManager.addTextField(new TextFieldBox(functionManager, drawManager, textFieldsManager));
+        /*drawManager.setTestDraw(() -> {
+            Group group = new Group();
+            PhasePortrait phasePortrait = new PhasePortrait(coordinateManager,1);
+            //List<Node> nodes = phasePortrait.solveLiner(new double[][]{{1, 0}, {0, 1}}, new double[] {0, 0}); // правильный узел
+            //List<Node> nodes = phasePortrait.solveLiner(new double[][]{{-1, -1}, {1, -3}}, new double[] {0, 0}); // вырожденный узел
+            //List<Node> nodes = phasePortrait.solveLiner(new double[][]{{4, 2}, {1, 3}}, new double[] {0, 0}); // узел
+            List<Node> nodes = phasePortrait.solveLiner(new double[][]{{1, -4}, {1, -1}}, new double[] {0, 0}); // центр
+            //List<Node> nodes = phasePortrait.solveLiner(new double[][]{{-2, -2}, {-1, 2}}, new double[] {12, -3}); // седло
+            //List<Node> nodes = phasePortrait.solveLiner(new double[][]{{3, 2}, {-5, 5}}, new double[] {1, 2}); // фокус
+            group.getChildren().addAll(nodes);
+            return group;
+        });*/
         drawManager.makeNewFrame();
     }
     public int getWidth(){
@@ -50,7 +67,7 @@ public class MainManager {
     }
     public void shift(double x, double y){
         if(controlManager.isLineDragged()) {
-            drawManager.getLastGroupLines().setCircle(x, y);
+            drawManager.getLastGroupLines().setDraggedGroup(x, y);
         } else {
             coordinateManagers.get("cartesian").shift(x, y);
             coordinateManagers.get("polar").shift(x, y);
@@ -59,7 +76,7 @@ public class MainManager {
     }
     public void stopDragged() {
         if(controlManager.isLineDragged()) {
-            drawManager.getLastGroupLines().clearCircle();
+            drawManager.getLastGroupLines().clearDraggedGroup();
             controlManager.setLineDragged(false);
         }
     }
@@ -154,9 +171,6 @@ public class MainManager {
             case F2 -> openSettings();
         }
     }
-    public void cauchyAlert() {
-        functionManager.cauchyAlert();
-    }
     public void showDirectionsField() {
         controlManager.setDirectionsShowed();
         drawManager.makeNewFrame();
@@ -175,6 +189,38 @@ public class MainManager {
             polarAlert();
         }
     }
+    public void showPhasePortrait(String f, String g) {
+        try {
+            double[][] A = new double[2][2];
+            double[] b = new double[2];
+
+            String reject = "[+|-]?\\d\\*x[+|-]\\d\\*y[+|-]\\d";
+            if(!f.matches(reject) || !g.matches(reject)) throw new RuntimeException();
+
+            Pattern pattern = Pattern.compile("([+|-]?\\d)");
+            Matcher matcher = pattern.matcher(f);
+
+            if(matcher.find()) A[0][0] = Double.parseDouble(matcher.group());
+            if(matcher.find()) A[0][1] = Double.parseDouble(matcher.group());
+            if(matcher.find()) b[0] = Double.parseDouble(matcher.group());
+
+            matcher = pattern.matcher(g);
+
+            if(matcher.find()) A[1][0] = Double.parseDouble(matcher.group());
+            if(matcher.find()) A[1][1] = Double.parseDouble(matcher.group());
+            if(matcher.find()) b[1] = Double.parseDouble(matcher.group());
+
+            functionManager.setPhasePortrait(A, b);
+            controlManager.setPortraitShowed(true);
+            drawManager.makeNewFrame();
+        } catch (RuntimeException e) {
+            phaseAlert();
+        }
+    }
+    public void showFunctions() {
+        controlManager.setPortraitShowed(false);
+        drawManager.makeNewFrame();
+    }
     private void setPoint(String x, String y, Point def, PointSetter ps) {
         double X, Y;
         if(x.equals("") || x.matches(" +")) X = def.getX();
@@ -191,8 +237,14 @@ public class MainManager {
         ((PolarManager)coordinateManagers.get("polar")).setBorders(start, end);
         if(coordinateManager instanceof PolarManager) drawManager.makeNewFrame();
     }
+    public void cauchyAlert() {
+        functionManager.cauchyAlert();
+    }
     public void polarAlert() {
         ((PolarManager)coordinateManagers.get("polar")).polarAlert();
+    }
+    public void phaseAlert() {
+        functionManager.phaseAlert();
     }
     public DrawManager getDrawManager() {
         return drawManager;

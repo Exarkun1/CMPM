@@ -9,7 +9,6 @@ import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.io.data.CustomizableFunction;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 import java.util.Set;
 
@@ -35,9 +34,8 @@ public class GroupLines extends AbstractGroupLines {
             intersect(function);
             extremes(function);
 
-            draggedCircle = null;
-            draggedPane = null;
-            setCircle(mouseEvent.getX(), mouseEvent.getY());
+            draggedGroup = null;
+            setDraggedGroup(mouseEvent.getX(), mouseEvent.getY());
         });
     }
     private void solve(Function function) {

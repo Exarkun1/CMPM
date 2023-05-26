@@ -4,10 +4,7 @@ import com.propcool.cmpm_project.components.AbstractGroupLines;
 import com.propcool.cmpm_project.components.DifGroupLines;
 import com.propcool.cmpm_project.components.ImpGroupLines;
 import com.propcool.cmpm_project.io.data.CustomizableTable;
-import com.propcool.cmpm_project.util.Inclines;
-import com.propcool.cmpm_project.util.Mixer;
-import com.propcool.cmpm_project.util.Point;
-import com.propcool.cmpm_project.util.Quadtree;
+import com.propcool.cmpm_project.util.*;
 import com.propcool.cmpm_project.components.GroupLines;
 import com.propcool.cmpm_project.functions.Function;
 import com.propcool.cmpm_project.io.data.CustomizableFunction;
@@ -19,6 +16,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Pair;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -103,12 +101,14 @@ public class DrawManager {
      * Пересоздание линий всех функций
      * */
     public void rebuildAllFunctions(Group groupText){
-        for (var functionName : functionManager.getFunctions().keySet()){
-            rebuildFunction(functionName);
-        }
-        for (var tableName : functionManager.getTables().keySet()) {
-            rebuildTable(tableName);
-        }
+        if(!controlManager.isPortraitShowed()) {
+            for (var functionName : functionManager.getFunctions().keySet()) {
+                rebuildFunction(functionName);
+            }
+            for (var tableName : functionManager.getTables().keySet()) {
+                rebuildTable(tableName);
+            }
+        } else rebuildPhasePortrait();
         graphics.add(groupText);
     }
 
@@ -217,6 +217,9 @@ public class DrawManager {
 
         graphics.add(group);
     }
+    /**
+     * Отображение таблицы
+     * */
     public void rebuildTable(String tableName) {
         CustomizableTable ct = functionManager.getTable(tableName);
         if(ct == null || ct.getApproximate() == null) return;
@@ -241,6 +244,19 @@ public class DrawManager {
         }
     }
     /**
+     * Отображение фазового портрета
+     * */
+    public void rebuildPhasePortrait() {
+        PhasePortrait pp = new PhasePortrait(coordinateManager, 1);
+        var pair = functionManager.phasePortrait();
+        List<Node> nodes = pp.solveLiner(pair.getKey(), pair.getValue());
+        graphics.add(new Group(nodes));
+    }
+    public void testDraw(TestDraw test) {
+        if(test != null)
+            graphics.add(test.getGroup());
+    }
+    /**
      * Отображение всех элементов
      * */
     public void redrawAll(){
@@ -262,6 +278,7 @@ public class DrawManager {
         clear();
         Group groupText = rebuildFrame();
         rebuildAllFunctions(groupText);
+        testDraw(test);
         redrawAll();
     }
     /**
@@ -283,7 +300,7 @@ public class DrawManager {
     /**
      * Добавление точки на изображение
      * */
-    public void addPoint(Circle point) {
+    public void addPoint(Group point) {
         points.add(point);
         addNodes(point);
     }
@@ -303,6 +320,9 @@ public class DrawManager {
     public void setLastGroupLines(AbstractGroupLines lastGroupLines) {
         this.lastGroupLines = lastGroupLines;
     }
+    public void setTestDraw(TestDraw test) {
+        this.test = test;
+    }
 
     private final int step = 2;
     private final AnchorPane paneForGraphs;
@@ -310,8 +330,12 @@ public class DrawManager {
     private CoordinateManager coordinateManager;
     private final FunctionManager functionManager;
     private final ControlManager controlManager;
-    private final Set<Circle> points = new HashSet<>();
+    private final Set<Group> points = new HashSet<>();
     private AbstractGroupLines lastGroupLines;
     private final DecimalFormat format = new DecimalFormat("#.#");
     private final Mixer mix = new Mixer();
+    private TestDraw test;
+    public interface TestDraw {
+        Group getGroup();
+    }
 }

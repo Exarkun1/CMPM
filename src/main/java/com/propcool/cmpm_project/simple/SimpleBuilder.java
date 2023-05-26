@@ -166,6 +166,15 @@ public class SimpleBuilder {
             case "arctan" -> {
                 return new ATan(building(functionName, end));
             }
+            case "sh" -> {
+                return new Sh(building(functionName, end));
+            }
+            case "ch" -> {
+                return new Ch(building(functionName, end));
+            }
+            case "th" -> {
+                return new Th(building(functionName, end));
+            }
             default -> {
                 return null;
             }

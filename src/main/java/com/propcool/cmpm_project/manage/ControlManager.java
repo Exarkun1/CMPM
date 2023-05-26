@@ -22,6 +22,7 @@ public class ControlManager {
     public boolean isDirectionsShowed() {
         return directionsShowed;
     }
+    public boolean isPortraitShowed() { return portraitShowed; }
 
     public void setMenuOpen() {
         menuOpen = !menuOpen;
@@ -36,9 +37,11 @@ public class ControlManager {
         this.lineDragged = lineDragged;
     }
     public void setDirectionsShowed() { directionsShowed = !directionsShowed; }
+    public void setPortraitShowed(boolean portraitShowed) { this.portraitShowed = portraitShowed; }
     private boolean menuOpen = false;
     private boolean settingsOpen = false;
     private boolean tablesOpen = false;
     private boolean lineDragged = false;
     private boolean directionsShowed = true;
+    private boolean portraitShowed = false;
 }

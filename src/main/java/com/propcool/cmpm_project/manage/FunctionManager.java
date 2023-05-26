@@ -16,6 +16,7 @@ import com.propcool.cmpm_project.functions.mono.*;
 import com.propcool.cmpm_project.io.data.CustomizableFunction;
 import com.propcool.cmpm_project.io.data.CustomizableParameter;
 import javafx.scene.control.Alert;
+import javafx.util.Pair;
 
 import java.util.*;
 /**
@@ -274,6 +275,18 @@ public class FunctionManager {
     public void cauchyAlert() {
         cauchyAlert.show();
     }
+    public void setPhasePortrait(double[][] A, double[] b) {
+        for(int i = 0; i < 2; i++) {
+            System.arraycopy(A[i], 0, this.A[i], 0, 2);
+        }
+        System.arraycopy(b, 0, this.b, 0, 2);
+    }
+    public Pair<double[][], double[]> phasePortrait() {
+        return new Pair<>(A, b);
+    }
+    public void phaseAlert() {
+        phaseAlert.show();
+    }
     private final Map<String, FunctionFactory> keyWords = new LinkedHashMap<>();
     private final List<String> constants = List.of("pi", "e");
     private final  Map<String, CustomizableFunction> functions = new LinkedHashMap<>();
@@ -284,8 +297,10 @@ public class FunctionManager {
     private final RootSearcher rootSearcher = new RootSearcher(1e-6, 100);
     private final TabulateBuilder tabulateBuilder = new TabulateBuilder();
     private final Point cauchyPoint = new Point(0, 0);
+    private final double[][] A = new double[2][2];
+    private final double[] b = new double[2];
     private final Alert cauchyAlert = new Alert(Alert.AlertType.ERROR,"Не верные данные в задаче Коши");
-
+    private final Alert phaseAlert = new Alert(Alert.AlertType.ERROR,"Не верные данные в уравнениях фазового портрета");
     public FunctionManager(){
         keyWords.put("sqrt", (b, e, s, p) -> new Pow(functionBuilder.buildingNotNamed(e, p), 0.5));
         keyWords.put("exp", (b, e, s, p) -> new Exp(functionBuilder.buildingNotNamed(e, p)));
