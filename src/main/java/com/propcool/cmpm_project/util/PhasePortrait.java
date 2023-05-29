@@ -46,30 +46,30 @@ public class PhasePortrait {
         } else {
             if(lambda.getX().getRl() != lambda.getY().getRl()) {
                 if(lambda.getX().getRl() > 0 && lambda.getY().getRl() > 0) { // Неустойчивый узел
-                    nodes.addAll(phaseRect(min, max, step*100, A, b, -1, 0.002));
+                    nodes.addAll(phaseRectN(min, max, step*75, A, b, -1, 10));
                     nodes.addAll(getPoint(A, b, "Неустойчивый узел"));
                 } else if(lambda.getX().getRl() < 0 && lambda.getY().getRl() < 0) { // Устойчивый узел
-                    nodes.addAll(phaseRect(min, max, step*100, A, b, 1, 0.001));
+                    nodes.addAll(phaseRectN(min, max, step*75, A, b, 1, 10));
                     nodes.addAll(getPoint(A, b, "Устойчивый узел"));
                 } else { // Седло
-                    nodes.addAll(phaseRect(min, max, step*20, A, b, 1, 0.002));
+                    nodes.addAll(phaseRect(min, max, step*20, A, b, -1, 0.002));
                     nodes.addAll(getPoint(A, b, "Седло"));
                 }
             } else {
                 if(lambda.getX().getRl() > 0) {
                     if(A[0][1] == 0 && A[1][0] == 0) { // Неустойчивый правильный узел
-                        nodes.addAll(phaseRect(min, max, step*150, A, b, -1, 0.01));
+                        nodes.addAll(phaseRectN(min, max, step*100, A, b, -1, 10));
                         nodes.addAll(getPoint(A, b, "Неустойчивый правильный узел"));
                     } else { // Неустойчивый вырожденный узел
-                        nodes.addAll(phaseRect(min, max, step*100, A, b, -1, 0.002));
+                        nodes.addAll(phaseRectN(min, max, step*75, A, b, -1, 10));
                         nodes.addAll(getPoint(A, b, "Неустойчивый вырожденный узел"));
                     }
                 } else {
                     if(A[0][1] == 0 && A[1][0] == 0) { // Устойчивый правильный узел
-                        nodes.addAll(phaseRect(min, max, step*150, A, b, 1, 0.01));
+                        nodes.addAll(phaseRectN(min, max, step*100, A, b, 1, 10));
                         nodes.addAll(getPoint(A, b, "Устойчивый правильный узел"));
                     } else { // Устойчивый вырожденный узел
-                        nodes.addAll(phaseRect(min, max, step*100, A, b, 1, 0.002));
+                        nodes.addAll(phaseRectN(min, max, step*75, A, b, 1, 10));
                         nodes.addAll(getPoint(A, b, "Устойчивый вырожденный узел"));
                     }
                 }
@@ -125,6 +125,64 @@ public class PhasePortrait {
         }
         return lines;
     }
+    /**
+     * Прямоугольник для портрета с соединением при достижении особой точки
+     * */
+    private List<Node> phaseRectN(Point min, Point max, double step, double[][] A, double[] b, int direction, double n) {
+        Function f = new Sum(new Sum(new Multiply(new Constant(A[0][0]), new VariableX()), new Multiply(new Constant(A[0][1]), new VariableY())), new Constant(b[0]));
+        Function g = new Sum(new Sum(new Multiply(new Constant(A[1][0]), new VariableX()), new Multiply(new Constant(A[1][1]), new VariableY())), new Constant(b[1]));
+        double height = coordinateManager.getHeight();
+        double wight = coordinateManager.getWidth();
+
+        double[] XY = ss.solve(A, new double[]{-b[0], -b[1]});
+        Point o = coordinateManager.getPixelXY(XY[0], XY[1]);
+
+        List<Node> nodes = new ArrayList<>();
+        for(double x = min.getX(); x <= max.getX(); x+= step) {
+            double pixelX = coordinateManager.getPixelX(x, 0);
+            nodes.addAll(phaseCurveN(f, g, new Point(pixelX, 2), direction, n, o));
+            nodes.addAll(phaseCurveN(f, g, new Point(pixelX, height-2), direction, n, o));
+        }
+        for(double y = min.getY(); y <= max.getY(); y+= step) {
+            double pixelY = coordinateManager.getPixelY(0, y);
+            nodes.addAll(phaseCurveN(f, g, new Point(2, pixelY), direction, n, o));
+            nodes.addAll(phaseCurveN(f, g, new Point(wight-2, pixelY), direction, n, o));
+        }
+        return nodes;
+    }
+    /**
+     * Построение фазовой кривой, проходящей через заданную начальную точку, с соединением при достижении особой точки
+     * */
+    private List<Line> phaseCurveN(Function f, Function g, Point p, int direction, double n, Point o) {
+        List<Line> lines = new ArrayList<>();
+        //Строим кривую, пока не выйдем за границы изображения(экрана)
+        while (coordinateManager.onScreen(p)){
+            //Вычисляем значения в зависимости от шага и направления
+            double dx = f.get(coordinateManager.getXY(p)) * direction;
+            double dy = -g.get(coordinateManager.getXY(p)) * direction;
+            Point dp = p.add(dx, dy);
+            //Если изменение слишком малое, то останавливаем построение(Достигли особой точки)
+            if(dist(p, o) < n) {
+                Line line = new Line(p.getX(), p.getY(), o.getX(), o.getY());
+                if(direction == 1) line.setStroke(Color.RED);
+                else line.setStroke(Color.BLUE);
+                line.setStrokeWidth(strokeWidth);
+                lines.add(line);
+                break;
+            }
+            //Строим прямую
+            if(coordinateManager.onScreen(dp)) {
+                Line line = new Line(p.getX(), p.getY(), dp.getX(), dp.getY());
+                if(direction == 1) line.setStroke(Color.RED);
+                else line.setStroke(Color.BLUE);
+                line.setStrokeWidth(strokeWidth);
+                lines.add(line);
+            }
+            //Делаем сдвиг
+            p = dp;
+        }
+        return lines;
+    }
     private List<Node> getPoint(double[][] A, double[] b, String type) {
         DecimalFormat format = new DecimalFormat("#.#####");
         double[] XY = ss.solve(A, new double[]{-b[0], -b[1]});
@@ -164,6 +222,9 @@ public class PhasePortrait {
     private Complex sqrt(double d) {
         if(d >= 0) return new Complex(Math.sqrt(d), 0);
         else return new Complex(0, Math.sqrt(-d));
+    }
+    private double dist(Point p1, Point p2) {
+        return Math.sqrt(Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2));
     }
     private final CoordinateManager coordinateManager;
     private final int strokeWidth;

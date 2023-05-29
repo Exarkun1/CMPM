@@ -24,7 +24,7 @@ public class TabulateBuilder {
         return dY;
     }
     public PolynomialWithX interpolateUp(Function f, double x0, double h, double[] Y) {
-        if(h <= 0) throw new RuntimeException("Шаг должен быть положительным");
+        if(h <= 0) throw new RootException("Шаг должен быть положительным");
         double[][] dY = finiteDiffs(Y);
         int n = Y.length;
         double[] A = new double[n];
@@ -42,7 +42,7 @@ public class TabulateBuilder {
         return new PolynomialWithX(f, A, X);
     }
     public PolynomialWithX interpolateDown(Function f, double xn, double h, double[] Y) {
-        if(h >= 0) throw new RuntimeException("Шаг должен быть отрицательным");
+        if(h >= 0) throw new RootException("Шаг должен быть отрицательным");
         double[][] dY = finiteDiffs(Y);
         int n = Y.length;
         double[] A = new double[n];
@@ -61,7 +61,7 @@ public class TabulateBuilder {
     }
 
     public Polynomial approximation(Function f, double[] X, double[] Y, int k) {
-        if(X.length != Y.length) throw new RuntimeException("Разные размеры X и Y");
+        if(X.length != Y.length) throw new RootException("Разные размеры X и Y");
         int n = X.length;
         double[] apX = new double[2*k+1];
         double[] b = new double[k+1];

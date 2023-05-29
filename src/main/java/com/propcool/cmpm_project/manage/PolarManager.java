@@ -68,7 +68,7 @@ public class PolarManager extends CoordinateManager {
         min = start;
         max = end;
     }
-    private final Alert polarAlert = new Alert(Alert.AlertType.ERROR,"Не верные данные в границах");
+    private final Alert polarAlert = new Alert(Alert.AlertType.WARNING,"Не верные данные в границах");
     private double min = 0;
     private double max = 4*Math.PI;
 }

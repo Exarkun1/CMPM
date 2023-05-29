@@ -31,7 +31,7 @@ public class TablesManager {
             Scene scene = new Scene(fxmlLoader.load());
             tableStage = new Stage();
             tableStage.setTitle("Table builder");
-            tableStage.getIcons().add(new Image(Objects.requireNonNull(CmpmApplication.class.getResourceAsStream("Icon.png"))));
+            tableStage.getIcons().add(new Image(Objects.requireNonNull(CmpmApplication.class.getResourceAsStream("table.png"))));
             tableStage.setScene(scene);
             tableStage.setResizable(false);
             tableStage.initModality(Modality.APPLICATION_MODAL);

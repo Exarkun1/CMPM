@@ -284,7 +284,8 @@ public class FunctionManager {
     public Pair<double[][], double[]> phasePortrait() {
         return new Pair<>(A, b);
     }
-    public void phaseAlert() {
+    public void phaseAlert(String text) {
+        phaseAlert.setContentText(text);
         phaseAlert.show();
     }
     private final Map<String, FunctionFactory> keyWords = new LinkedHashMap<>();
@@ -299,8 +300,8 @@ public class FunctionManager {
     private final Point cauchyPoint = new Point(0, 0);
     private final double[][] A = new double[2][2];
     private final double[] b = new double[2];
-    private final Alert cauchyAlert = new Alert(Alert.AlertType.ERROR,"Не верные данные в задаче Коши");
-    private final Alert phaseAlert = new Alert(Alert.AlertType.ERROR,"Не верные данные в уравнениях фазового портрета");
+    private final Alert cauchyAlert = new Alert(Alert.AlertType.WARNING,"Не верные данные в задаче Коши");
+    private final Alert phaseAlert = new Alert(Alert.AlertType.WARNING);
     public FunctionManager(){
         keyWords.put("sqrt", (b, e, s, p) -> new Pow(functionBuilder.buildingNotNamed(e, p), 0.5));
         keyWords.put("exp", (b, e, s, p) -> new Exp(functionBuilder.buildingNotNamed(e, p)));

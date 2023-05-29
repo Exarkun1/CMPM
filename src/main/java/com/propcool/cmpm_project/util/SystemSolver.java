@@ -1,4 +1,5 @@
 package com.propcool.cmpm_project.util;
+
 public class SystemSolver {
     public double[] solve(double[][] A, double[] B) {
         int n = A.length;
@@ -6,7 +7,7 @@ public class SystemSolver {
 
         double D = det(A);
         if (D == 0) {
-            throw new RuntimeException("The system has no unique solution");
+            throw new RootException("Корни не найдены");
         }
 
         for (int i = 0; i < n; i++) {

@@ -4,6 +4,7 @@ import com.propcool.cmpm_project.components.RowBox;
 import com.propcool.cmpm_project.components.TableBox;
 import com.propcool.cmpm_project.functions.interpolate.Polynomial;
 import com.propcool.cmpm_project.io.tables.TableLoader;
+import com.propcool.cmpm_project.util.RootException;
 import com.propcool.cmpm_project.manage.DrawManager;
 import com.propcool.cmpm_project.manage.FunctionManager;
 import com.propcool.cmpm_project.manage.TablesManager;
@@ -51,6 +52,9 @@ public class TableController {
             int k = Integer.parseInt(approximateField.getText());
             saveTable(k);
             drawManager.makeNewFrame();
+        } catch (RootException e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Невозможно аппроксимировать точки");
+            alert.show();
         } catch (RuntimeException e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
             alert.show();
@@ -62,6 +66,9 @@ public class TableController {
         try {
             saveTable(rowBoxes.size()-1);
             drawManager.makeNewFrame();
+        } catch (RootException e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Невозможно аппроксимировать точки");
+            alert.show();
         } catch (RuntimeException e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
             alert.show();
@@ -147,16 +154,20 @@ public class TableController {
         return approximatePoints(name, points, k, colorPicker.getValue(), !visibleButton.isSelected(), pointsButton.isSelected());
     }
     public CustomizableTable approximatePoints(String name, Set<Point> points, int k, Color color, boolean visible, boolean pointsVisible) {
-        Polynomial f = functionManager.approximation(points, k);
-        CustomizableTable ct = new CustomizableTable(f);
-        ct.setRows(points);
-        ct.setColor(color.toString());
-        ct.setVisible(visible);
-        ct.setWidth(2);
-        ct.setK(k);
-        ct.setName(name);
-        ct.setPointsVisible(pointsVisible);
-        return ct;
+        try {
+            Polynomial f = functionManager.approximation(points, k);
+            CustomizableTable ct = new CustomizableTable(f);
+            ct.setRows(points);
+            ct.setColor(color.toString());
+            ct.setVisible(visible);
+            ct.setWidth(2);
+            ct.setK(k);
+            ct.setName(name);
+            ct.setPointsVisible(pointsVisible);
+            return ct;
+        } catch (NegativeArraySizeException e) {
+            throw new RuntimeException("Пустая таблица, либо отрицательная степень аппроксимации", e);
+        }
     }
     public void clearRows() {
         rowBoxes.clear();

@@ -1,13 +1,9 @@
 package com.propcool.cmpm_project.components;
 
-import com.propcool.cmpm_project.CmpmApplication;
 import com.propcool.cmpm_project.controllers.TableController;
 import com.propcool.cmpm_project.util.Point;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-
-import java.net.URL;
 
 public class RowBox extends HBox {
     public RowBox(String x, String y, TableController controller) {
@@ -33,10 +29,18 @@ public class RowBox extends HBox {
         this("", "", controller);
     }
     public double getX() {
-        return Double.parseDouble(xTextField.getText());
+        try {
+            return Double.parseDouble(xTextField.getText());
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Не верные данные в полях таблицы", e);
+        }
     }
     public double getY() {
-        return Double.parseDouble(yTextField.getText());
+        try {
+            return Double.parseDouble(yTextField.getText());
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Не верные данные в полях таблицы", e);
+        }
     }
     public Point getRow() {
         return new Point(getX(), getY());

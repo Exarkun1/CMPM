@@ -42,7 +42,7 @@ public class MainManager {
             //List<Node> nodes = phasePortrait.solveLiner(new double[][]{{1, 0}, {0, 1}}, new double[] {0, 0}); // правильный узел
             //List<Node> nodes = phasePortrait.solveLiner(new double[][]{{-1, -1}, {1, -3}}, new double[] {0, 0}); // вырожденный узел
             //List<Node> nodes = phasePortrait.solveLiner(new double[][]{{4, 2}, {1, 3}}, new double[] {0, 0}); // узел
-            List<Node> nodes = phasePortrait.solveLiner(new double[][]{{1, -4}, {1, -1}}, new double[] {0, 0}); // центр
+            //List<Node> nodes = phasePortrait.solveLiner(new double[][]{{1, -4}, {1, -1}}, new double[] {0, 0}); // центр
             //List<Node> nodes = phasePortrait.solveLiner(new double[][]{{-2, -2}, {-1, 2}}, new double[] {12, -3}); // седло
             //List<Node> nodes = phasePortrait.solveLiner(new double[][]{{3, 2}, {-5, 5}}, new double[] {1, 2}); // фокус
             group.getChildren().addAll(nodes);
@@ -195,7 +195,7 @@ public class MainManager {
             double[] b = new double[2];
 
             String reject = "[+|-]?\\d\\*x[+|-]\\d\\*y[+|-]\\d";
-            if(!f.matches(reject) || !g.matches(reject)) throw new RuntimeException();
+            if(!f.matches(reject) || !g.matches(reject)) throw new RuntimeException("Не верные данные");
 
             Pattern pattern = Pattern.compile("([+|-]?\\d)");
             Matcher matcher = pattern.matcher(f);
@@ -210,11 +210,13 @@ public class MainManager {
             if(matcher.find()) A[1][1] = Double.parseDouble(matcher.group());
             if(matcher.find()) b[1] = Double.parseDouble(matcher.group());
 
+            if(A[0][0] / A[1][0] == A[0][1] / A[1][1]) throw new RuntimeException("Вырожденный случай");
+
             functionManager.setPhasePortrait(A, b);
             controlManager.setPortraitShowed(true);
             drawManager.makeNewFrame();
         } catch (RuntimeException e) {
-            phaseAlert();
+            phaseAlert(e.getMessage());
         }
     }
     public void showFunctions() {
@@ -243,8 +245,8 @@ public class MainManager {
     public void polarAlert() {
         ((PolarManager)coordinateManagers.get("polar")).polarAlert();
     }
-    public void phaseAlert() {
-        functionManager.phaseAlert();
+    public void phaseAlert(String text) {
+        functionManager.phaseAlert(text);
     }
     public DrawManager getDrawManager() {
         return drawManager;
