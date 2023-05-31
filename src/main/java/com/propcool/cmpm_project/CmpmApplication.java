@@ -8,7 +8,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
-
+/**
+ * Наконец-то релиз!!!
+ * */
 public class CmpmApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
