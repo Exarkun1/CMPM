@@ -194,10 +194,10 @@ public class MainManager {
             double[][] A = new double[2][2];
             double[] b = new double[2];
 
-            String reject = "[+|-]?\\d\\*x[+|-]\\d\\*y[+|-]\\d";
+            String reject = "[+|-]?\\d+(.\\d+)?\\*x[+|-]\\d+(.\\d+)?\\*y[+|-]\\d+(.\\d+)?";
             if(!f.matches(reject) || !g.matches(reject)) throw new RuntimeException("Не верные данные");
 
-            Pattern pattern = Pattern.compile("([+|-]?\\d)");
+            Pattern pattern = Pattern.compile("([+|-]?\\d+(.\\d+)?)");
             Matcher matcher = pattern.matcher(f);
 
             if(matcher.find()) A[0][0] = Double.parseDouble(matcher.group());

@@ -52,7 +52,7 @@ public class PhasePortrait {
                     nodes.addAll(phaseRectN(min, max, step*75, A, b, 1, 10));
                     nodes.addAll(getPoint(A, b, "Устойчивый узел"));
                 } else { // Седло
-                    nodes.addAll(phaseRect(min, max, step*20, A, b, -1, 0.002));
+                    nodes.addAll(phaseRect(min, max, step*30, A, b, -1, 0.0001));
                     nodes.addAll(getPoint(A, b, "Седло"));
                 }
             } else {
